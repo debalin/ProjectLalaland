@@ -74,44 +74,10 @@ public class Environment {
   
   public void createObstacles() {
     PVector obstacleColor = new PVector(123, 116, 214);
-    obstacles.add(new Obstacle(0, (int)(numTiles.y * 0.25), (int)(numTiles.x * 0.09), (int)(numTiles.y * 0.25) + 1, this, obstacleColor)); //Room 1, Wall LB
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.2), (int)(numTiles.y * 0.25), (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.25) + 1, this, obstacleColor)); //Room 1, Wall RB
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.33) - 1, 0, (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.25) - 1, this, obstacleColor)); //Room 1, Wall R
-    
-    obstacleColor = new PVector(123, 116, 214);
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.67), (int)(numTiles.y * 0.25), (int)(numTiles.x * 0.79), (int)(numTiles.y * 0.25) + 1, this, obstacleColor)); //Room 2, Wall LB
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.92) - 1, (int)(numTiles.y * 0.25), (int)(numTiles.x * 1.0), (int)(numTiles.y * 0.25) + 1, this, obstacleColor)); //Room 2, Wall RB
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.67), 0, (int)(numTiles.x * 0.67) + 1, (int)(numTiles.y * 0.25) - 1, this, obstacleColor)); //Room 2, Wall L
-    
-    obstacleColor = new PVector(255, 92, 92);
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.78), (int)(numTiles.y * 0.15), (int)(numTiles.x * 0.9), (int)(numTiles.y * 0.15) + 1, this, obstacleColor)); //Room 2A, Wall B
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.78), (int)(numTiles.y * 0.05), (int)(numTiles.x * 0.78) + 1, (int)(numTiles.y * 0.15) - 1, this, obstacleColor)); //Room 2A, Wall L
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.9) - 1, (int)(numTiles.y * 0.05), (int)(numTiles.x * 0.9), (int)(numTiles.y * 0.15) - 1, this, obstacleColor)); //Room 2A, Wall R
-    
-    obstacleColor = new PVector(255, 92, 92);
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.09), (int)(numTiles.y * 0.15), (int)(numTiles.x * 0.22), (int)(numTiles.y * 0.15) + 1, this, obstacleColor)); //Room 2B, Wall LB
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.09), (int)(numTiles.y * 0.05), (int)(numTiles.x * 0.09) + 1, (int)(numTiles.y * 0.15) - 1, this, obstacleColor)); //Room 2B, Wall RB
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.22) - 1, (int)(numTiles.y * 0.05), (int)(numTiles.x * 0.22), (int)(numTiles.y * 0.15) - 1, this, obstacleColor)); //Room 2B, Wall L
-    
-    obstacleColor = new PVector(255, 92, 92);
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.4), (int)(numTiles.y * 0.4), (int)(numTiles.x * 0.6) - 1, (int)(numTiles.y * 0.6) - 1, this, obstacleColor)); //Center Block
-    
-    obstacleColor = new PVector(123, 116, 214);
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.325), (int)(numTiles.y * 0.8), (int)(numTiles.x * 0.7), (int)(numTiles.y * 0.8) + 1, this, obstacleColor)); //Atrium, Wall T
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.325), (int)(numTiles.y * 0.8) + 2, (int)(numTiles.x * 0.325) + 1, (int)(numTiles.y * 0.93), this, obstacleColor)); //Atrium, Wall L
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.7) - 1, (int)(numTiles.y * 0.8) + 2, (int)(numTiles.x * 0.7), (int)(numTiles.y * 0.93), this, obstacleColor)); //Atrium, Wall R
-    
-    obstacleColor = new PVector(123, 116, 214);
-    obstacles.add(new Obstacle(0, (int)(numTiles.y * 0.45), (int)(numTiles.x * 0.18), (int)(numTiles.y * 0.45) + 1, this, obstacleColor)); //Left Doorway, Wall T
-    obstacles.add(new Obstacle(0, (int)(numTiles.y * 0.58), (int)(numTiles.x * 0.18), (int)(numTiles.y * 0.58) + 1, this, obstacleColor)); //Left Doorway, Wall B
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.18) - 1, (int)(numTiles.y * 0.45) + 2, (int)(numTiles.x * 0.18), (int)(numTiles.y * 0.5) - 1, this, obstacleColor)); //Left Doorway, Entrance T
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.18) - 1, (int)(numTiles.y * 0.5) + 4, (int)(numTiles.x * 0.18), (int)(numTiles.y * 0.58) - 1, this, obstacleColor)); //Left Doorway, Entrance T
-    
-    obstacleColor = new PVector(123, 116, 214);
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.82), (int)(numTiles.y * 0.45), (int)(numTiles.x * 1.0), (int)(numTiles.y * 0.45) + 1, this, obstacleColor)); //Right Doorway, Wall T
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.82), (int)(numTiles.y * 0.58), (int)(numTiles.x * 1.0), (int)(numTiles.y * 0.58) + 1, this, obstacleColor)); //Right Doorway, Wall B
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.82), (int)(numTiles.y * 0.45) + 2, (int)(numTiles.x * 0.82) + 1, (int)(numTiles.y * 0.5) - 1, this, obstacleColor)); //Right Doorway, Entrance T
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.82), (int)(numTiles.y * 0.5) + 4, (int)(numTiles.x * 0.82) + 1, (int)(numTiles.y * 0.58) - 1, this, obstacleColor)); //Right Doorway, Entrance T
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.45), (int)(numTiles.y * 0.2), (int)(numTiles.x * 0.55), (int)(numTiles.y * 0.2) + 1, this, obstacleColor)); //Top barrier
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.45), (int)(numTiles.y * 0.8) - 1, (int)(numTiles.x * 0.55), (int)(numTiles.y * 0.8), this, obstacleColor)); //Bottom barrier
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.2), (int)(numTiles.y * 0.45), (int)(numTiles.x * 0.2) + 1, (int)(numTiles.y * 0.55), this, obstacleColor)); //Left barrier
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.8) - 1, (int)(numTiles.y * 0.45), (int)(numTiles.x * 0.8), (int)(numTiles.y * 0.55), this, obstacleColor)); //Right barrier
     
     formInvalidNodes();
   }

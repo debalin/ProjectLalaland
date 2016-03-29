@@ -96,7 +96,7 @@ public abstract class GameObject {
     drawShape();
   }
 
-  protected void drawShape() {
+  private void drawShape() {
     parent.pushMatrix();
     group.rotate(mapToRange(orientation - (float)(Math.PI / 2)));
     parent.shape(group, position.x, position.y);
@@ -104,7 +104,7 @@ public abstract class GameObject {
     parent.popMatrix();
   }
   
-  protected void drawBreadcrumbs() {
+  private void drawBreadcrumbs() {
     parent.pushMatrix();
     parent.fill(CRUMB_COLOR.x, CRUMB_COLOR.y, CRUMB_COLOR.z);
     for (PVector historyPos : history) {

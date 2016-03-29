@@ -12,7 +12,7 @@ public class Engine extends PApplet {
   private static final PVector RESOLUTION = new PVector(800, 800);
   private static final int SMOOTH_FACTOR = 4;
   private static final PVector BACKGROUND_RGB = new PVector(60, 60, 60);
-  private static final PVector INITIAL_POSITION = new PVector(50, RESOLUTION.y - 50);
+  private static final PVector PLAYER_INITIAL_POSITION = new PVector(RESOLUTION.x / 2, RESOLUTION.y / 2);
   private static final PVector NUM_TILES = new PVector(80, 80);
   private static final boolean DRAW_PATH = false;
   private static final GraphSearch.SearchType searchType = GraphSearch.SearchType.ASTAR; 
@@ -41,7 +41,7 @@ public class Engine extends PApplet {
     environment.buildGraph();
     
     graphSearch = new GraphSearch(environment, (int)(NUM_TILES.x * NUM_TILES.y));
-    player = new Player(INITIAL_POSITION.x, INITIAL_POSITION.y, this);
+    player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this);
     notReachable = NotReachable.FALSE;
     
     toDrawPath = new LinkedList<Integer>();
@@ -70,8 +70,6 @@ public class Engine extends PApplet {
     
     player.move();
     player.display();
-    
-    Utility.drawText(searchType.toString(), RESOLUTION.x / 2f, RESOLUTION.y / 2f, this);
   }
   
   public void mouseClicked() {
