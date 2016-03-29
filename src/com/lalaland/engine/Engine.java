@@ -1,11 +1,9 @@
 package com.lalaland.engine;
 
 import processing.core.*;
-import java.util.*;
 
 import com.lalaland.environment.*;
 import com.lalaland.object.*;
-import com.lalaland.object.Player.MoveDirection;
 
 public class Engine extends PApplet {
   
@@ -17,7 +15,6 @@ public class Engine extends PApplet {
   
   private Environment environment;
   private GraphSearch graphSearch;
-  private LinkedList<Integer> solutionPath;
   private Player player;
   private NotReachable notReachable;
   
@@ -58,31 +55,11 @@ public class Engine extends PApplet {
   }
   
   public void keyPressed() {
-    switch(key) {
-    case 'W':
-    case 'w':
-      player.setMoveTo(MoveDirection.UP);
-      break;
-    case 'S':
-    case 's':
-      player.setMoveTo(MoveDirection.DOWN);
-      break;
-    case 'A':
-    case 'a':
-      player.setMoveTo(MoveDirection.LEFT);
-      break;
-    case 'D':
-    case 'd':
-      player.setMoveTo(MoveDirection.RIGHT);
-      break;
-    default:
-      player.setMoveTo(MoveDirection.STAY);
-      break;
-    }
+    player.setDirection(key, true);
   }
   
   public void keyReleased() {
-    player.setMoveTo(MoveDirection.STAY);
+    player.setDirection(key, false);
   }
 
 }

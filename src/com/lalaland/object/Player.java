@@ -3,15 +3,11 @@ package com.lalaland.object;
 import processing.core.*;
 
 public class Player extends GameObject {
-  
-  private MoveDirection moveTo;
 
   private static final float PLAYER_RADIUS = 6;
   private static final PVector PLAYER_COLOR = new PVector(41, 242, 138);
   
-  public enum MoveDirection {
-    LEFT, RIGHT, UP, DOWN, STAY
-  }
+  private boolean LEFT, RIGHT, UP, DOWN;
   
   public Player(float positionX, float positionY, PApplet parent) {
     super(positionX, positionY, parent, PLAYER_RADIUS, PLAYER_COLOR);
@@ -19,38 +15,45 @@ public class Player extends GameObject {
     DRAW_BREADCRUMBS = true;
     TIME_TARGET_ROT = 7;
     MAX_VELOCITY = 2;
-    moveTo = MoveDirection.STAY;
-  }
-  
-  public void setMoveTo(MoveDirection moveTo) {
-    this.moveTo = moveTo;
+    LEFT = RIGHT = UP = DOWN = false;
   }
   
   @Override
   public void move() {
-    switch (moveTo) {
-    case LEFT:
+    if (LEFT)
       velocity.x = -MAX_VELOCITY;
-      velocity.y = 0;
-      break;
-    case RIGHT:
+    else if (RIGHT)
       velocity.x = MAX_VELOCITY;
-      velocity.y = 0;
-      break;
-    case UP:
-      velocity.x = 0;
+    else
+      velocity.x = 0f;
+    if (UP)
       velocity.y = -MAX_VELOCITY;
-      break;
-    case DOWN:
-      velocity.x = 0;
+    else if (DOWN)
       velocity.y = MAX_VELOCITY;
+    else
+      velocity.y = 0f;
+    position.add(velocity);
+  }
+  
+  public void setDirection(int key, boolean set) {
+    switch(key) {
+    case 'W':
+    case 'w':
+      UP = set;
       break;
-    case STAY:
-      velocity.x = 0;
-      velocity.y = 0;
+    case 'S':
+    case 's':
+      DOWN = set;
+      break;
+    case 'A':
+    case 'a':
+      LEFT = set;
+      break;
+    case 'D':
+    case 'd':
+      RIGHT = set;
       break;
     }
-    position.add(velocity);
   }
 
 }
