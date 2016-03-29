@@ -74,10 +74,10 @@ public class Environment {
   
   public void createObstacles() {
     PVector obstacleColor = new PVector(123, 116, 214);
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.45), (int)(numTiles.y * 0.2), (int)(numTiles.x * 0.55), (int)(numTiles.y * 0.2) + 1, this, obstacleColor)); //Top barrier
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.45), (int)(numTiles.y * 0.8) - 1, (int)(numTiles.x * 0.55), (int)(numTiles.y * 0.8), this, obstacleColor)); //Bottom barrier
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.2), (int)(numTiles.y * 0.45), (int)(numTiles.x * 0.2) + 1, (int)(numTiles.y * 0.55), this, obstacleColor)); //Left barrier
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.8) - 1, (int)(numTiles.y * 0.45), (int)(numTiles.x * 0.8), (int)(numTiles.y * 0.55), this, obstacleColor)); //Right barrier
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.45), (int)(numTiles.y * 0.2), (int)(numTiles.x * 0.55), (int)(numTiles.y * 0.2), this, obstacleColor)); //Top barrier
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.45), (int)(numTiles.y * 0.8), (int)(numTiles.x * 0.55), (int)(numTiles.y * 0.8), this, obstacleColor)); //Bottom barrier
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.2), (int)(numTiles.y * 0.45), (int)(numTiles.x * 0.2), (int)(numTiles.y * 0.55), this, obstacleColor)); //Left barrier
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.8), (int)(numTiles.y * 0.45), (int)(numTiles.x * 0.8), (int)(numTiles.y * 0.55), this, obstacleColor)); //Right barrier
     
     formInvalidNodes();
   }

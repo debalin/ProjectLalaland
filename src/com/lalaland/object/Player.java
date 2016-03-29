@@ -4,7 +4,7 @@ import processing.core.*;
 
 public class Player extends GameObject {
 
-  private static final float PLAYER_RADIUS = 6;
+  private static final float PLAYER_RADIUS = 7;
   private static final PVector PLAYER_COLOR = new PVector(41, 242, 138);
   
   private boolean LEFT, RIGHT, UP, DOWN;
@@ -33,6 +33,7 @@ public class Player extends GameObject {
     else
       velocity.y = 0f;
     position.add(velocity);
+    orientation = (float) Math.atan2(parent.mouseY - position.y, parent.mouseX - position.x);
   }
   
   public void setDirection(int key, boolean set) {
