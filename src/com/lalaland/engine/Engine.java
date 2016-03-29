@@ -5,7 +5,7 @@ import java.util.*;
 
 import com.lalaland.environment.*;
 import com.lalaland.object.*;
-import com.lalaland.utility.*;
+import com.lalaland.object.Player.MoveDirection;
 
 public class Engine extends PApplet {
   
@@ -14,12 +14,10 @@ public class Engine extends PApplet {
   private static final PVector BACKGROUND_RGB = new PVector(60, 60, 60);
   private static final PVector PLAYER_INITIAL_POSITION = new PVector(RESOLUTION.x / 2, RESOLUTION.y / 2);
   private static final PVector NUM_TILES = new PVector(80, 80);
-  private static final boolean DRAW_PATH = false;
-  private static final GraphSearch.SearchType searchType = GraphSearch.SearchType.ASTAR; 
   
   private Environment environment;
   private GraphSearch graphSearch;
-  private LinkedList<Integer> solutionPath, toDrawPath;
+  private LinkedList<Integer> solutionPath;
   private Player player;
   private NotReachable notReachable;
   
@@ -43,70 +41,48 @@ public class Engine extends PApplet {
     graphSearch = new GraphSearch(environment, (int)(NUM_TILES.x * NUM_TILES.y));
     player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this);
     notReachable = NotReachable.FALSE;
-    
-    toDrawPath = new LinkedList<Integer>();
   }
   
   public static void main(String args[]) {  
     PApplet.main(new String[] { "com.lalaland.engine.Engine" });
   }
   
-  @SuppressWarnings("unused")
   public void draw() {
     background(BACKGROUND_RGB.x, BACKGROUND_RGB.y, BACKGROUND_RGB.z);
     
     environment.drawObstacles();
     environment.drawTarget(notReachable);
     
-    if (solutionPath != null && solutionPath.size() != 0 && player.isReached()) {
-      int node = solutionPath.poll();
-      int gridY = (int)(node / NUM_TILES.x);
-      int gridX = (int)(node % NUM_TILES.x);
-      player.setTargetPosition(new PVector(gridX * environment.getTileSize().x + environment.getTileSize().x / 2, gridY * environment.getTileSize().y + environment.getTileSize().y / 2));
-    }
-    if (toDrawPath.size() != 0 && DRAW_PATH) {
-      environment.drawPath(toDrawPath);
-    }
-    
     player.move();
     player.display();
   }
   
-  public void mouseClicked() {
-    PVector indicatorPosition = player.getPosition();
-    
-    int originX = (int)(indicatorPosition.x / environment.getTileSize().x);
-    int originY = (int)(indicatorPosition.y / environment.getTileSize().x);
-    int originNode = originY * (int)NUM_TILES.x + originX;
-    
-    int destinationX = (int)(mouseX / environment.getTileSize().x);
-    int destinationY = (int)(mouseY / environment.getTileSize().y);
-    int destinationNode = destinationY * (int)NUM_TILES.x + destinationX;
-    Logger.log("Origin is " + originNode + " and destination is " + destinationNode + ".");
-    
-    environment.setTargetPosition(new PVector(mouseX, mouseY));
-    notReachable = NotReachable.FALSE;
-    
-    if (environment.getInvalidNodes().contains(new PVector(destinationX, destinationY))) {
-      notReachable = NotReachable.ON_OBSTACLE;
-      return;
+  public void keyPressed() {
+    switch(key) {
+    case 'W':
+    case 'w':
+      player.setMoveTo(MoveDirection.UP);
+      break;
+    case 'S':
+    case 's':
+      player.setMoveTo(MoveDirection.DOWN);
+      break;
+    case 'A':
+    case 'a':
+      player.setMoveTo(MoveDirection.LEFT);
+      break;
+    case 'D':
+    case 'd':
+      player.setMoveTo(MoveDirection.RIGHT);
+      break;
+    default:
+      player.setMoveTo(MoveDirection.STAY);
+      break;
     }
-    
-    long start_time = System.nanoTime();
-    if (graphSearch.search(originNode, destinationNode, searchType)) {
-      solutionPath = graphSearch.getSolutionPath();
-      if (DRAW_PATH)
-        toDrawPath.addAll(solutionPath);
-      Logger.log("Path cost is " + Double.toString(graphSearch.getPathCost()) + ".");
-      Logger.log("Solution path is " + solutionPath.toString());
-    }
-    else {
-      notReachable = NotReachable.NO_PATH;
-    }
-    long end_time = System.nanoTime();
-    double timeTaken = (end_time - start_time) / 1e6;
-    Logger.log("Time taken is " + Double.toString(timeTaken) + ".");
-    graphSearch.reset();
+  }
+  
+  public void keyReleased() {
+    player.setMoveTo(MoveDirection.STAY);
   }
 
 }

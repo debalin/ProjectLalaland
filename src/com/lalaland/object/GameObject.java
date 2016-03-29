@@ -6,11 +6,8 @@ import java.util.*;
 public abstract class GameObject {
   
   protected PVector position, velocity;
-  protected PVector acceleration;
   protected float orientation, rotation;
-  protected PVector targetPosition;
   protected float targetOrientation;
-  protected boolean reached;
   protected PApplet parent;
   protected PShape group, head, beak;
   protected Set<PVector> history;
@@ -19,9 +16,7 @@ public abstract class GameObject {
   protected boolean POSITION_MATCHING;
   protected boolean DRAW_BREADCRUMBS;
   protected float TIME_TARGET_ROT;
-  protected float RADIUS_SATISFACTION;
   protected float MAX_VELOCITY;
-  protected float MAX_ACCELERATION;
   protected float IND_RADIUS;
   protected PVector IND_COLOR;
   protected PVector CRUMB_COLOR;
@@ -33,7 +28,6 @@ public abstract class GameObject {
     this.IND_RADIUS = IND_RADIUS;
     this.IND_COLOR = this.CRUMB_COLOR = IND_COLOR;
     velocity = new PVector();
-    acceleration = new PVector();
     
     group = parent.createShape(PApplet.GROUP);
     head = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
@@ -52,18 +46,12 @@ public abstract class GameObject {
   public GameObject(float positionX, float positionY, PApplet parent, float IND_RADIUS, PVector IND_COLOR) {
     this(parent, IND_RADIUS, IND_COLOR);
     position = new PVector(positionX, positionY);
-    targetPosition = new PVector(positionX, positionY);
-    reached = false;
   }
   
   public abstract void move();
   
   public PVector getPosition() {
     return position;
-  }
-
-  public void setTargetPosition(PVector targetPosition) {
-    this.targetPosition = targetPosition;
   }
   
   protected static float mapToRange(float rotation) {
@@ -76,10 +64,6 @@ public abstract class GameObject {
       else
         return (r + 2 * (float)Math.PI);
     }
-  }
-  
-  public boolean isReached() {
-    return reached;
   }
   
   protected void storeHistory() {

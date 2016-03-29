@@ -4,44 +4,53 @@ import processing.core.*;
 
 public class Player extends GameObject {
   
+  private MoveDirection moveTo;
+
+  private static final float PLAYER_RADIUS = 6;
+  private static final PVector PLAYER_COLOR = new PVector(41, 242, 138);
+  
+  public enum MoveDirection {
+    LEFT, RIGHT, UP, DOWN, STAY
+  }
+  
   public Player(float positionX, float positionY, PApplet parent) {
-    super(positionX, positionY, parent, 6, new PVector(41, 242, 138));
+    super(positionX, positionY, parent, PLAYER_RADIUS, PLAYER_COLOR);
     POSITION_MATCHING = true;
     DRAW_BREADCRUMBS = true;
     TIME_TARGET_ROT = 7;
-    RADIUS_SATISFACTION = 12;
-    MAX_VELOCITY = 3;
-    MAX_ACCELERATION = 0.5f;
+    MAX_VELOCITY = 2;
+    moveTo = MoveDirection.STAY;
   }
   
+  public void setMoveTo(MoveDirection moveTo) {
+    this.moveTo = moveTo;
+  }
+  
+  @Override
   public void move() {
-    if (POSITION_MATCHING)
-      movePositionMatching();
-  }
-  
-  private void movePositionMatching() {
-    if (position.dist(targetPosition) <= RADIUS_SATISFACTION) {
-      velocity.set(0, 0);
-      acceleration.set(0, 0);
-      reached = true;
-      return;
+    switch (moveTo) {
+    case LEFT:
+      velocity.x = -MAX_VELOCITY;
+      velocity.y = 0;
+      break;
+    case RIGHT:
+      velocity.x = MAX_VELOCITY;
+      velocity.y = 0;
+      break;
+    case UP:
+      velocity.x = 0;
+      velocity.y = -MAX_VELOCITY;
+      break;
+    case DOWN:
+      velocity.x = 0;
+      velocity.y = MAX_VELOCITY;
+      break;
+    case STAY:
+      velocity.x = 0;
+      velocity.y = 0;
+      break;
     }
-    reached = false;
-    
-    acceleration = PVector.sub(targetPosition, position);
-    acceleration.setMag(MAX_ACCELERATION);
-    velocity.add(acceleration);
-    
-    if (velocity.mag() >= MAX_VELOCITY)
-      velocity.setMag(MAX_VELOCITY);
     position.add(velocity);
-    
-    targetOrientation = velocity.heading(); 
-    rotation = (targetOrientation - orientation) / TIME_TARGET_ROT;
-    orientation += rotation;
-    
-    if (DRAW_BREADCRUMBS)
-      storeHistory();
   }
 
 }
