@@ -157,5 +157,15 @@ public class Environment {
     adjacencyList = utility.buildGraph(invalidNodes, numTiles);
     nodesList = utility.getNodesList();
   }
+  
+  public boolean onObstacle(PVector position) {
+    int gridX = (int)(position.x / tileSize.x);
+    int gridY = (int)(position.y / tileSize.y);
+    
+    if (invalidNodes.contains(new PVector(gridX, gridY))) {
+      return true;
+    }
+    return false;
+  }
 
 }

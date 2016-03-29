@@ -34,7 +34,8 @@ public class Player extends GameObject {
       velocity.y = MAX_VELOCITY;
     else
       velocity.y = 0f;
-    position.add(velocity);
+    if (!environment.onObstacle(PVector.add(position, velocity)))
+      position.add(velocity);
     orientation = (float) Math.atan2(parent.mouseY - position.y, parent.mouseX - position.x);
   }
   
