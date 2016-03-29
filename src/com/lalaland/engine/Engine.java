@@ -48,7 +48,7 @@ public class Engine extends PApplet {
   }
   
   public static void main(String args[]) {  
-    PApplet.main(new String[] { "Engine" });
+    PApplet.main(new String[] { "com.lalaland.engine.Engine" });
   }
   
   @SuppressWarnings("unused")
