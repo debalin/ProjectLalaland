@@ -3,6 +3,8 @@ package com.lalaland.object;
 import processing.core.*;
 import java.util.*;
 
+import com.lalaland.environment.*;
+
 public abstract class GameObject {
   
   protected PVector position, velocity;
@@ -12,6 +14,7 @@ public abstract class GameObject {
   protected PShape group, head, beak;
   protected Set<PVector> history;
   protected int interval;
+  protected Environment environment;
   
   protected boolean POSITION_MATCHING;
   protected boolean DRAW_BREADCRUMBS;
@@ -22,12 +25,12 @@ public abstract class GameObject {
   protected PVector CRUMB_COLOR;
   
   private static final int MAX_INTERVAL = 5;
-
-  public GameObject(PApplet parent, float IND_RADIUS, PVector IND_COLOR) {
+  
+  public GameObject(float positionX, float positionY, PApplet parent, Environment environment, float IND_RADIUS, PVector IND_COLOR) {
     this.parent = parent;
+    this.environment = environment;
     this.IND_RADIUS = IND_RADIUS;
     this.IND_COLOR = this.CRUMB_COLOR = IND_COLOR;
-    velocity = new PVector();
     
     group = parent.createShape(PApplet.GROUP);
     head = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
@@ -41,11 +44,9 @@ public abstract class GameObject {
     
     history = new HashSet<PVector>();
     interval = 0;
-  }
-  
-  public GameObject(float positionX, float positionY, PApplet parent, float IND_RADIUS, PVector IND_COLOR) {
-    this(parent, IND_RADIUS, IND_COLOR);
+    
     position = new PVector(positionX, positionY);
+    velocity = new PVector();
   }
   
   public abstract void move();

@@ -2,6 +2,8 @@ package com.lalaland.object;
 
 import processing.core.*;
 
+import com.lalaland.environment.*;
+
 public class Player extends GameObject {
 
   private static final float PLAYER_RADIUS = 7;
@@ -9,8 +11,8 @@ public class Player extends GameObject {
   
   private boolean LEFT, RIGHT, UP, DOWN;
   
-  public Player(float positionX, float positionY, PApplet parent) {
-    super(positionX, positionY, parent, PLAYER_RADIUS, PLAYER_COLOR);
+  public Player(float positionX, float positionY, PApplet parent, Environment environment) {
+    super(positionX, positionY, parent, environment, PLAYER_RADIUS, PLAYER_COLOR);
     POSITION_MATCHING = true;
     DRAW_BREADCRUMBS = true;
     TIME_TARGET_ROT = 7;

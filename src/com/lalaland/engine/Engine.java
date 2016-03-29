@@ -36,7 +36,7 @@ public class Engine extends PApplet {
     environment.buildGraph();
     
     graphSearch = new GraphSearch(environment, (int)(NUM_TILES.x * NUM_TILES.y));
-    player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this);
+    player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this, environment);
     notReachable = NotReachable.FALSE;
   }
   

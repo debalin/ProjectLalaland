@@ -4,7 +4,6 @@ import processing.core.*;
 import java.util.*;
 
 import com.lalaland.engine.*;
-import com.lalaland.object.*;
 import com.lalaland.utility.*;
 
 public class Environment {

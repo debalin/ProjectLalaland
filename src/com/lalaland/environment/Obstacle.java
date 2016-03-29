@@ -1,9 +1,8 @@
-package com.lalaland.object;
+package com.lalaland.environment;
 
 import java.util.*;
 import processing.core.*;
 
-import com.lalaland.environment.*;
 import com.lalaland.utility.*;
 
 public class Obstacle {

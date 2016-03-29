@@ -3,13 +3,15 @@ package com.lalaland.object;
 import processing.core.PApplet;
 import processing.core.PVector;
 
+import com.lalaland.environment.*;
+
 public class Soldier extends Enemy {
 
   private static final float SOLDIER_RADIUS = 6;
   private static final PVector SOLDIER_COLOR = new PVector(146, 109, 13);
   
-  public Soldier(float positionX, float positionY, PApplet parent) {
-    super(positionX, positionY, parent, SOLDIER_RADIUS, SOLDIER_COLOR);
+  public Soldier(float positionX, float positionY, PApplet parent, Environment environment) {
+    super(positionX, positionY, parent, environment, SOLDIER_RADIUS, SOLDIER_COLOR);
     POSITION_MATCHING = true;
     DRAW_BREADCRUMBS = true;
     TIME_TARGET_ROT = 7;
