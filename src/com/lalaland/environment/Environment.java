@@ -146,10 +146,10 @@ public class Environment {
         invalidNodes.add(new PVector(tileLocation.x, tileLocation.y + 1));
         invalidNodes.add(new PVector(tileLocation.x - 1, tileLocation.y));
         invalidNodes.add(new PVector(tileLocation.x, tileLocation.y - 1));
-        /*invalidNodes.add(new PVector(tileLocation.x + 1, tileLocation.y + 1));
+        invalidNodes.add(new PVector(tileLocation.x + 1, tileLocation.y + 1));
         invalidNodes.add(new PVector(tileLocation.x + 1, tileLocation.y - 1));
         invalidNodes.add(new PVector(tileLocation.x - 1, tileLocation.y + 1));
-        invalidNodes.add(new PVector(tileLocation.x - 1, tileLocation.y - 1));*/
+        invalidNodes.add(new PVector(tileLocation.x - 1, tileLocation.y - 1));
       }
     }
   }
