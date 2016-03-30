@@ -17,7 +17,6 @@ public class Environment {
   private Map<Integer, Utility.NodeInfo> nodesList;
   private Utility utility;
   private Player player;
-  private GraphSearch graphSearch;
 
   public Map<Integer, List<Utility.Neighbour>> getAdjacencyList() {
     return adjacencyList;
@@ -42,19 +41,19 @@ public class Environment {
   public PVector getTileSize() {
     return tileSize;
   }
-  
-  private Environment() {
+
+  public Environment(PApplet parent, PVector resolution, PVector numTiles) {
+    this.parent = parent;
+    this.width = (int)resolution.x;
+    this.height = (int)resolution.y;
+    this.numTiles = numTiles;
+
     obstacles = new ArrayList<>();
     invalidNodes = new HashSet<>();
     utility = new Utility();
-    //graphSearch = new GraphSearch(this, (int)(numTiles.x * numTiles.y));
-  }
-
-  public Environment(PApplet parent, int width, int height) {
-    this();
-    this.parent = parent;
-    this.width = width;
-    this.height = height;
+    makeTiles((int)numTiles.x, (int)numTiles.y);
+    createObstacles();
+    buildGraph();
   }
   
   public void makeTiles(int numTilesX, int numTilesY) {
@@ -81,16 +80,6 @@ public class Environment {
       PVector obstacleColor = obstacle.getObstacleColor();
       parent.fill(obstacleColor.x, obstacleColor.y, obstacleColor.z);
       parent.rect(corner.x, corner.y, size.x, size.y);
-    }
-    parent.popMatrix();
-  }
-  
-  public void drawNodes() {
-    parent.pushMatrix();
-    parent.fill(250, 250, 250);
-    for (Map.Entry<Integer, Utility.NodeInfo> entry : nodesList.entrySet()) {
-      Utility.NodeInfo nodeInfo = entry.getValue();
-      parent.rect(nodeInfo.getGridX() * tileSize.x, nodeInfo.getGridY() * tileSize.y, tileSize.x, tileSize.y);
     }
     parent.popMatrix();
   }
@@ -150,4 +139,7 @@ public class Environment {
     this.player = player;
   }
 
+  public GraphSearch getNewGraphSearch() {
+    return (new GraphSearch(this, (int)(numTiles.x * numTiles.y)));
+  }
 }

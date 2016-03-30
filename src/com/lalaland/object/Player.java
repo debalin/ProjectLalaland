@@ -22,7 +22,7 @@ public class Player extends GameObject {
     TIME_TARGET_ROT = 7;
     MAX_VELOCITY = 2;
     LEFT = RIGHT = UP = DOWN = false;
-    bullets = new LinkedList<Bullet>();
+    bullets = new LinkedList<>();
   }
   
   @Override

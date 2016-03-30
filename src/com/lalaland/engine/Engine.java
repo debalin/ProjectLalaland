@@ -18,13 +18,8 @@ public class Engine extends PApplet {
   private static final PVector NUM_TILES = new PVector(80, 80);
   
   private Environment environment;
-  private GraphSearch graphSearch;
   private Player player;
   private List<Enemy> enemies;
-  
-  public enum NotReachable {
-    ON_OBSTACLE, NO_PATH, FALSE
-  };
   
   public void settings() {
     size((int)RESOLUTION.x, (int)RESOLUTION.y, P3D);
@@ -34,16 +29,12 @@ public class Engine extends PApplet {
   public void setup() {
     noStroke();
     
-    environment = new Environment(this, (int)RESOLUTION.x, (int)RESOLUTION.y);
-    environment.makeTiles((int)NUM_TILES.x, (int)NUM_TILES.y);
-    environment.createObstacles();
-    environment.buildGraph();
+    environment = new Environment(this, RESOLUTION, NUM_TILES);
     
-    graphSearch = new GraphSearch(environment, (int)(NUM_TILES.x * NUM_TILES.y));
     player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this, environment);
     environment.setPlayer(player);
-    enemies = new LinkedList<Enemy>();
-    enemies.add(new Soldier(400, -50, this, environment));
+    enemies = new LinkedList<>();
+    enemies.add(new Soldier(400, -50, this, environment, true));
   }
   
   public static void main(String args[]) {  
@@ -54,10 +45,17 @@ public class Engine extends PApplet {
     background(BACKGROUND_RGB.x, BACKGROUND_RGB.y, BACKGROUND_RGB.z);
     
     environment.drawObstacles();
-    
+
+    controlPlayer();
+    controlEnemies();
+  }
+
+  private void controlPlayer() {
     player.move();
     player.display();
-    
+  }
+
+  private void controlEnemies() {
     Iterator<Enemy> i = enemies.iterator();
     while (i.hasNext()) {
       Enemy enemy = i.next();
