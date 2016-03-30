@@ -1,7 +1,6 @@
 package com.lalaland.object;
 
 import processing.core.*;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class Player extends GameObject {
     TIME_TARGET_ROT = 7;
     MAX_VELOCITY = 2;
     LEFT = RIGHT = UP = DOWN = false;
-    bullets = (List<Bullet>)Collections.synchronizedList(new LinkedList<Bullet>());
+    bullets = new LinkedList<Bullet>();
   }
   
   @Override
@@ -48,17 +47,15 @@ public class Player extends GameObject {
   }
   
   private void controlBullets() {
-    synchronized (bullets) {
-      Iterator<Bullet> i = bullets.iterator();
-      while (i.hasNext()) {
-        Bullet bullet = i.next();
-        if (!environment.outOfBounds(bullet.getPosition())) {
-          bullet.move();
-          bullet.display();
-        }
-        else {
-          i.remove();
-        }
+    Iterator<Bullet> i = bullets.iterator();
+    while (i.hasNext()) {
+      Bullet bullet = i.next();
+      if (!environment.outOfBounds(bullet.getPosition()) && !environment.onObstacle(bullet.getPosition())) {
+        bullet.move();
+        bullet.display();
+      }
+      else {
+        i.remove();
       }
     }
     Logger.log("Number of bullets = " + bullets.size());
