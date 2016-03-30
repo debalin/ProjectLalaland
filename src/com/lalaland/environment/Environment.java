@@ -4,6 +4,7 @@ import processing.core.*;
 import java.util.*;
 
 import com.lalaland.engine.*;
+import com.lalaland.object.Player;
 import com.lalaland.utility.*;
 
 public class Environment {
@@ -18,6 +19,7 @@ public class Environment {
   private Utility utility;
   private PVector targetPosition;
   private float targetAlpha, signToggle;
+  private Player player;
   
   private static final int TARGET_RADIUS = 7;
   private static final PVector TARGET_COLOR = new PVector(250, 50, 50);
@@ -174,6 +176,14 @@ public class Environment {
     if (position.y >= height || position.y <= 0)
       return true;
     return false;
+  }
+
+  public Player getPlayer() {
+    return player;
+  }
+
+  public void setPlayer(Player player) {
+    this.player = player;
   }
 
 }

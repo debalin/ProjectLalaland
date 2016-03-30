@@ -2,6 +2,10 @@ package com.lalaland.engine;
 
 import processing.core.*;
 
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.lalaland.environment.*;
 import com.lalaland.object.*;
 
@@ -16,7 +20,7 @@ public class Engine extends PApplet {
   private Environment environment;
   private GraphSearch graphSearch;
   private Player player;
-  private NotReachable notReachable;
+  private List<Enemy> enemies;
   
   public enum NotReachable {
     ON_OBSTACLE, NO_PATH, FALSE
@@ -37,7 +41,9 @@ public class Engine extends PApplet {
     
     graphSearch = new GraphSearch(environment, (int)(NUM_TILES.x * NUM_TILES.y));
     player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this, environment);
-    notReachable = NotReachable.FALSE;
+    environment.setPlayer(player);
+    enemies = new LinkedList<Enemy>();
+    enemies.add(new Soldier(400, -50, this, environment));
   }
   
   public static void main(String args[]) {  
@@ -48,10 +54,18 @@ public class Engine extends PApplet {
     background(BACKGROUND_RGB.x, BACKGROUND_RGB.y, BACKGROUND_RGB.z);
     
     environment.drawObstacles();
-    environment.drawTarget(notReachable);
     
     player.move();
     player.display();
+    
+    Iterator<Enemy> i = enemies.iterator();
+    while (i.hasNext()) {
+      Enemy enemy = i.next();
+      if (enemy.isAlive()) {
+        enemy.move();
+        enemy.display();
+      }
+    }
   }
   
   public void keyPressed() {

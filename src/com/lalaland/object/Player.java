@@ -18,7 +18,7 @@ public class Player extends GameObject {
   
   public Player(float positionX, float positionY, PApplet parent, Environment environment) {
     super(positionX, positionY, parent, environment, PLAYER_RADIUS, PLAYER_COLOR);
-    DRAW_BREADCRUMBS = true;
+    DRAW_BREADCRUMBS = false;
     TIME_TARGET_ROT = 7;
     MAX_VELOCITY = 2;
     LEFT = RIGHT = UP = DOWN = false;
@@ -44,6 +44,9 @@ public class Player extends GameObject {
     orientation = (float) Math.atan2(parent.mouseY - position.y, parent.mouseX - position.x);
     
     controlBullets();
+    
+    if (DRAW_BREADCRUMBS)
+      storeHistory();
   }
   
   private void controlBullets() {
