@@ -3,7 +3,6 @@ package com.lalaland.environment;
 import processing.core.*;
 import java.util.*;
 
-import com.lalaland.engine.*;
 import com.lalaland.object.Player;
 import com.lalaland.utility.*;
 
@@ -17,16 +16,8 @@ public class Environment {
   private Map<Integer, List<Utility.Neighbour>> adjacencyList;
   private Map<Integer, Utility.NodeInfo> nodesList;
   private Utility utility;
-  private PVector targetPosition;
-  private float targetAlpha, signToggle;
   private Player player;
-  
-  private static final int TARGET_RADIUS = 7;
-  private static final PVector TARGET_COLOR = new PVector(250, 50, 50);
-
-  public void setTargetPosition(PVector targetPosition) {
-    this.targetPosition = targetPosition;
-  }
+  private GraphSearch graphSearch;
 
   public Map<Integer, List<Utility.Neighbour>> getAdjacencyList() {
     return adjacencyList;
@@ -52,12 +43,11 @@ public class Environment {
     return tileSize;
   }
   
-  public Environment() {
-    obstacles = new ArrayList<Obstacle>();
-    invalidNodes = new HashSet<PVector>();
+  private Environment() {
+    obstacles = new ArrayList<>();
+    invalidNodes = new HashSet<>();
     utility = new Utility();
-    targetAlpha = 0f;
-    targetPosition = new PVector(-100, -100);
+    //graphSearch = new GraphSearch(this, (int)(numTiles.x * numTiles.y));
   }
 
   public Environment(PApplet parent, int width, int height) {
@@ -105,7 +95,7 @@ public class Environment {
     parent.popMatrix();
   }
   
-  public void formInvalidNodes() {
+  private void formInvalidNodes() {
     for (Obstacle obstacle : obstacles) {
       for (PVector tileLocation : obstacle.getTileLocations()) {
         invalidNodes.add(tileLocation);
@@ -132,29 +122,6 @@ public class Environment {
     parent.popMatrix();
   }
   
-  public void drawTarget(Engine.NotReachable notReachable) {
-    switch (notReachable) {
-    case NO_PATH:
-      Utility.drawText("Path not found.", 105f, height - 30f, parent);
-      break;
-    case ON_OBSTACLE:
-      Utility.drawText("Destination on obstacle, path not reachable.", 210f, height - 30f, parent);
-      break;
-    case FALSE:
-      parent.pushMatrix();
-      parent.fill(TARGET_COLOR.x, TARGET_COLOR.y, TARGET_COLOR.z, targetAlpha);
-      parent.ellipse(targetPosition.x, targetPosition.y, TARGET_RADIUS, TARGET_RADIUS);
-      parent.popMatrix();
-  
-      if (targetAlpha <= 0.0)
-        signToggle = 5;
-      else if (targetAlpha >= 255.0)
-        signToggle = -5;
-      targetAlpha += signToggle;
-      break;
-    }
-  }
-  
   public void buildGraph() {
     adjacencyList = utility.buildGraph(invalidNodes, numTiles);
     nodesList = utility.getNodesList();
@@ -163,11 +130,8 @@ public class Environment {
   public boolean onObstacle(PVector position) {
     int gridX = (int)(position.x / tileSize.x);
     int gridY = (int)(position.y / tileSize.y);
-    
-    if (invalidNodes.contains(new PVector(gridX, gridY))) {
-      return true;
-    }
-    return false;
+
+    return invalidNodes.contains(new PVector(gridX, gridY));
   }
   
   public boolean outOfBounds(PVector position) {
