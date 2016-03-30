@@ -44,6 +44,7 @@ public abstract class GameObject {
     
     history = new HashSet<PVector>();
     interval = 0;
+    DRAW_BREADCRUMBS = false;
     
     position = new PVector(positionX, positionY);
     velocity = new PVector();

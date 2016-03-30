@@ -61,5 +61,9 @@ public class Engine extends PApplet {
   public void keyReleased() {
     player.setDirection(key, false);
   }
+  
+  public void mousePressed() {
+    player.shootBullet();
+  }
 
 }

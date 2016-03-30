@@ -167,5 +167,13 @@ public class Environment {
     }
     return false;
   }
+  
+  public boolean outOfBounds(PVector position) {
+    if (position.x >= width || position.x <= 0)
+      return true;
+    if (position.y >= height || position.y <= 0)
+      return true;
+    return false;
+  }
 
 }
