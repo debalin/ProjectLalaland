@@ -42,7 +42,7 @@ public abstract class GameObject {
     beak.setStroke(parent.color(255, 0));
     group.addChild(beak);
     
-    history = new HashSet<PVector>();
+    history = new HashSet<>();
     interval = 0;
     DRAW_BREADCRUMBS = false;
     
@@ -85,6 +85,9 @@ public abstract class GameObject {
   private void drawShape() {
     parent.pushMatrix();
     group.rotate(mapToRange(orientation - (float)(Math.PI / 2)));
+    PShape[] children = group.getChildren();
+    for (PShape child : children)
+      child.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
     parent.shape(group, position.x, position.y);
     group.resetMatrix();
     parent.popMatrix();

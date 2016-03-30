@@ -131,6 +131,18 @@ public class Environment {
     return false;
   }
 
+  public boolean inSameGrid(PVector position1, PVector position2) {
+    int gridX1 = (int)(position1.x / tileSize.x);
+    int gridY1 = (int)(position1.y / tileSize.y);
+    int gridX2 = (int)(position2.x / tileSize.x);
+    int gridY2 = (int)(position2.y / tileSize.y);
+
+    if (gridX1 == gridX2 && gridY1 == gridY2)
+      return true;
+    else
+      return false;
+  }
+
   public Player getPlayer() {
     return player;
   }

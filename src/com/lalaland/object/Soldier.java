@@ -4,16 +4,22 @@ import com.lalaland.utility.Logger;
 import processing.core.*;
 import com.lalaland.environment.*;
 
+import java.util.Iterator;
+import java.util.List;
+
 public class Soldier extends Enemy {
 
   private static final float SOLDIER_RADIUS = 7;
-  private static final PVector SOLDIER_COLOR = new PVector(146, 109, 13);
+  private static final PVector SOLDIER_COLOR = new PVector(112, 241, 252);
   private static final int PATH_FIND_INTERVAL = 1000;
+  private static final int LIFE_THRESHOLD = 30;
+  private static final float FLEE_VELOCITY = 2;
 
   private int pathFindStart, pathFindStep;
+  private boolean fleeing;
   
   public Soldier(float positionX, float positionY, PApplet parent, Environment environment, boolean PATH_FIND) {
-    super(positionX, positionY, parent, environment, SOLDIER_RADIUS, SOLDIER_COLOR);
+    super(positionX, positionY, parent, environment, SOLDIER_RADIUS, SOLDIER_COLOR.copy());
     POSITION_MATCHING = true;
     DRAW_BREADCRUMBS = false;
     TIME_TARGET_ROT = 7;
@@ -23,15 +29,51 @@ public class Soldier extends Enemy {
     targetPosition = new PVector(position.x, position.y);
     this.PATH_FIND = PATH_FIND;
     pathFindStart = pathFindStep = 0;
+    lifeReductionRate = 5;
+    fleeing = false;
   }
 
   @Override
   public void move() {
+    updateLife();
+    System.out.println(life);
+
+    if (life <= LIFE_THRESHOLD) {
+      fleeing = true;
+      flee();
+    }
+    else {
+      fleeing = false;
+      targetPosition.x = environment.getPlayer().getPosition().x;
+      targetPosition.y = environment.getPlayer().getPosition().y;
+    }
+    if (POSITION_MATCHING)
+      movePositionMatching();
+  }
+
+  private void updateLife() {
+    List<Bullet> bullets = environment.getPlayer().getBullets();
+    synchronized (bullets) {
+      Iterator<Bullet> i = bullets.iterator();
+      while (i.hasNext()) {
+        Bullet bullet = i.next();
+        if (environment.inSameGrid(bullet.getPosition(), position)) {
+          life -= lifeReductionRate;
+          IND_COLOR.x = (IND_COLOR.x >= 255) ? 255 : IND_COLOR.x + 15;
+          IND_COLOR.y = (IND_COLOR.y >= 255) ? 255 : IND_COLOR.y - 15;
+          IND_COLOR.z = (IND_COLOR.z >= 255) ? 255 : IND_COLOR.z - 15;
+          i.remove();
+        }
+      }
+    }
+  }
+
+  private void flee() {
     if (PATH_FIND) {
       if (pathFindStart == 0)
         pathFindStart = parent.millis();
       if (parent.millis() > pathFindStart + PATH_FIND_INTERVAL * pathFindStep) {
-        pathFindToPlayer();
+        pathFindToCover();
         pathFindStep++;
       }
       if (solutionPath != null && solutionPath.size() != 0 && reached) {
@@ -42,15 +84,9 @@ public class Soldier extends Enemy {
         targetPosition.y = gridY * environment.getTileSize().y + environment.getTileSize().y / 2;
       }
     }
-    else {
-      //write obstacle avoidance code, just set target position
-    }
-
-    if (POSITION_MATCHING)
-      movePositionMatching();
   }
 
-  private void pathFindToPlayer() {
+  private void pathFindToCover() {
     PVector playerPosition = environment.getPlayer().getPosition();
 
     int originX = (int)(position.x / environment.getTileSize().x);
@@ -89,9 +125,15 @@ public class Soldier extends Enemy {
     acceleration = PVector.sub(targetPosition, position);
     acceleration.setMag(MAX_ACCELERATION);
     velocity.add(acceleration);
-    
-    if (velocity.mag() >= MAX_VELOCITY)
-      velocity.setMag(MAX_VELOCITY);
+
+    if (fleeing) {
+      if (velocity.mag() >= FLEE_VELOCITY)
+        velocity.setMag(FLEE_VELOCITY);
+    }
+    else {
+      if (velocity.mag() >= MAX_VELOCITY)
+        velocity.setMag(MAX_VELOCITY);
+    }
     position.add(velocity);
     
     targetOrientation = velocity.heading(); 

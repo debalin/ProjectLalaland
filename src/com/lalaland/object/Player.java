@@ -1,6 +1,8 @@
 package com.lalaland.object;
 
 import processing.core.*;
+
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +24,7 @@ public class Player extends GameObject {
     TIME_TARGET_ROT = 7;
     MAX_VELOCITY = 2;
     LEFT = RIGHT = UP = DOWN = false;
-    bullets = new LinkedList<>();
+    bullets = Collections.synchronizedList(new LinkedList<>());
   }
   
   @Override
@@ -50,18 +52,19 @@ public class Player extends GameObject {
   }
   
   private void controlBullets() {
-    Iterator<Bullet> i = bullets.iterator();
-    while (i.hasNext()) {
-      Bullet bullet = i.next();
-      if (!environment.outOfBounds(bullet.getPosition()) && !environment.onObstacle(bullet.getPosition())) {
-        bullet.move();
-        bullet.display();
-      }
-      else {
-        i.remove();
+    synchronized (bullets) {
+      Iterator<Bullet> i = bullets.iterator();
+      while (i.hasNext()) {
+        Bullet bullet = i.next();
+        if (!environment.outOfBounds(bullet.getPosition()) && !environment.onObstacle(bullet.getPosition())) {
+          bullet.move();
+          bullet.display();
+        } else {
+          i.remove();
+        }
       }
     }
-    Logger.log("Number of bullets = " + bullets.size());
+    Logger.log("Number of bullets = " + getBullets().size());
   }
   
   public void setDirection(int key, boolean set) {
@@ -86,7 +89,10 @@ public class Player extends GameObject {
   }
   
   public void shootBullet() {
-    bullets.add(new Bullet(position.x, position.y, orientation, parent, 3, new PVector(255, 0, 0)));
+    getBullets().add(new Bullet(position.x, position.y, orientation, parent, 3, new PVector(255, 0, 0)));
   }
 
+  public List<Bullet> getBullets() {
+    return bullets;
+  }
 }
