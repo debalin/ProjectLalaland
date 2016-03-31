@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="libraries/jogl-all-natives-windows-amd64.jar"/>
 	<classpathentry kind="lib" path="libraries/jogl-all-natives-windows-i586.jar"/>
 	<classpathentry kind="lib" path="libraries/jogl-all.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
