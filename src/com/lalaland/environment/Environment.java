@@ -64,10 +64,10 @@ public class Environment {
   
   public void createObstacles() {
     PVector obstacleColor = new PVector(123, 116, 214);
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.45), (int)(numTiles.y * 0.2), (int)(numTiles.x * 0.55), (int)(numTiles.y * 0.2), this, obstacleColor)); //Top barrier
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.45), (int)(numTiles.y * 0.8), (int)(numTiles.x * 0.55), (int)(numTiles.y * 0.8), this, obstacleColor)); //Bottom barrier
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.2), (int)(numTiles.y * 0.45), (int)(numTiles.x * 0.2), (int)(numTiles.y * 0.55), this, obstacleColor)); //Left barrier
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.8), (int)(numTiles.y * 0.45), (int)(numTiles.x * 0.8), (int)(numTiles.y * 0.55), this, obstacleColor)); //Right barrier
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.45), (int)(numTiles.y * 0.2), (int)(numTiles.x * 0.55), (int)(numTiles.y * 0.2) + 2, this, obstacleColor)); //Top barrier
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.45), (int)(numTiles.y * 0.6), (int)(numTiles.x * 0.55), (int)(numTiles.y * 0.6) + 2, this, obstacleColor)); //Bottom barrier
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.2), (int)(numTiles.y * 0.45), (int)(numTiles.x * 0.2) + 2, (int)(numTiles.y * 0.55), this, obstacleColor)); //Left barrier
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.6), (int)(numTiles.y * 0.45), (int)(numTiles.x * 0.6) + 2, (int)(numTiles.y * 0.55), this, obstacleColor)); //Right barrier
     
     formInvalidNodes();
   }
@@ -141,6 +141,19 @@ public class Environment {
       return true;
     else
       return false;
+  }
+
+  public Obstacle getNearestObstacle(PVector position) {
+    Obstacle nearestObstacle = null;
+    float minimumDistance = 999999;
+    for (Obstacle obstacle : obstacles) {
+      float distance = PVector.dist(obstacle.getCenterPosition(), position);
+      if (distance < minimumDistance) {
+        minimumDistance = distance;
+        nearestObstacle = obstacle;
+      }
+    }
+    return nearestObstacle;
   }
 
   public Player getPlayer() {

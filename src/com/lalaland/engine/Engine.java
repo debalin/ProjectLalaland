@@ -34,9 +34,13 @@ public class Engine extends PApplet {
     player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this, environment);
     environment.setPlayer(player);
     enemies = new LinkedList<>();
-    enemies.add(new Soldier(400, -50, this, environment, true));
-    enemies.add(new Enemy_Grunt(200, 50, this, environment));
-    enemies.add(new Enemy_Hermit(300, 50, this, environment));
+
+
+//    enemies.add(new Enemy_Grunt(200, 50, this, environment));
+//    enemies.add(new Enemy_Hermit(300, 50, this, environment));
+
+    enemies.add(new Soldier(400, -50, this, environment));
+
   }
   
   public static void main(String args[]) {  

@@ -12,6 +12,9 @@ public class Obstacle {
   private List<PVector> tileLocations;
   private Environment environment;
   private PVector obstacleColor;
+  private PVector firstGrid;
+  private PVector lastGrid;
+  private PVector centerPosition;
   
   public PVector getCorner() {
     return corner;
@@ -24,21 +27,16 @@ public class Obstacle {
   public List<PVector> getTileLocations() {
     return tileLocations;
   }
-
-  public void setTileLocations(List<PVector> tileLocations) {
-    this.tileLocations = tileLocations;
-  }
-  
-  public Obstacle() {
-    tileLocations = new ArrayList<PVector>();
-  }
   
   public Obstacle(int firstGridX, int firstGridY, int lastGridX, int lastGridY, Environment environment, PVector obstacleColor) {
-    this();
+    tileLocations = new ArrayList<>();
     this.environment = environment;
     this.obstacleColor = obstacleColor;
-    
-    Logger.log("Creating obstacle.");
+    this.firstGrid = new PVector(firstGridX, firstGridY);
+    this.lastGrid = new PVector(lastGridX, lastGridY);
+    PVector centerPosition1 = new PVector(firstGridX * environment.getTileSize().x + environment.getTileSize().x / 2, firstGridY * environment.getTileSize().y + environment.getTileSize().y / 2);
+    PVector centerPosition2 = new PVector(lastGridX * environment.getTileSize().x + environment.getTileSize().x / 2, lastGridY * environment.getTileSize().y + environment.getTileSize().y / 2);
+    centerPosition = new PVector((centerPosition1.x + centerPosition2.x) / 2, (centerPosition1.y + centerPosition2.y) / 2);
     
     for (int i = firstGridY; i <= lastGridY; i++) {
       for (int j = firstGridX; j <= lastGridX; j++) {
@@ -60,5 +58,8 @@ public class Obstacle {
     float height = (tileLocations.get(tileLocations.size() - 1).y - tileLocations.get(0).y + 1) * environment.getTileSize().y;
     size = new PVector(width, height);
   }
-  
+
+  public PVector getCenterPosition() {
+    return centerPosition;
+  }
 }
