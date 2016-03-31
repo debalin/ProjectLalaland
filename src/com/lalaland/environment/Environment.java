@@ -143,6 +143,19 @@ public class Environment {
       return false;
   }
 
+  public Obstacle getNearestObstacle(PVector position) {
+    Obstacle nearestObstacle = null;
+    float minimumDistance = 999999;
+    for (Obstacle obstacle : obstacles) {
+      float distance = PVector.dist(obstacle.getCenterPosition(), position);
+      if (distance < minimumDistance) {
+        minimumDistance = distance;
+        nearestObstacle = obstacle;
+      }
+    }
+    return nearestObstacle;
+  }
+
   public Player getPlayer() {
     return player;
   }

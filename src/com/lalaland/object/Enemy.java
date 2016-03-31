@@ -17,7 +17,6 @@ public abstract class Enemy extends GameObject {
   protected LinkedList<Integer> solutionPath;
   protected float RADIUS_SATISFACTION;
   protected float MAX_ACCELERATION;
-  protected boolean PATH_FIND;
   protected int life;
   protected int lifeReductionRate;
 

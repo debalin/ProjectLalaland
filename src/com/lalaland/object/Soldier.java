@@ -11,14 +11,14 @@ public class Soldier extends Enemy {
 
   private static final float SOLDIER_RADIUS = 7;
   private static final PVector SOLDIER_COLOR = new PVector(112, 241, 252);
-  private static final int PATH_FIND_INTERVAL = 1000;
-  private static final int LIFE_THRESHOLD = 30;
-  private static final float FLEE_VELOCITY = 2;
+  private static final int LIFE_THRESHOLD = 50;
+  private static final float FLEE_VELOCITY = 3;
+  private static final int OBSTACLE_OFFSET = 20;
 
-  private int pathFindStart, pathFindStep;
   private boolean fleeing;
+  private boolean PATH_FIND;
   
-  public Soldier(float positionX, float positionY, PApplet parent, Environment environment, boolean PATH_FIND) {
+  public Soldier(float positionX, float positionY, PApplet parent, Environment environment) {
     super(positionX, positionY, parent, environment, SOLDIER_RADIUS, SOLDIER_COLOR.copy());
     POSITION_MATCHING = true;
     DRAW_BREADCRUMBS = false;
@@ -27,10 +27,9 @@ public class Soldier extends Enemy {
     MAX_VELOCITY = 1;
     MAX_ACCELERATION = 0.5f;
     targetPosition = new PVector(position.x, position.y);
-    this.PATH_FIND = PATH_FIND;
-    pathFindStart = pathFindStep = 0;
     lifeReductionRate = 5;
     fleeing = false;
+    PATH_FIND = false;
   }
 
   @Override
@@ -69,39 +68,55 @@ public class Soldier extends Enemy {
   }
 
   private void flee() {
-    if (PATH_FIND) {
-      if (pathFindStart == 0)
-        pathFindStart = parent.millis();
-      if (parent.millis() > pathFindStart + PATH_FIND_INTERVAL * pathFindStep) {
-        pathFindToCover();
-        pathFindStep++;
+    if (!PATH_FIND) {
+      Obstacle coverObstacle = environment.getNearestObstacle(position);
+      PVector left, right, up, down;
+      left = new PVector(coverObstacle.getCenterPosition().x - coverObstacle.getSize().x / 2, coverObstacle.getCenterPosition().y);
+      right = new PVector(coverObstacle.getCenterPosition().x + coverObstacle.getSize().x / 2, coverObstacle.getCenterPosition().y);
+      up = new PVector(coverObstacle.getCenterPosition().x, coverObstacle.getCenterPosition().y - coverObstacle.getSize().y / 2);
+      down = new PVector(coverObstacle.getCenterPosition().x, coverObstacle.getCenterPosition().y + coverObstacle.getSize().y / 2);
+      float minimumDistance = 99999;
+      PVector pointToFleeTo = new PVector();
+      if (PVector.dist(left, environment.getPlayer().getPosition()) < minimumDistance) {
+        minimumDistance = PVector.dist(left, environment.getPlayer().getPosition());
+        pointToFleeTo.x = right.x + OBSTACLE_OFFSET;
+        pointToFleeTo.y = right.y;
       }
-      if (solutionPath != null && solutionPath.size() != 0 && reached) {
-        int node = solutionPath.poll();
-        int gridY = (int) (node / environment.getNumTiles().x);
-        int gridX = (int) (node % environment.getNumTiles().x);
-        targetPosition.x = gridX * environment.getTileSize().x + environment.getTileSize().x / 2;
-        targetPosition.y = gridY * environment.getTileSize().y + environment.getTileSize().y / 2;
+      if (PVector.dist(right, environment.getPlayer().getPosition()) < minimumDistance) {
+        minimumDistance = PVector.dist(right, environment.getPlayer().getPosition());
+        pointToFleeTo.x = left.x - OBSTACLE_OFFSET;
+        pointToFleeTo.y = left.y;
       }
+      if (PVector.dist(up, environment.getPlayer().getPosition()) < minimumDistance) {
+        minimumDistance = PVector.dist(up, environment.getPlayer().getPosition());
+        pointToFleeTo.x = down.x;
+        pointToFleeTo.y = down.y + OBSTACLE_OFFSET;
+      }
+      if (PVector.dist(down, environment.getPlayer().getPosition()) < minimumDistance) {
+        pointToFleeTo.x = up.x;
+        pointToFleeTo.y = up.y - OBSTACLE_OFFSET;
+      }
+      PATH_FIND = true;
+      pathFindToCover(pointToFleeTo);
+    }
+
+    if (solutionPath != null && solutionPath.size() != 0 && reached) {
+      int node = solutionPath.poll();
+      int gridY = (int) (node / environment.getNumTiles().x);
+      int gridX = (int) (node % environment.getNumTiles().x);
+      targetPosition.x = gridX * environment.getTileSize().x + environment.getTileSize().x / 2;
+      targetPosition.y = gridY * environment.getTileSize().y + environment.getTileSize().y / 2;
     }
   }
 
-  private void pathFindToCover() {
-    PVector playerPosition = environment.getPlayer().getPosition();
-
+  private void pathFindToCover(PVector pointToFleeTo) {
     int originX = (int)(position.x / environment.getTileSize().x);
     int originY = (int)(position.y / environment.getTileSize().y);
     int originNode = originY * (int)environment.getNumTiles().x + originX;
 
-    int destinationX = (int)(playerPosition.x / environment.getTileSize().x);
-    int destinationY = (int)(playerPosition.y / environment.getTileSize().y);
+    int destinationX = (int)(pointToFleeTo.x / environment.getTileSize().x);
+    int destinationY = (int)(pointToFleeTo.y / environment.getTileSize().y);
     int destinationNode = destinationY * (int)environment.getNumTiles().x + destinationX;
-
-    if (environment.onObstacle(position) || environment.outOfBounds(position) || environment.onObstacle(playerPosition) || environment.outOfBounds(playerPosition)) {
-      targetPosition.x = playerPosition.x;
-      targetPosition.y = playerPosition.y;
-      return;
-    }
 
     if (graphSearch.search(originNode, destinationNode, searchType)) {
       solutionPath =  graphSearch.getSolutionPath();
