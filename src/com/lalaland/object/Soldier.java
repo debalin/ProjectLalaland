@@ -30,7 +30,7 @@ public class Soldier extends Enemy {
     this.PATH_FIND = PATH_FIND;
     pathFindStart = pathFindStep = 0;
     lifeReductionRate = 5;
-    fleeing = false;
+    fleeing = false;    
   }
 
   @Override
