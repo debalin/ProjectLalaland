@@ -1,11 +1,16 @@
 package com.lalaland.object;
 
-import com.lalaland.utility.Logger;
-import processing.core.*;
-import com.lalaland.environment.*;
-
 import java.util.Iterator;
 import java.util.List;
+
+import com.lalaland.environment.Environment;
+import com.lalaland.steering.LookWhereYoureGoing;
+import com.lalaland.steering.Seek;
+import com.lalaland.steering.SteeringOutput;
+import com.lalaland.utility.Logger;
+
+import processing.core.PApplet;
+import processing.core.PVector;
 
 public class Soldier extends Enemy {
 
@@ -22,7 +27,7 @@ public class Soldier extends Enemy {
     super(positionX, positionY, parent, environment, SOLDIER_RADIUS, SOLDIER_COLOR.copy());
     POSITION_MATCHING = true;
     DRAW_BREADCRUMBS = false;
-    TIME_TARGET_ROT = 7;
+    TIME_TARGET_ROT = 20;
     RADIUS_SATISFACTION = 5;
     MAX_VELOCITY = 1;
     MAX_ACCELERATION = 0.5f;
@@ -114,7 +119,12 @@ public class Soldier extends Enemy {
   }
   
   private void movePositionMatching() {
-    if (position.dist(targetPosition) <= RADIUS_SATISFACTION) {
+  	Kinematic target = new Kinematic(targetPosition, null, 0, 0);
+  	
+  	SteeringOutput steering = Seek.getSteering((Kinematic) this, target, MAX_ACCELERATION, RADIUS_SATISFACTION);
+    steering.angular = LookWhereYoureGoing.getSteering((Kinematic) this, target, TIME_TARGET_ROT).angular;
+    
+  	if (steering.linear.mag() == 0) {
       velocity.set(0, 0);
       acceleration.set(0, 0);
       reached = true;
@@ -122,9 +132,7 @@ public class Soldier extends Enemy {
     }
     reached = false;
     
-    acceleration = PVector.sub(targetPosition, position);
-    acceleration.setMag(MAX_ACCELERATION);
-    velocity.add(acceleration);
+    velocity.add(steering.linear);
 
     if (fleeing) {
       if (velocity.mag() >= FLEE_VELOCITY)
@@ -136,12 +144,9 @@ public class Soldier extends Enemy {
     }
     position.add(velocity);
     
-    targetOrientation = velocity.heading(); 
-    rotation = (targetOrientation - orientation) / TIME_TARGET_ROT;
-    orientation += rotation;
+    orientation += steering.angular;
     
     if (DRAW_BREADCRUMBS)
       storeHistory();
   }
-
 }

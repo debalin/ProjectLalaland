@@ -5,10 +5,8 @@ import java.util.*;
 
 import com.lalaland.environment.*;
 
-public abstract class GameObject {
+public abstract class GameObject extends Kinematic {
   
-  protected PVector position, velocity;
-  protected float orientation, rotation;
   protected float targetOrientation;
   protected PApplet parent;
   protected PShape group, head, beak;
