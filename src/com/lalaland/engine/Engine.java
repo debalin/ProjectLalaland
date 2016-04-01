@@ -11,7 +11,9 @@ import com.lalaland.object.*;
 
 public class Engine extends PApplet {
   
-  private static final PVector RESOLUTION = new PVector(800, 800);
+	public static float time = 0f;
+  public static final PVector RESOLUTION = new PVector(800, 800);
+  
   private static final int SMOOTH_FACTOR = 4;
   private static final PVector BACKGROUND_RGB = new PVector(60, 60, 60);
   private static final PVector PLAYER_INITIAL_POSITION = new PVector(RESOLUTION.x / 2, RESOLUTION.y / 2);
@@ -48,6 +50,7 @@ public class Engine extends PApplet {
   }
   
   public void draw() {
+  	time = millis();
     background(BACKGROUND_RGB.x, BACKGROUND_RGB.y, BACKGROUND_RGB.z);
     
     environment.drawObstacles();

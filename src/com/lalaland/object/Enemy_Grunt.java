@@ -37,7 +37,7 @@ public class Enemy_Grunt extends Enemy {
 	public void move() {
 		
 		updateLife();
-    System.out.println(life);
+//    System.out.println(life);
 
     if (life <= LIFE_THRESHOLD) {
       alive = false;
