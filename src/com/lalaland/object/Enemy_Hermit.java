@@ -38,8 +38,6 @@ public class Enemy_Hermit extends Enemy {
 	public void move() {
 
 		updateLife();
-    System.out.println(life);
-
     if (life <= LIFE_THRESHOLD) {
       alive = false;
     }
@@ -92,10 +90,10 @@ public class Enemy_Hermit extends Enemy {
 	  
 	    //update position vectors
 	    //check if colliding
-	    handleObstacleAvoidance();
-	    position.add(velocity);
-	    if (velocity.mag() >= MAX_VELOCITY)
-	      velocity.setMag(MAX_VELOCITY);
+	    boolean onObstacle = handleObstacleAvoidance();
+	    if(!onObstacle)
+	    	position.add(velocity);
+	    
 
 	    //handle behavior near window boundary
 	    if(position.x < 0 + HERMIT_PADDING){
@@ -119,54 +117,5 @@ public class Enemy_Hermit extends Enemy {
 	      updateVelocityPerOrientation();
 	    }
 		}
-		
-		private void handleObstacleAvoidance(){
-			PVector future_ray1 = PVector.add(position, PVector.mult(velocity, 0.5f));;
-			PVector future_ray2 = PVector.add(position, PVector.mult(velocity, 1));;
-			PVector future_ray3 = PVector.add(position, PVector.mult(velocity, 1.5f));;
-			PVector future_ray4 = PVector.add(position, PVector.mult(velocity, 2));;
-			if (environment.onObstacle(future_ray1) || environment.onObstacle(future_ray2) || environment.onObstacle(future_ray3) || environment.onObstacle(future_ray4)){
-				avoidObstacle();
-			}
-		}
-		
-		private void avoidObstacle(){
-			float avoidance_orient = (parent.random(1)>0)?PConstants.PI:-PConstants.PI;
-	    rotateShapeDirection(avoidance_orient);
-//	    if(USE_ACCEL)
-//	      rotationInProg = true;
-	    updateVelocityPerOrientation();
-		}
-
-		void rotateShapeDirection(float angle){
-	    angle = scaleRotationAngle(angle);
-	    if(!USE_ACCEL)
-	      TTA = 1;
-	    angle = angle/TTA;
-	    orientation += angle;
-	    group.rotateZ(angle);
-	  }
-	 
-	 float scaleRotationAngle(float angle){
-	    angle = angle % PConstants.TWO_PI;
-	    if (Math.abs(angle) <= PConstants.PI)
-	      return angle;
-	    if(angle > PConstants.PI){
-	      angle -= PConstants.TWO_PI;
-	    }
-	    else if(angle < -PConstants.PI){
-	      angle += PConstants.TWO_PI;
-	    }
-	    return angle;
-	  } 
-	
-	private void updateVelocityPerOrientation(){
-	    velocity.x = MAX_VELOCITY*PApplet.cos(orientation);
-	    velocity.y = MAX_VELOCITY*PApplet.sin(orientation);
-	  }
-	
-	private float RandomBinomial(){
-	    return  parent.random(0,1) - parent.random(0,1);
-	}  
 
 }

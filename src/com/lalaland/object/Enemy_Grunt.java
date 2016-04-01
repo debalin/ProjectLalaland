@@ -10,35 +10,28 @@ import processing.core.PConstants;
 import processing.core.PVector;
 
 public class Enemy_Grunt extends Enemy {
-	private static final float GRUNT_RADIUS = 9;
-	private static final float GRUNT_PADDING = GRUNT_RADIUS*2.0f;
+	private static final float GRUNT_RADIUS = 7;
 	private static final PVector GRUNT_COLOR = new PVector(230, 115, 0);
-	private static final int LIFE_THRESHOLD = 80;
+	private static final int LIFE_THRESHOLD = 5;
 	
 	private int randomiser_counter = 0;
-	private int randomiser_limit = 200;
-	private float TTA = 26;
-	private boolean USE_ACCEL = true;
-	private float br_angle = PConstants.PI;
-	
-	private boolean rotationInProg = false;
-  int rotcounter = 0;
-  float rand_orient;
+	private int randomiser_limit = 30;	
+	private int rotcounter = 0;
+  private float rand_orient;
+  private float TTA = 120;
+	private boolean rotationInProg = false;	
+	private boolean USE_ACCEL = true;	  
 	
 	public Enemy_Grunt(float positionX, float positionY, PApplet parent, Environment environment) {
 		super(positionX, positionY, parent, environment, GRUNT_RADIUS, GRUNT_COLOR);
 		DRAW_BREADCRUMBS = false;
-		TIME_TARGET_ROT = 7;
 		MAX_VELOCITY = 1.0f;
-		lifeReductionRate = 5;		
+		lifeReductionRate = 5;
 	}
 
 	@Override
-	public void move() {
-		
+	public void move() {		
 		updateLife();
-    System.out.println(life);
-
     if (life <= LIFE_THRESHOLD) {
       alive = false;
     }
@@ -71,53 +64,16 @@ public class Enemy_Grunt extends Enemy {
     }
   
     //update position vectors
-    //check if colliding
-    handleObstacleAvoidance();
-    position.add(velocity);
-    if (velocity.mag() >= MAX_VELOCITY)
-      velocity.setMag(MAX_VELOCITY);
-
+    //check if colliding, returns if future position is on obstacle
+    boolean onObstacle = handleObstacleAvoidance();
+    if(!onObstacle)
+    	position.add(velocity);
+    
     //handle behavior near window boundary
-    if(position.x < 0 + GRUNT_PADDING){
-    	position.x = GRUNT_PADDING;
-      rotateShapeDirection(br_angle);
-      updateVelocityPerOrientation();
-    }
-    else if(position.x > parent.width - GRUNT_PADDING){
-    	position.x = parent.width - GRUNT_PADDING; 
-      rotateShapeDirection(br_angle);
-      updateVelocityPerOrientation();
-    }    
-    else if(position.y < 0 + GRUNT_PADDING){
-    	position.y = GRUNT_PADDING;
-      rotateShapeDirection(br_angle);
-      updateVelocityPerOrientation();
-    }
-    else if(position.y > parent.height - GRUNT_PADDING){
-    	position.y = parent.height - GRUNT_PADDING; 
-      rotateShapeDirection(br_angle);
-      updateVelocityPerOrientation();
-    }
+    avoidBoundary();
 	}
 	
-	private void handleObstacleAvoidance(){
-		PVector future_ray1 = PVector.add(position, PVector.mult(velocity, 10f));;
-		PVector future_ray2 = PVector.add(position, PVector.mult(velocity, 15f));;
-		PVector future_ray3 = PVector.add(position, PVector.mult(velocity, 12f));;
-		PVector future_ray4 = PVector.add(position, PVector.mult(velocity, 13f));;
-		if (environment.onObstacle(future_ray1) || environment.onObstacle(future_ray2) || environment.onObstacle(future_ray3) || environment.onObstacle(future_ray4)){
-			avoidObstacle();
-		}
-	}
-	
-	private void avoidObstacle(){
-		float avoidance_orient = (parent.random(1)>0)?PConstants.PI:-PConstants.PI;
-    rotateShapeDirection(avoidance_orient);
-//    if(USE_ACCEL)
-//      rotationInProg = true;
-    updateVelocityPerOrientation();
-	}
-	
+
 	private void updateLife() {
     List<Bullet> bullets = environment.getPlayer().getBullets();
     synchronized (bullets) {
@@ -134,36 +90,5 @@ public class Enemy_Grunt extends Enemy {
       }
     }
   }
-	
-	 void rotateShapeDirection(float angle){
-	    angle = scaleRotationAngle(angle);
-	    if(!USE_ACCEL)
-	      TTA = 1;
-	    angle = angle/TTA;
-	    orientation += angle;
-	    group.rotateZ(angle);
-	  }
-	 
-	 float scaleRotationAngle(float angle){
-	    angle = angle % PConstants.TWO_PI;
-	    if (Math.abs(angle) <= PConstants.PI)
-	      return angle;
-	    if(angle > PConstants.PI){
-	      angle -= PConstants.TWO_PI;
-	    }
-	    else if(angle < -PConstants.PI){
-	      angle += PConstants.TWO_PI;
-	    }
-	    return angle;
-	  } 
-	
-	private void updateVelocityPerOrientation(){
-	    velocity.x = MAX_VELOCITY*PApplet.cos(orientation);
-	    velocity.y = MAX_VELOCITY*PApplet.sin(orientation);
-	  }
-	
-	private float RandomBinomial(){
-	    return  parent.random(0,1) - parent.random(0,1);
-	}  
 
 }

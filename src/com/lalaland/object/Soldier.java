@@ -18,6 +18,7 @@ public class Soldier extends Enemy {
 
   private boolean fleeing;
   private boolean PATH_FIND;
+  private boolean rotationInProg = false;
   
   public Soldier(float positionX, float positionY, PApplet parent, Environment environment) {
     super(positionX, positionY, parent, environment, SOLDIER_RADIUS, SOLDIER_COLOR.copy());

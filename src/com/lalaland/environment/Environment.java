@@ -2,7 +2,6 @@ package com.lalaland.environment;
 
 import processing.core.*;
 import java.util.*;
-
 import com.lalaland.object.Player;
 import com.lalaland.utility.*;
 
