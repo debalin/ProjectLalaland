@@ -36,8 +36,8 @@ public class Engine extends PApplet {
     enemies = new LinkedList<>();
 
 
-//    enemies.add(new Enemy_Grunt(200, 50, this, environment));
-//    enemies.add(new Enemy_Hermit(300, 50, this, environment));
+    enemies.add(new Enemy_Grunt(200, 50, this, environment));
+    enemies.add(new Enemy_Hermit(300, 50, this, environment));
 
     enemies.add(new Soldier(400, -50, this, environment));
 
@@ -70,7 +70,7 @@ public class Engine extends PApplet {
         enemy.display();
       }
       else{
-      	enemies.remove(enemy);
+      	i.remove();
       }
     }
   }
