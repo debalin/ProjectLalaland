@@ -66,14 +66,12 @@ public class Environment {
     obstacles.add(new Obstacle((int)(numTiles.x * 0.23), (int)(numTiles.y * 0.35) - 1, (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.35), this, obstacleColor)); //Left Top cover point
     obstacles.add(new Obstacle((int)(numTiles.x * 0.33) - 1, (int)(numTiles.y * 0.26), (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.35) - 2, this, obstacleColor)); //Left Top cover point
 
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.35) - 1, (int)(numTiles.x * 0.75), (int)(numTiles.y * 0.35), this, obstacleColor)); //Right Top cover point
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.26), (int)(numTiles.x * 0.65) + 1, (int)(numTiles.y * 0.35) - 2, this, obstacleColor)); //Right Top cover point
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.26), (int)(numTiles.x * 0.75), (int)(numTiles.y * 0.35), this, obstacleColor)); //Right Top Box
 
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.23), (int)(numTiles.y * 0.65), (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.65) + 1, this, obstacleColor)); //Left Bottom cover point
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.33) - 1, (int)(numTiles.y * 0.65) + 2, (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.74), this, obstacleColor)); //Left Bottom cover point
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.23), (int)(numTiles.y * 0.65), (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.75), this, obstacleColor)); //Left Bottom Box
 
     obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.65), (int)(numTiles.x * 0.75), (int)(numTiles.y * 0.65) + 1, this, obstacleColor)); //Right Bottom cover point
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.65) + 2, (int)(numTiles.x * 0.65) + 1, (int)(numTiles.y * 0.74), this, obstacleColor)); //Right Bottom cover point
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.65) + 2, (int)(numTiles.x * 0.65) + 1, (int)(numTiles.y * 0.75), this, obstacleColor)); //Right Bottom cover point
     
     formInvalidNodes();
   }

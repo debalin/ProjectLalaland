@@ -39,9 +39,7 @@ public class Engine extends PApplet {
 
     //enemies.add(new Enemy_Grunt(200, 50, this, environment));
     //enemies.add(new Enemy_Hermit(300, 50, this, environment));
-
     enemies.add(new Enemy_Soldier(400, -50, this, environment));
-
   }
   
   public static void main(String args[]) {  
