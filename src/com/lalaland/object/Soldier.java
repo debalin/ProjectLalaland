@@ -5,7 +5,6 @@ import processing.core.*;
 import com.lalaland.environment.*;
 import com.lalaland.steering.*;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 public class Soldier extends Enemy {
@@ -18,6 +17,9 @@ public class Soldier extends Enemy {
 
   private boolean fleeing;
   private boolean PATH_FIND;
+  private enum States {
+    SEEK, FLEE, REGAIN_HEALTH
+  }
   
   public Soldier(float positionX, float positionY, PApplet parent, Environment environment) {
     super(positionX, positionY, parent, environment, SOLDIER_RADIUS, SOLDIER_COLOR.copy());
