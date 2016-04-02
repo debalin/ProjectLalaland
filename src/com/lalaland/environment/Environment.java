@@ -104,17 +104,6 @@ public class Environment {
     }
   }
   
-  public void drawPath(List<Integer> path) {
-    parent.pushMatrix();
-    parent.fill(102, 255, 153);
-    for (int node : path) {
-      int gridY = (int)(node / numTiles.x);
-      int gridX = (int)(node % numTiles.x);
-      parent.rect(gridX * tileSize.x, gridY * tileSize.y, tileSize.x, tileSize.y);
-    }
-    parent.popMatrix();
-  }
-  
   public void buildGraph() {
     adjacencyList = utility.buildGraph(invalidNodes, numTiles);
     nodesList = utility.getNodesList();
@@ -141,7 +130,16 @@ public class Environment {
     int gridX2 = (int)(position2.x / tileSize.x);
     int gridY2 = (int)(position2.y / tileSize.y);
 
-    if (gridX1 == gridX2 && gridY1 == gridY2)
+    int gridX1_LT = gridX1 - 1;
+    int gridY1_LT = gridY1 - 1;
+    int gridX1_RB = gridX1 + 1;
+    int gridY1_RB = gridY1 + 1;
+    /*int gridX2_LT = gridX2 - 1;
+    int gridY2_LT = gridY2 - 1;
+    int gridX2_RB = gridX2 + 1;
+    int gridY2_RB = gridY2 + 1;*/
+
+    if (gridX2 >= gridX1_LT && gridX2 <= gridX1_RB && gridY2 >= gridY1_LT && gridY2 <= gridY1_RB)
       return true;
     else
       return false;
