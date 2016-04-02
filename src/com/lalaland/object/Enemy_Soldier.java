@@ -15,10 +15,12 @@ public class Enemy_Soldier extends Enemy {
   private static final int REGAIN_THRESHOLD = 70;
   private static final float FLEE_VELOCITY = 2;
   private static final int OBSTACLE_OFFSET = 20;
+  private static final int MAX_FOLLOW_NODE_COUNT = 10;
 
   private boolean startTakingCover;
+  private int followedNodes;
   private enum States {
-    SEEK, PATH_FIND_COVER, PATH_FOLLOW_COVER, REGAIN_HEALTH
+    SEEK, PATH_FIND_COVER, PATH_FOLLOW_COVER, PATH_FIND_PLAYER, PATH_FOLLOW_PLAYER, REGAIN_HEALTH
   }
   private States state;
   private float lifeRegainRate;
@@ -33,9 +35,10 @@ public class Enemy_Soldier extends Enemy {
     MAX_VELOCITY = 1;
     MAX_ACCELERATION = 0.3f;
     targetPosition = new PVector(position.x, position.y);
-    lifeReductionRate = 10;
+    lifeReductionRate = 5;
     lifeRegainRate = 0.08f;
     startTakingCover = false;
+    followedNodes = 0;
     state = States.SEEK;
     lastCoverObstacle = null;
   }
@@ -48,6 +51,8 @@ public class Enemy_Soldier extends Enemy {
       case SEEK:
         targetPosition.x = environment.getPlayer().getPosition().x;
         targetPosition.y = environment.getPlayer().getPosition().y;
+        if (checkForObstacleAvoidance())
+          updateState(States.PATH_FIND_PLAYER);
         break;
       case PATH_FIND_COVER:
         findCover();
@@ -55,13 +60,41 @@ public class Enemy_Soldier extends Enemy {
       case PATH_FOLLOW_COVER:
         takeCover();
         break;
+      case PATH_FIND_PLAYER:
+        findPlayer();
+        break;
+      case PATH_FOLLOW_PLAYER:
+        followPathForSometime();
+        break;
       case REGAIN_HEALTH:
         regainHealth();
         break;
     }
 
-    if (POSITION_MATCHING)
-      movePositionMatching();
+    updatePosition();
+  }
+
+  private void findPlayer() {
+    PVector pointToFleeTo = targetPosition.copy();
+    pathFind(pointToFleeTo);
+    updateState(States.PATH_FOLLOW_PLAYER);
+  }
+
+  private void followPathForSometime() {
+    if (solutionPath != null && solutionPath.size() != 0 && (reached || !startTakingCover) && followedNodes <= MAX_FOLLOW_NODE_COUNT) {
+      int node = solutionPath.poll();
+      int gridY = (int) (node / environment.getNumTiles().x);
+      int gridX = (int) (node % environment.getNumTiles().x);
+      targetPosition.x = gridX * environment.getTileSize().x + environment.getTileSize().x / 2;
+      targetPosition.y = gridY * environment.getTileSize().y + environment.getTileSize().y / 2;
+      startTakingCover = true;
+      followedNodes++;
+    }
+    else if (solutionPath == null || solutionPath.size() == 0 || followedNodes > MAX_FOLLOW_NODE_COUNT) {
+      updateState(States.SEEK);
+      startTakingCover = false;
+      followedNodes = 0;
+    }
   }
 
   private void updateState(States state) {
@@ -134,7 +167,7 @@ public class Enemy_Soldier extends Enemy {
         pointToFleeTo.y -= OBSTACLE_OFFSET;
       }
     }
-    pathFindToCover(pointToFleeTo);
+    pathFind(pointToFleeTo);
     updateState(States.PATH_FOLLOW_COVER);
   }
 
@@ -153,7 +186,7 @@ public class Enemy_Soldier extends Enemy {
     }
   }
 
-  private void pathFindToCover(PVector pointToFleeTo) {
+  private void pathFind(PVector pointToFleeTo) {
     int originX = (int)(position.x / environment.getTileSize().x);
     int originY = (int)(position.y / environment.getTileSize().y);
     int originNode = originY * (int)environment.getNumTiles().x + originX;
@@ -167,19 +200,17 @@ public class Enemy_Soldier extends Enemy {
       Logger.log("Path cost is " + Double.toString(graphSearch.getPathCost()) + ".");
       Logger.log("Solution path is " + solutionPath.toString());
     }
-    else {
-      graphSearch.reset();
-    }
+    graphSearch.reset();
   }
   
-  private void movePositionMatching() {
+  private void updatePosition() {
     position.add(velocity);
 
     Kinematic target = new Kinematic(targetPosition, null, 0, 0);
     KinematicOutput kinematic;
     SteeringOutput steering = new SteeringOutput();
 
-    if (startTakingCover) {
+    if (state == States.PATH_FOLLOW_COVER || state == States.PATH_FIND_COVER) {
       kinematic = Seek.getKinematic(this, target, FLEE_VELOCITY);
       velocity = kinematic.velocity;
       if (velocity.mag() >= FLEE_VELOCITY)

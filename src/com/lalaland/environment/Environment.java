@@ -66,16 +66,16 @@ public class Environment {
   
   public void createObstacles() {
     PVector obstacleColor = new PVector(123, 116, 214);
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.23), (int)(numTiles.y * 0.35) - 2, (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.35), this, obstacleColor)); //Left Top cover point
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.25), (int)(numTiles.y * 0.35) - 2, (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.35), this, obstacleColor)); //Left Top cover point
     obstacles.add(new Obstacle((int)(numTiles.x * 0.33) - 2, (int)(numTiles.y * 0.26), (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.35) - 2, this, obstacleColor)); //Left Top cover point
 
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.26), (int)(numTiles.x * 0.75), (int)(numTiles.y * 0.35), this, obstacleColor)); //Right Top Box
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.26), (int)(numTiles.x * 0.73), (int)(numTiles.y * 0.35), this, obstacleColor)); //Right Top Box
 
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.23), (int)(numTiles.y * 0.65), (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.75), this, obstacleColor)); //Left Bottom Box
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.25), (int)(numTiles.y * 0.65), (int)(numTiles.x * 0.33), (int)(numTiles.y * 0.75), this, obstacleColor)); //Left Bottom Box
 
-    obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.65), (int)(numTiles.x * 0.75), (int)(numTiles.y * 0.65) + 2, this, obstacleColor)); //Right Bottom cover point
+    obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.65), (int)(numTiles.x * 0.73), (int)(numTiles.y * 0.65) + 2, this, obstacleColor)); //Right Bottom cover point
     obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.65) + 2, (int)(numTiles.x * 0.65) + 2, (int)(numTiles.y * 0.75), this, obstacleColor)); //Right Bottom cover point
-    
+
     formInvalidNodes();
   }
   
@@ -161,10 +161,6 @@ public class Environment {
     int gridY1_LT = gridY1 - 1;
     int gridX1_RB = gridX1 + 1;
     int gridY1_RB = gridY1 + 1;
-    /*int gridX2_LT = gridX2 - 1;
-    int gridY2_LT = gridY2 - 1;
-    int gridX2_RB = gridX2 + 1;
-    int gridY2_RB = gridY2 + 1;*/
 
     if (gridX2 >= gridX1_LT && gridX2 <= gridX1_RB && gridY2 >= gridY1_LT && gridY2 <= gridY1_RB)
       return true;

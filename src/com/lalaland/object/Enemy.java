@@ -82,7 +82,7 @@ public abstract class Enemy extends GameObject {
 		return parent.random(0, 1) - parent.random(0, 1);
 	}
 	
-	protected boolean handleObstacleAvoidance(){
+	protected boolean checkForObstacleAvoidance(){
 		PVector future_ray1 = PVector.add(position, PVector.mult(velocity, 1.5f));
 		PVector future_ray2 = PVector.add(position, PVector.mult(velocity, 3f));
 		if (
@@ -90,13 +90,12 @@ public abstract class Enemy extends GameObject {
 				environment.onObstacle(future_ray2)
 				)
 		{
-			avoidObstacle();			
 			return true;
 		}
 		return false;		
 	}
 	
-	protected void avoidObstacle(){
+	protected void avoidObstacleOnWander(){
 		float avoidance_orient = randomWallAvoidanceAngle();
     rotateShapeDirection(avoidance_orient);
     if(USE_ACCEL)
