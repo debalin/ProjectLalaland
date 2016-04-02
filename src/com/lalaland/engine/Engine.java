@@ -15,13 +15,15 @@ public class Engine extends PApplet {
   public static final PVector RESOLUTION = new PVector(800, 800);
   
   private static final int SMOOTH_FACTOR = 4;
+  private static final int BONUS_DROP_INTERVAL = 800;
   private static final PVector BACKGROUND_RGB = new PVector(60, 60, 60);
   private static final PVector PLAYER_INITIAL_POSITION = new PVector(RESOLUTION.x / 2, RESOLUTION.y / 2);
   private static final PVector NUM_TILES = new PVector(80, 80);
   
   private Environment environment;
   private Player player;
-  private List<Enemy> enemies;
+  private List<Enemy> enemies;  
+  private List<BonusItem> bonusItems;
   
   public void settings() {
     size((int)RESOLUTION.x, (int)RESOLUTION.y, P3D);
@@ -35,11 +37,14 @@ public class Engine extends PApplet {
     
     player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this, environment);
     environment.setPlayer(player);
+    
     enemies = new LinkedList<>();
-
     enemies.add(new Enemy_Grunt(200, 50, this, environment));
     enemies.add(new Enemy_Hermit(300, 50, this, environment));
     enemies.add(new Enemy_Soldier(400, -50, this, environment));
+    
+    bonusItems = new LinkedList<>();    
+    environment.setBonusItems(bonusItems);
   }
   
   public static void main(String args[]) {  
@@ -54,6 +59,8 @@ public class Engine extends PApplet {
 
     controlPlayer();
     controlEnemies();
+    controlItems();
+    spawnBonusItems();
   }
 
   private void controlPlayer() {
@@ -63,7 +70,7 @@ public class Engine extends PApplet {
   }
 
   private void controlPlayerGun(){
-  	if(mousePressed && frameCount % Player.getGUN_FIRE_RATE() == 0)
+  	if(mousePressed && frameCount % Player.getGUN_FIRE_INTERVAL() == 0)
     	player.shootBullet();  	
   }
   
@@ -79,6 +86,24 @@ public class Engine extends PApplet {
       	i.remove();
       }
     }
+  }
+  
+  private void controlItems(){
+  	Iterator<BonusItem> i = bonusItems.iterator();
+  	while(i.hasNext()){
+  		BonusItem item = i.next();
+  		if(!item.isConsumed())
+  			item.display();
+  		else
+  			i.remove();
+  	}
+  }
+  
+  private void spawnBonusItems(){
+  	if(frameCount % BONUS_DROP_INTERVAL == 0){
+  		PVector position = environment.getRandomValidPosition();
+  		bonusItems.add(new BonusItem(position.x, position.y, this, environment));
+  	}
   }
   
   public void keyPressed() {

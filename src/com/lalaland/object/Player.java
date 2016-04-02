@@ -13,7 +13,9 @@ import com.lalaland.utility.Logger;
 public class Player extends GameObject {
 
   private static final float PLAYER_RADIUS = 7;
-  private static int GUN_FIRE_RATE = 4; 
+  private static int GUN_FIRE_INTERVAL = 10;
+  private static int BONUS_TIMEOUT_DURATION = 400;
+  private static int gun_reset_framecount = 0;
   private static final PVector PLAYER_COLOR = new PVector(41, 242, 138);
   
   private boolean LEFT, RIGHT, UP, DOWN;
@@ -47,9 +49,24 @@ public class Player extends GameObject {
     orientation = (float) Math.atan2(parent.mouseY - position.y, parent.mouseX - position.x);
     
     controlBullets();
+    controlBonusItemPicking();
     
     if (DRAW_BREADCRUMBS)
       storeHistory();
+  }
+  
+  private void controlBonusItemPicking(){
+  	BonusItem item = environment.onBonusItem(position); 
+  	if(item != null ){
+  		setGUN_FIRE_INTERVAL(4);
+  		gun_reset_framecount = parent.frameCount + BONUS_TIMEOUT_DURATION;  		
+  	}
+  	handleGunReset();
+  }
+  
+  private void handleGunReset(){
+  	if(parent.frameCount == gun_reset_framecount)
+  		setGUN_FIRE_INTERVAL(10);
   }
   
   private void controlBullets() {
@@ -97,11 +114,11 @@ public class Player extends GameObject {
     return bullets;
   }
   
-  public static int getGUN_FIRE_RATE() {
-		return GUN_FIRE_RATE;
+  public static int getGUN_FIRE_INTERVAL() {
+		return GUN_FIRE_INTERVAL;
 	}
-
-	public static void setGUN_FIRE_RATE(int gUN_FIRE_RATE) {
-		GUN_FIRE_RATE = gUN_FIRE_RATE;
+  
+  public static void setGUN_FIRE_INTERVAL(int gUN_FIRE_INTERVAL) {
+		GUN_FIRE_INTERVAL = gUN_FIRE_INTERVAL;
 	}
 }

@@ -2,6 +2,8 @@ package com.lalaland.environment;
 
 import processing.core.*;
 import java.util.*;
+
+import com.lalaland.object.BonusItem;
 import com.lalaland.object.Player;
 import com.lalaland.utility.*;
 
@@ -16,6 +18,7 @@ public class Environment {
   private Map<Integer, Utility.NodeInfo> nodesList;
   private Utility utility;
   private Player player;
+  private List<BonusItem> bonusItems;
 
   public Map<Integer, List<Utility.Neighbour>> getAdjacencyList() {
     return adjacencyList;
@@ -116,6 +119,30 @@ public class Environment {
     return invalidNodes.contains(new PVector(gridX, gridY));
   }
   
+  public BonusItem onBonusItem(PVector position){
+     Iterator<BonusItem> i = bonusItems.iterator();
+     while(i.hasNext()){
+    	 BonusItem item = i.next();
+    	 if(Utility.calculateEuclideanDistance(position, item.getPosition()) < 12){
+    		 item.consumeItem();
+    		 return item;
+    	 }
+     }
+     return null;
+  }
+  
+  public PVector getRandomValidPosition(){
+  	float BORDER_PADDING = 8;
+  	PVector randPosition;
+  	do{
+	  	float x = parent.random(BORDER_PADDING, width-BORDER_PADDING);
+	  	float y = parent.random(BORDER_PADDING, height-BORDER_PADDING);
+	  	randPosition = new PVector(x,y);
+  	}
+  	while(onObstacle(randPosition) || onBonusItem(randPosition) != null);  	
+  	return randPosition;  	
+  }
+  
   public boolean outOfBounds(PVector position) {
     if (position.x >= width || position.x <= 0)
       return true;
@@ -164,6 +191,14 @@ public class Environment {
 
   public void setPlayer(Player player) {
     this.player = player;
+  }
+  
+  public List<BonusItem> getBonusItems(){
+  	return bonusItems;
+  }
+  
+  public void setBonusItems(List<BonusItem> items){
+  	this.bonusItems = items;
   }
 
   public GraphSearch getNewGraphSearch() {
