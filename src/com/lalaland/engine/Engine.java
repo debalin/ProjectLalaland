@@ -12,12 +12,12 @@ import com.lalaland.object.*;
 public class Engine extends PApplet {
   
 	public static float time = 0f;
-  public static final PVector RESOLUTION = new PVector(800, 800);
+  public static final PVector RESOLUTION = new PVector(1000, 800);
   
   private static final int SMOOTH_FACTOR = 4;
   private static final PVector BACKGROUND_RGB = new PVector(60, 60, 60);
   private static final PVector PLAYER_INITIAL_POSITION = new PVector(RESOLUTION.x / 2, RESOLUTION.y / 2);
-  private static final PVector NUM_TILES = new PVector(80, 80);
+  private static final PVector NUM_TILES = new PVector(100, 80);
   
   private Environment environment;
   private Player player;

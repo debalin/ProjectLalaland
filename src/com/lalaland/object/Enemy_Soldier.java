@@ -179,7 +179,7 @@ public class Enemy_Soldier extends Enemy {
     KinematicOutput kinematic;
     SteeringOutput steering = new SteeringOutput();
 
-    if (startTakingCover) {
+    if (state == States.PATH_FOLLOW_COVER || state == States.PATH_FIND_COVER) {
       kinematic = Seek.getKinematic(this, target, FLEE_VELOCITY);
       velocity = kinematic.velocity;
       if (velocity.mag() >= FLEE_VELOCITY)
