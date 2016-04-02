@@ -42,7 +42,7 @@ public class Player extends GameObject {
       velocity.y = MAX_VELOCITY;
     else
       velocity.y = 0f;
-    if (!environment.onObstacle(PVector.add(position, velocity)))
+    if (!environment.onObstacle(PVector.add(position, velocity)) && !environment.outOfBounds(PVector.add(position, velocity), PLAYER_RADIUS * 2))
       position.add(velocity);
     orientation = (float) Math.atan2(parent.mouseY - position.y, parent.mouseX - position.x);
     
@@ -57,7 +57,7 @@ public class Player extends GameObject {
       Iterator<Bullet> i = bullets.iterator();
       while (i.hasNext()) {
         Bullet bullet = i.next();
-        if (!environment.outOfBounds(bullet.getPosition()) && !environment.onObstacle(bullet.getPosition())) {
+        if (!environment.outOfBounds(bullet.getPosition(), 0) && !environment.onObstacle(bullet.getPosition())) {
           bullet.move();
           bullet.display();
         } else {

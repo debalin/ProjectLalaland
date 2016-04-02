@@ -116,10 +116,10 @@ public class Environment {
     return invalidNodes.contains(new PVector(gridX, gridY));
   }
   
-  public boolean outOfBounds(PVector position) {
-    if (position.x >= width || position.x <= 0)
+  public boolean outOfBounds(PVector position, float padding) {
+    if (position.x >= width - padding || position.x <= padding)
       return true;
-    if (position.y >= height || position.y <= 0)
+    if (position.y >= height - padding || position.y <= padding)
       return true;
     return false;
   }
