@@ -15,7 +15,6 @@ import processing.core.PVector;
 public class Enemy_Hermit extends Enemy {
 	private static final float HERMIT_RADIUS = 7;
 	private static final PVector HERMIT_COLOR = new PVector(102, 255, 51);
-	private static final int LIFE_THRESHOLD = 5;
 	private static final float HERMIT_VIEW_RADIUS = 180;
 	private static final float MAX_LINEAR_ACC = 0.5f;
 	private static final float MAX_ANGULAR_ACC = 0.1f;

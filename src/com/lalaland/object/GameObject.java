@@ -12,6 +12,9 @@ public abstract class GameObject extends Kinematic {
   protected Set<PVector> history;
   protected int interval;
   protected Environment environment;
+  protected float life;
+  protected int MAX_LIFE = 100;
+  protected float lifeReductionRate;
   
   protected boolean POSITION_MATCHING;
   protected boolean DRAW_BREADCRUMBS;
@@ -20,8 +23,11 @@ public abstract class GameObject extends Kinematic {
   protected float IND_RADIUS;
   protected PVector IND_COLOR;
   protected PVector CRUMB_COLOR;
-  
+
+  protected static final int LIFE_THRESHOLD = 0;
   private static final int MAX_INTERVAL = 5;
+  private static final int LIFE_BAR_WIDTH = 20;
+  private static final int LIFE_BAR_HEIGHT = 3;
   
   public GameObject(float positionX, float positionY, PApplet parent, Environment environment, float IND_RADIUS, PVector IND_COLOR) {
     this.parent = parent;
@@ -45,32 +51,7 @@ public abstract class GameObject extends Kinematic {
     
     position = new PVector(positionX, positionY);
     velocity = new PVector();
-  }
-  
-  public void enlarge(){
-  	IND_RADIUS += 0.5f;
-  	group = parent.createShape(PApplet.GROUP);
-    head = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
-    head.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
-    head.setStroke(parent.color(255, 0));
-    group.addChild(head);
-    beak = parent.createShape(PApplet.TRIANGLE, -IND_RADIUS, IND_RADIUS / 4, IND_RADIUS, IND_RADIUS / 4, 0, 2.1f * IND_RADIUS);
-    beak.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
-    beak.setStroke(parent.color(255, 0));
-    group.addChild(beak);
-  }
-  
-  public void diminish(){
-  	IND_RADIUS -= 0.5f;
-  	group = parent.createShape(PApplet.GROUP);
-    head = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
-    head.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
-    head.setStroke(parent.color(255, 0));
-    group.addChild(head);
-    beak = parent.createShape(PApplet.TRIANGLE, -IND_RADIUS, IND_RADIUS / 4, IND_RADIUS, IND_RADIUS / 4, 0, 2.1f * IND_RADIUS);
-    beak.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
-    beak.setStroke(parent.color(255, 0));
-    group.addChild(beak);
+    life = MAX_LIFE;
   }
   
   public abstract void move();
@@ -103,9 +84,10 @@ public abstract class GameObject extends Kinematic {
     if (DRAW_BREADCRUMBS)
       drawBreadcrumbs();
     drawShape();
+    drawLifeBar();
   }
 
-  private void drawShape() {
+  protected void drawShape() {
     parent.pushMatrix();
     group.rotate(mapToRange(orientation - (float)(Math.PI / 2)));
     PShape[] children = group.getChildren();
@@ -115,8 +97,17 @@ public abstract class GameObject extends Kinematic {
     group.resetMatrix();
     parent.popMatrix();
   }
+
+  private void drawLifeBar() {
+    parent.pushMatrix();
+    parent.fill(0, 255, 0);
+    parent.rect(position.x - 10, position.y - 20, (life / MAX_LIFE) * LIFE_BAR_WIDTH, LIFE_BAR_HEIGHT);
+    parent.fill(255, 0, 0);
+    parent.rect(position.x - 10 + (life / MAX_LIFE) * LIFE_BAR_WIDTH, position.y - 20, ((MAX_LIFE - life) / MAX_LIFE) * LIFE_BAR_WIDTH, LIFE_BAR_HEIGHT);
+    parent.popMatrix();
+  }
   
-  private void drawBreadcrumbs() {
+  protected void drawBreadcrumbs() {
     parent.pushMatrix();
     parent.fill(CRUMB_COLOR.x, CRUMB_COLOR.y, CRUMB_COLOR.z);
     for (PVector historyPos : history) {

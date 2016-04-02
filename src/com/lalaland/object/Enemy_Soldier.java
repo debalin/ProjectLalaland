@@ -11,8 +11,7 @@ public class Enemy_Soldier extends Enemy {
 
   private static final float SOLDIER_RADIUS = 7;
   private static final PVector SOLDIER_COLOR = new PVector(112, 241, 252);
-  private static final PVector SOLDIER_INJURED_COLOR = new PVector(240, 20, 20);
-  private static final float LIFE_THRESHOLD = 40;
+  private static final float COVER_THRESHOLD = 30;
   private static final int REGAIN_THRESHOLD = 70;
   private static final float FLEE_VELOCITY = 2;
   private static final int OBSTACLE_OFFSET = 20;
@@ -23,7 +22,6 @@ public class Enemy_Soldier extends Enemy {
   }
   private States state;
   private float lifeRegainRate;
-  private PVector colorReductionRate, colorRegainRate;
   private Obstacle lastCoverObstacle;
   
   public Enemy_Soldier(float positionX, float positionY, PApplet parent, Environment environment) {
@@ -35,18 +33,10 @@ public class Enemy_Soldier extends Enemy {
     MAX_VELOCITY = 1;
     MAX_ACCELERATION = 0.3f;
     targetPosition = new PVector(position.x, position.y);
-    lifeReductionRate = 5;
-    lifeRegainRate = 0.1f;
+    lifeReductionRate = 10;
+    lifeRegainRate = 0.08f;
     startTakingCover = false;
     state = States.SEEK;
-    colorReductionRate = new PVector();
-    colorReductionRate.x = (lifeReductionRate / MAX_LIFE) * (SOLDIER_INJURED_COLOR.x - SOLDIER_COLOR.x);
-    colorReductionRate.y = (lifeReductionRate / MAX_LIFE) * (SOLDIER_INJURED_COLOR.y - SOLDIER_COLOR.y);
-    colorReductionRate.z = (lifeReductionRate / MAX_LIFE) * (SOLDIER_INJURED_COLOR.z - SOLDIER_COLOR.z);
-    colorRegainRate = new PVector();
-    colorRegainRate.x = (lifeRegainRate / MAX_LIFE) * (-SOLDIER_INJURED_COLOR.x + SOLDIER_COLOR.x);
-    colorRegainRate.y = (lifeRegainRate / MAX_LIFE) * (-SOLDIER_INJURED_COLOR.y + SOLDIER_COLOR.y);
-    colorRegainRate.z = (lifeRegainRate / MAX_LIFE) * (-SOLDIER_INJURED_COLOR.z + SOLDIER_COLOR.z);
     lastCoverObstacle = null;
   }
 
@@ -86,38 +76,20 @@ public class Enemy_Soldier extends Enemy {
         Bullet bullet = i.next();
         if (environment.inSameGrid(bullet.getPosition(), position)) {
           life -= lifeReductionRate;
-          changeColor(colorReductionRate);
           if (state == States.REGAIN_HEALTH)
             updateState(States.PATH_FIND_COVER);
           i.remove();
         }
       }
     }
-    if (life <= LIFE_THRESHOLD && state == States.SEEK)
+    if (life <= LIFE_THRESHOLD)
+      alive = false;
+    if (life <= COVER_THRESHOLD && state == States.SEEK)
       updateState(States.PATH_FIND_COVER);
-  }
-
-  private void changeColor(PVector colorChangeRate) {
-    IND_COLOR.x += colorChangeRate.x;
-    IND_COLOR.y += colorChangeRate.y;
-    IND_COLOR.z += colorChangeRate.z;
-    if (IND_COLOR.x < 0)
-      IND_COLOR.x = 0;
-    else if (IND_COLOR.x > 255)
-      IND_COLOR.x = 255;
-    if (IND_COLOR.y < 0)
-      IND_COLOR.y = 0;
-    else if (IND_COLOR.y > 255)
-      IND_COLOR.y = 255;
-    if (IND_COLOR.z < 0)
-      IND_COLOR.z = 0;
-    else if (IND_COLOR.z > 255)
-      IND_COLOR.z = 255;
   }
 
   private void regainHealth() {
     life += lifeRegainRate;
-    changeColor(colorRegainRate);
     if (life >= REGAIN_THRESHOLD)
       updateState(States.SEEK);
   }

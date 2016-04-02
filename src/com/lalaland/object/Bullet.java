@@ -14,8 +14,16 @@ public class Bullet extends GameObject {
     velocity.setMag(MAX_VELOCITY);
   }
 
+  @Override
   public void move() {
     position.add(velocity);
+  }
+
+  @Override
+  public void display() {
+    if (DRAW_BREADCRUMBS)
+      drawBreadcrumbs();
+    drawShape();
   }
   
 }

@@ -55,7 +55,7 @@ public class Enemy_Grunt extends Enemy {
     //get a random orientation and rotate marker
     randomiser_counter++;
     if(randomiser_counter == randomiser_limit){
-      rand_orient = RandomBinomial() * PConstants.PI;
+      rand_orient = randomBinomial() * PConstants.PI;
       rotateShapeDirection(rand_orient);
       if(USE_ACCEL)
         rotationInProg = true;

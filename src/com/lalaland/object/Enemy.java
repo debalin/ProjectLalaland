@@ -18,9 +18,6 @@ public abstract class Enemy extends GameObject {
 	protected LinkedList<Integer> solutionPath;
 	protected float RADIUS_SATISFACTION;
 	protected float MAX_ACCELERATION;
-	protected float life;
-	protected float lifeReductionRate;
-  protected int MAX_LIFE = 100;
 
 	protected float TTA = 120;
 	boolean USE_ACCEL = true;
@@ -43,7 +40,6 @@ public abstract class Enemy extends GameObject {
 		reached = false;
 		alive = true;
 		graphSearch = environment.getNewGraphSearch();
-		life = MAX_LIFE;
 	}
 	
 	/*************methods*************/
@@ -73,19 +69,17 @@ public abstract class Enemy extends GameObject {
 		velocity.y = MAX_VELOCITY * PApplet.sin(orientation);
 	}
 
-	protected float RandomWallAvoidanceAngle() {
+	protected float randomWallAvoidanceAngle() {
 		wa_counter++;
 		if (wa_counter == WA_LIMIT) {
 			wa_angle = (parent.random(2) > 1) ? -1 * PConstants.PI : PConstants.PI;
 			wa_counter = 0;
 		}
 		return wa_angle;
-
 	}
 
-	protected float RandomBinomial() {
+	protected float randomBinomial() {
 		return parent.random(0, 1) - parent.random(0, 1);
-		// return parent.random(-1,1);
 	}
 	
 	protected boolean handleObstacleAvoidance(){
@@ -102,36 +96,61 @@ public abstract class Enemy extends GameObject {
 		return false;		
 	}
 	
-	void avoidObstacle(){
-		float avoidance_orient = RandomWallAvoidanceAngle();
+	protected void avoidObstacle(){
+		float avoidance_orient = randomWallAvoidanceAngle();
     rotateShapeDirection(avoidance_orient);
     if(USE_ACCEL)
       rotationInProg = true;    
     updateVelocityPerOrientation();
 	}
-	
-	
+
 	protected void avoidBoundary(){
 		if(position.x < BORDER_PADDING  ){
     	position.x = BORDER_PADDING;
-      rotateShapeDirection(RandomWallAvoidanceAngle());
+      rotateShapeDirection(randomWallAvoidanceAngle());
       updateVelocityPerOrientation();
     }
     else if(position.x > parent.width - BORDER_PADDING){
     	position.x = parent.width - BORDER_PADDING; 
-      rotateShapeDirection(RandomWallAvoidanceAngle());
+      rotateShapeDirection(randomWallAvoidanceAngle());
       updateVelocityPerOrientation();
     }    
     else if(position.y < BORDER_PADDING){
     	position.y = BORDER_PADDING;
-      rotateShapeDirection(RandomWallAvoidanceAngle());
+      rotateShapeDirection(randomWallAvoidanceAngle());
       updateVelocityPerOrientation();
     }
     else if(position.y > parent.height - BORDER_PADDING){
     	position.y = parent.height - BORDER_PADDING; 
-      rotateShapeDirection(RandomWallAvoidanceAngle());
+      rotateShapeDirection(randomWallAvoidanceAngle());
       updateVelocityPerOrientation();
     }
 	}
+
+  protected void enlarge(){
+    IND_RADIUS += 0.5f;
+    group = parent.createShape(PApplet.GROUP);
+    head = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
+    head.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
+    head.setStroke(parent.color(255, 0));
+    group.addChild(head);
+    beak = parent.createShape(PApplet.TRIANGLE, -IND_RADIUS, IND_RADIUS / 4, IND_RADIUS, IND_RADIUS / 4, 0, 2.1f * IND_RADIUS);
+    beak.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
+    beak.setStroke(parent.color(255, 0));
+    group.addChild(beak);
+  }
+
+  protected void diminish(){
+    IND_RADIUS -= 0.5f;
+    group = parent.createShape(PApplet.GROUP);
+    head = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
+    head.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
+    head.setStroke(parent.color(255, 0));
+    group.addChild(head);
+    beak = parent.createShape(PApplet.TRIANGLE, -IND_RADIUS, IND_RADIUS / 4, IND_RADIUS, IND_RADIUS / 4, 0, 2.1f * IND_RADIUS);
+    beak.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
+    beak.setStroke(parent.color(255, 0));
+    group.addChild(beak);
+  }
 	
 }
