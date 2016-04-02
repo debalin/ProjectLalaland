@@ -41,7 +41,6 @@ public class Enemy_Hermit extends Enemy {
 
 	@Override
 	public void move() {
-
 		updateLife();
     if (life <= LIFE_THRESHOLD) {
       alive = false;

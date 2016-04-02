@@ -18,8 +18,9 @@ public abstract class Enemy extends GameObject {
 	protected LinkedList<Integer> solutionPath;
 	protected float RADIUS_SATISFACTION;
 	protected float MAX_ACCELERATION;
-	protected int life;
-	protected int lifeReductionRate;
+	protected float life;
+	protected float lifeReductionRate;
+  protected int MAX_LIFE = 100;
 
 	protected float TTA = 120;
 	boolean USE_ACCEL = true;
@@ -30,7 +31,6 @@ public abstract class Enemy extends GameObject {
 	protected final int BORDER_PADDING = 12;
 
 	protected static final GraphSearch.SearchType searchType = GraphSearch.SearchType.ASTAR;
-	private static final int MAX_LIFE = 100;
 
 	public boolean isAlive() {
 		return alive;
@@ -45,7 +45,6 @@ public abstract class Enemy extends GameObject {
 		graphSearch = environment.getNewGraphSearch();
 		life = MAX_LIFE;
 	}
-
 	
 	/*************methods*************/
 	
