@@ -8,6 +8,7 @@ import com.lalaland.steering.LookWhereYoureGoing;
 import com.lalaland.steering.Seek;
 import com.lalaland.steering.SteeringOutput;
 import com.lalaland.steering.Wander;
+import com.lalaland.utility.Utility;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -82,7 +83,7 @@ public class Enemy_Hermit extends Enemy {
 	}
 	
 	private boolean isPlayerVisible(){
-		return PVector.sub(environment.getPlayer().position, position).mag() <= HERMIT_VIEW_RADIUS;
+		return Utility.calculateEuclideanDistance(environment.getPlayer().position, position) <= HERMIT_VIEW_RADIUS;
 	}
 	
 	private void seekPlayer(){

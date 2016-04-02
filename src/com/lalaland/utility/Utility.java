@@ -63,6 +63,14 @@ public class Utility {
     return(Math.abs(nodesList.get(index1).gridX - nodesList.get(index2).gridX) + Math.abs(nodesList.get(index1).gridY - nodesList.get(index2).gridY)) + Math.random() * 100;
   }
   
+  public static float calculateEuclideanDistance(float x1, float y1, float x2, float y2){
+  	return (float)Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)); 
+  }
+  
+  public static float calculateEuclideanDistance(PVector v1, PVector v2){
+  	return calculateEuclideanDistance(v1.x, v1.y, v2.x, v2.y); 
+  }
+  
   public Map<Integer, List<Neighbour>> buildGraph(Set<PVector> invalidNodes, PVector numTiles) {
     Map<Integer, List<Neighbour>> adjacencyList = new HashMap<Integer, List<Neighbour>>();
     
