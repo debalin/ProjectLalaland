@@ -22,10 +22,7 @@ public class Enemy_Hermit extends Enemy {
 	private static final float SEEK_MAX_VELOCITY = 1.9f;
 	private boolean rageModeEntered = false;
 	private PVector savedColor = new PVector();
-	
 	private float TTA = 50;
-	int rotcounter = 0;
-	float rand_orient;
 
 	public Enemy_Hermit(float positionX, float positionY, PApplet parent, Environment environment) {
 		super(positionX, positionY, parent, environment, HERMIT_RADIUS, HERMIT_COLOR);
@@ -100,7 +97,7 @@ public class Enemy_Hermit extends Enemy {
     position.add(velocity);
 
     Kinematic target = new Kinematic(targetPosition, null, 0, 0);
-    SteeringOutput steering = new SteeringOutput();
+    SteeringOutput steering;
     steering = Seek.getSteering(this, target, MAX_LINEAR_ACC, RADIUS_SATISFACTION);
     if (steering.linear.mag() == 0) {
       velocity.set(0, 0);
