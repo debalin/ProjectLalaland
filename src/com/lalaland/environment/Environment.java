@@ -72,7 +72,7 @@ public class Environment {
 
     obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.65), (int)(numTiles.x * 0.73), (int)(numTiles.y * 0.65) + 2, this, obstacleColor)); //Right Bottom cover point
     obstacles.add(new Obstacle((int)(numTiles.x * 0.65), (int)(numTiles.y * 0.65) + 2, (int)(numTiles.x * 0.65) + 2, (int)(numTiles.y * 0.75), this, obstacleColor)); //Right Bottom cover point
-    
+
     formInvalidNodes();
   }
   
