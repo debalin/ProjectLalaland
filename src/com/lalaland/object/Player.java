@@ -13,6 +13,7 @@ import com.lalaland.utility.Logger;
 public class Player extends GameObject {
 
   private static final float PLAYER_RADIUS = 7;
+  private static int GUN_FIRE_RATE = 4; 
   private static final PVector PLAYER_COLOR = new PVector(41, 242, 138);
   
   private boolean LEFT, RIGHT, UP, DOWN;
@@ -95,4 +96,12 @@ public class Player extends GameObject {
   public List<Bullet> getBullets() {
     return bullets;
   }
+  
+  public static int getGUN_FIRE_RATE() {
+		return GUN_FIRE_RATE;
+	}
+
+	public static void setGUN_FIRE_RATE(int gUN_FIRE_RATE) {
+		GUN_FIRE_RATE = gUN_FIRE_RATE;
+	}
 }
