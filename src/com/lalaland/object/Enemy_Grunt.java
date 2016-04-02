@@ -65,7 +65,7 @@ public class Enemy_Grunt extends Enemy {
   
     //update position vectors
     //check if colliding, returns if future position is on obstacle
-    boolean onObstacle = handleObstacleAvoidance();
+    boolean onObstacle = checkForObstacleAvoidance();
     if(!onObstacle)
     	position.add(velocity);
     

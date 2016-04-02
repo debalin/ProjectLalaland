@@ -15,13 +15,13 @@ import processing.core.PVector;
 public class Enemy_Hermit extends Enemy {
 	private static final float HERMIT_RADIUS = 7;
 	private static final PVector HERMIT_COLOR = new PVector(102, 255, 51);
+	private static final PVector HERMIT_RAGE_COLOR = new PVector(255, 255, 0);
 	private static final float HERMIT_VIEW_RADIUS = 180;
 	private static final float MAX_LINEAR_ACC = 0.5f;
 	private static final float MAX_ANGULAR_ACC = 0.1f;
 	private static final float RADIUS_SATISFACTION = 0.1f;
 	private static final float SEEK_MAX_VELOCITY = 1.9f;
 	private boolean rageModeEntered = false;
-	private PVector savedColor = new PVector();
 	private float TTA = 50;
 
 	public Enemy_Hermit(float positionX, float positionY, PApplet parent, Environment environment) {
@@ -57,9 +57,6 @@ public class Enemy_Hermit extends Enemy {
 				Bullet bullet = i.next();
 				if (environment.inSameGrid(bullet.getPosition(), position)) {
 					life -= lifeReductionRate;
-					IND_COLOR.x = (IND_COLOR.x >= 255) ? 255 : IND_COLOR.x + 15;
-					IND_COLOR.y = (IND_COLOR.y >= 255) ? 255 : IND_COLOR.y - 15;
-					IND_COLOR.z = (IND_COLOR.z >= 255) ? 255 : IND_COLOR.z - 15;
 					i.remove();
 				}
 			}
@@ -69,10 +66,7 @@ public class Enemy_Hermit extends Enemy {
 	private void rageModeOn(){
 		if(rageModeEntered)
 			return;
-		savedColor = PVector.mult(IND_COLOR, 1);
-		IND_COLOR.x = 255;
-		IND_COLOR.y = 255;
-		IND_COLOR.z = 0;
+		IND_COLOR = HERMIT_RAGE_COLOR;
 		for(int i=7;i>0;i--)
 			enlarge();
 		rageModeEntered = true;
@@ -83,7 +77,7 @@ public class Enemy_Hermit extends Enemy {
 			return;
 		for(int i=7;i>0;i--)
 			diminish();
-		IND_COLOR = savedColor;
+		IND_COLOR = HERMIT_COLOR;
 		rageModeEntered = false;
 	}
 	
@@ -126,9 +120,10 @@ public class Enemy_Hermit extends Enemy {
 		
 		// update position vectors
 		// check if colliding
-		boolean onObstacle = handleObstacleAvoidance();
-		if(!onObstacle)
+		if(!checkForObstacleAvoidance())
 			position.add(velocity);
+		else
+			avoidObstacleOnWander();
 		
 		orientation += rotation;
 
