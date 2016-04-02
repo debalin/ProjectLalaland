@@ -37,8 +37,8 @@ public class Engine extends PApplet {
     environment.setPlayer(player);
     enemies = new LinkedList<>();
 
-    //enemies.add(new Enemy_Grunt(200, 50, this, environment));
-    //enemies.add(new Enemy_Hermit(300, 50, this, environment));
+    enemies.add(new Enemy_Grunt(200, 50, this, environment));
+    enemies.add(new Enemy_Hermit(300, 50, this, environment));
     enemies.add(new Enemy_Soldier(400, -50, this, environment));
   }
   
@@ -59,8 +59,14 @@ public class Engine extends PApplet {
   private void controlPlayer() {
     player.move();
     player.display();
+    controlPlayerGun();    
   }
 
+  private void controlPlayerGun(){
+  	if(mousePressed && frameCount % Player.getGUN_FIRE_RATE() == 0)
+    	player.shootBullet();  	
+  }
+  
   private void controlEnemies() {
     Iterator<Enemy> i = enemies.iterator();
     while (i.hasNext()) {
@@ -83,8 +89,4 @@ public class Engine extends PApplet {
     player.setDirection(key, false);
   }
   
-  public void mousePressed() {
-    player.shootBullet();
-  }
-
 }

@@ -129,20 +129,16 @@ public abstract class Enemy extends GameObject {
 
   protected void enlarge(){
     IND_RADIUS += 0.5f;
-    group = parent.createShape(PApplet.GROUP);
-    head = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
-    head.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
-    head.setStroke(parent.color(255, 0));
-    group.addChild(head);
-    beak = parent.createShape(PApplet.TRIANGLE, -IND_RADIUS, IND_RADIUS / 4, IND_RADIUS, IND_RADIUS / 4, 0, 2.1f * IND_RADIUS);
-    beak.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
-    beak.setStroke(parent.color(255, 0));
-    group.addChild(beak);
+    updateShape();
   }
 
   protected void diminish(){
     IND_RADIUS -= 0.5f;
-    group = parent.createShape(PApplet.GROUP);
+    updateShape();
+  }
+  
+  protected void updateShape(){
+  	group = parent.createShape(PApplet.GROUP);
     head = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
     head.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
     head.setStroke(parent.color(255, 0));
