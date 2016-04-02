@@ -24,8 +24,8 @@ public class Wander {
 			time += 2000;
 			target.position.x = (float) (Math.random() * Engine.RESOLUTION.x);
 			target.position.y = (float) (Math.random() * Engine.RESOLUTION.y);
-			System.out.println("Tar: " + target.position);
-			System.out.println("Char: " + character.position);
+//			System.out.println("Tar: " + target.position);
+//			System.out.println("Char: " + character.position);
 		}
 		
 		steering = Face.getSteering(character, target, timeToTarget, ros);
