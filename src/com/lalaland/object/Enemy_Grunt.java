@@ -81,10 +81,7 @@ public class Enemy_Grunt extends Enemy {
       while (i.hasNext()) {
         Bullet bullet = i.next();
         if (environment.inSameGrid(bullet.getPosition(), position)) {
-          life -= lifeReductionRate;
-          IND_COLOR.x = (IND_COLOR.x >= 255) ? 255 : IND_COLOR.x + 15;
-          IND_COLOR.y = (IND_COLOR.y >= 255) ? 255 : IND_COLOR.y - 15;
-          IND_COLOR.z = (IND_COLOR.z >= 255) ? 255 : IND_COLOR.z - 15;
+          life -= lifeReductionRate;          
           i.remove();
         }
       }
