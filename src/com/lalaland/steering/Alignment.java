@@ -7,6 +7,7 @@ import com.lalaland.object.Kinematic;
 import processing.core.PVector;
 
 public class Alignment {
+
 	public static SteeringOutput getSteering(Kinematic character, ArrayList<Kinematic> targets, float maxAcceleration, float threshold) {
 		SteeringOutput steering = new SteeringOutput();
 		PVector v = new PVector();
@@ -30,4 +31,5 @@ public class Alignment {
 		steering.linear = v;
 		return steering;
 	}
+
 }

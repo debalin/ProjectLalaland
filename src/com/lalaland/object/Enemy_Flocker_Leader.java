@@ -13,7 +13,7 @@ public class Enemy_Flocker_Leader extends Enemy {
 
 	private static final float LEADER_RADIUS = 7;
 	private static final PVector LEADER_COLOR = new PVector(200, 45, 200);
-	private static final int NUM_FOLLOWERS = 20;
+	private static final int NUM_FOLLOWERS = 10;
 	private static final int MAX_FOLLOW_NODE_COUNT = 10;
 	private static final float SIGHT_RADIUS = 200f;
 
@@ -38,7 +38,7 @@ public class Enemy_Flocker_Leader extends Enemy {
 		MAX_VELOCITY = 0.5f;
 		MAX_ACCELERATION = 0.2f;
 		targetPosition = new PVector(position.x, position.y);
-		lifeReductionRate = 5;
+		lifeReductionRate = 3;
 		state = States.SEEK_PLAYER;
 		spawnCount++;
 		

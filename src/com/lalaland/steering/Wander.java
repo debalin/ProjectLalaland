@@ -18,14 +18,12 @@ public class Wander {
 	
 	public static SteeringOutput getPositionMatchingSteering(Kinematic character, float maxLinearAcc, float maxAngularAcc, float timeToTarget, float ros) {
 		float mainTime = Engine.getTime();
-		SteeringOutput steering = new SteeringOutput();
+		SteeringOutput steering;
 		
 		if((mainTime-time) > Math.random()*2000) {
 			time += 2000;
 			target.position.x = (float) (Math.random() * Engine.getResolution().x);
 			target.position.y = (float) (Math.random() * Engine.getResolution().y);
-//			System.out.println("Tar: " + target.position);
-//			System.out.println("Char: " + character.position);
 		}
 		
 		steering = Face.getSteering(character, target, timeToTarget, ros);
