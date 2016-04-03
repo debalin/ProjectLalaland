@@ -10,7 +10,7 @@ import com.lalaland.environment.*;
 import com.lalaland.object.*;
 
 public class Engine extends PApplet {
-  
+
 	public static float time = 0f;
   public static final PVector RESOLUTION = new PVector(1000, 800);
   
