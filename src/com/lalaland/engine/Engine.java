@@ -22,7 +22,7 @@ public class Engine extends PApplet {
   
   private Environment environment;
   private Player player;
-  private List<Enemy> enemies;  
+  private List<Enemy> enemies;
   private List<BonusItem> bonusItems;
   
   public void settings() {
@@ -32,18 +32,19 @@ public class Engine extends PApplet {
   
   public void setup() {
     noStroke();    
-    //frameRate(100);
+    frameRate(55);
     environment = new Environment(this, RESOLUTION, NUM_TILES);
     
     player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this, environment);
     environment.setPlayer(player);
-    
     enemies = new LinkedList<>();
+
     enemies.add(new Enemy_Grunt(200, 50, this, environment));
     enemies.add(new Enemy_Hermit(300, 50, this, environment));
     enemies.add(new Enemy_Soldier(400, -50, this, environment));
-    
-    bonusItems = new LinkedList<>();    
+    enemies.add(new Enemy_Flocker_Leader(500, 50, this, environment));
+
+    bonusItems = new LinkedList<>();
     environment.setBonusItems(bonusItems);
   }
   
@@ -98,14 +99,14 @@ public class Engine extends PApplet {
   			i.remove();
   	}
   }
-  
+
   private void spawnBonusItems(){
   	if(frameCount % BONUS_DROP_INTERVAL == 0){
   		PVector position = environment.getRandomValidPosition();
   		bonusItems.add(new BonusItem(position.x, position.y, this, environment));
   	}
   }
-  
+
   public void keyPressed() {
     player.setDirection(key, true);
   }

@@ -130,7 +130,7 @@ public class Environment {
      }
      return null;
   }
-  
+
   public PVector getRandomValidPosition(){
   	float BORDER_PADDING = 8;
   	PVector randPosition;
@@ -139,14 +139,14 @@ public class Environment {
 	  	float y = parent.random(BORDER_PADDING, height-BORDER_PADDING);
 	  	randPosition = new PVector(x,y);
   	}
-  	while(onObstacle(randPosition) || onBonusItem(randPosition) != null);  	
-  	return randPosition;  	
+  	while(onObstacle(randPosition) || onBonusItem(randPosition) != null);
+  	return randPosition;
   }
-  
-  public boolean outOfBounds(PVector position) {
-    if (position.x >= width || position.x <= 0)
+
+  public boolean outOfBounds(PVector position, float padding) {
+    if (position.x >= width - padding || position.x <= padding)
       return true;
-    if (position.y >= height || position.y <= 0)
+    if (position.y >= height - padding || position.y <= padding)
       return true;
     return false;
   }
@@ -188,11 +188,11 @@ public class Environment {
   public void setPlayer(Player player) {
     this.player = player;
   }
-  
+
   public List<BonusItem> getBonusItems(){
   	return bonusItems;
   }
-  
+
   public void setBonusItems(List<BonusItem> items){
   	this.bonusItems = items;
   }
