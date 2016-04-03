@@ -17,7 +17,7 @@ public class Player extends GameObject {
   private static int BONUS_TIMEOUT_DURATION = 400;
   private static int gun_reset_framecount = 0;
   private static final PVector PLAYER_COLOR = new PVector(41, 242, 138);
-  
+
   private boolean LEFT, RIGHT, UP, DOWN;
   private List<Bullet> bullets;
   
@@ -108,6 +108,16 @@ public class Player extends GameObject {
   
   public void shootBullet() {
     getBullets().add(new Bullet(position.x, position.y, orientation, parent, 3, new PVector(255, 0, 0)));
+  }
+
+  public void shootRadialBullets(){
+    int RADIAL_NUM = 5;
+    float orient;
+    for(int i = 0; i< RADIAL_NUM; i++ ){
+      orient = i*PConstants.TWO_PI/RADIAL_NUM;
+      bullets.add(new Bullet(position.x, position.y, orient, parent, 3, new PVector(255, 0, 0)));
+    }
+
   }
 
   public List<Bullet> getBullets() {

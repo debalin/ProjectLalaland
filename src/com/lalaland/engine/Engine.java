@@ -55,6 +55,7 @@ public class Engine extends PApplet {
     player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this, environment);
     environment.setPlayer(player);
     enemies = new LinkedList<>();
+    enemies.add(new Enemy_Grunt(200, 100, this, environment));
 
     bonusItems = new LinkedList<>();
     environment.setBonusItems(bonusItems);
@@ -71,10 +72,10 @@ public class Engine extends PApplet {
     
     environment.drawObstacles();
 
-    controlPlayer();
-    controlEnemies();
     controlItems();
     spawnBonusItems();
+    controlEnemies();
+    controlPlayer();
     controlHUD();
   }
 
@@ -85,8 +86,17 @@ public class Engine extends PApplet {
   }
 
   private void controlPlayerGun(){
-  	if(mousePressed && frameCount % Player.getGUN_FIRE_INTERVAL() == 0)
-    	player.shootBullet();  	
+  	if(mousePressed && frameCount % Player.getGUN_FIRE_INTERVAL() == 0){
+//      if(keyPressed && keyCode == SHIFT){
+//        player.shootRadialBullets();
+//      }
+      if(mousePressed && mouseButton == RIGHT)
+        player.shootRadialBullets();
+      else{
+        player.shootBullet();
+      }
+    }
+
   }
   
   private void controlEnemies() {
