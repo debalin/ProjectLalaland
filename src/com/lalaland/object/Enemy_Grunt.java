@@ -49,7 +49,14 @@ public class Enemy_Grunt extends Enemy {
   }
 	
 	private void wander(){
-	//to smooth out rotation. used only when USE_ACCEL is set true
+    //// TODO: 4/2/2016
+    // wander waits too long when stuck to wall.s fix maybe using timetorotation var
+
+    //// TODO: 4/2/2016
+    // padding along border increase that.
+
+
+    //to smooth out rotation. used only when USE_ACCEL is set true
     if(rotationInProg){
       rotcounter++;
       rotateShapeDirection(rand_orient);
@@ -89,7 +96,8 @@ public class Enemy_Grunt extends Enemy {
       while (i.hasNext()) {
         Bullet bullet = i.next();
         if (environment.inSameGrid(bullet.getPosition(), position)) {
-          life -= lifeReductionRate;          
+          life -= lifeReductionRate;
+          super.incrementTotalHPDamage((int)lifeReductionRate);
           i.remove();
         }
       }

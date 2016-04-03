@@ -26,6 +26,17 @@ public abstract class Enemy extends GameObject {
 	private int wa_counter = 0;
 	private final int WA_LIMIT = 300;
 	private float wa_angle = PConstants.PI;
+	private static int totalHPDamage = 0;
+
+	public static int getTotalHPDamage() {
+		return totalHPDamage;
+	}
+
+	void incrementTotalHPDamage(int damage) {
+		totalHPDamage += damage;
+	}
+
+
 
 	protected static final GraphSearch.SearchType searchType = GraphSearch.SearchType.ASTAR;
 

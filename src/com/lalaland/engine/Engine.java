@@ -1,5 +1,6 @@
 package com.lalaland.engine;
 
+import com.lalaland.utility.Utility;
 import processing.core.*;
 
 import java.util.Iterator;
@@ -74,6 +75,7 @@ public class Engine extends PApplet {
     controlEnemies();
     controlItems();
     spawnBonusItems();
+    controlHUD();
   }
 
   private void controlPlayer() {
@@ -155,6 +157,10 @@ public class Engine extends PApplet {
   		else
   			i.remove();
   	}
+  }
+
+  private void controlHUD(){
+    Utility.drawText(String.valueOf(Enemy.getTotalHPDamage()), width - 50, 30, this);
   }
 
   private void spawnBonusItems(){

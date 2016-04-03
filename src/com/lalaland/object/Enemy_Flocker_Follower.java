@@ -108,6 +108,7 @@ public class Enemy_Flocker_Follower extends Enemy {
 				Bullet bullet = i.next();
 				if (environment.inSameGrid(bullet.getPosition(), position)) {
 					life -= lifeReductionRate;
+					super.incrementTotalHPDamage((int)lifeReductionRate);
 					i.remove();
 				}
 			}
