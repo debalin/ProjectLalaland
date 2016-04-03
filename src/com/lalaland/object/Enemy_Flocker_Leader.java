@@ -52,7 +52,7 @@ public class Enemy_Flocker_Leader extends Enemy {
 
 	public static void initializeSpawnDetails(int frameRate) {
 		SPAWN_OFFSET = frameRate * 20;
-		SPAWN_INTERVAL = frameRate * 60;
+		SPAWN_INTERVAL = frameRate * 20;
 		SPAWN_MAX = 1;
 	}
 
@@ -84,17 +84,28 @@ public class Enemy_Flocker_Leader extends Enemy {
 				updateState(States.PATH_FIND_PLAYER);
 			break;
 		case LEADER_DEAD_KILL_PLAYER:
-			targetPosition.x = environment.getPlayer().getPosition().x;
-			targetPosition.y = environment.getPlayer().getPosition().y;
-			if(allFollowersDead())
+			if (allFollowersDead()) {
 				alive = false;
+				spawnCount--;
+			}
 			break;
 		}
 
-		updatePosition();
-		
-		for(Enemy_Flocker_Follower follower : followers)
-			follower.move();
+		if (state != States.LEADER_DEAD_KILL_PLAYER)
+			updatePosition();
+
+		updateFollowers();
+	}
+
+	private void updateFollowers() {
+		Iterator<Enemy_Flocker_Follower> i = followers.iterator();
+		while (i.hasNext()) {
+			Enemy_Flocker_Follower follower = i.next();
+			if (follower.isAlive())
+				follower.move();
+			else
+				i.remove();
+		}
 	}
 
 	private void findPlayer() {
@@ -127,11 +138,9 @@ public class Enemy_Flocker_Leader extends Enemy {
 	private void updateState(States state) {
 		this.state = state;
 		if(state == States.KILL_PLAYER || state == States.LEADER_DEAD_KILL_PLAYER)
-			for(Enemy_Flocker_Follower follower : followers)
-				follower.updateStateToKill();
+			followers.forEach(Enemy_Flocker_Follower::updateStateToKill);
 		else
-			for(Enemy_Flocker_Follower follower : followers)
-				follower.updateStateToFollow();
+			followers.forEach(Enemy_Flocker_Follower::updateStateToFollow);
 	}
 
 	private void updateLife() {
@@ -147,7 +156,6 @@ public class Enemy_Flocker_Leader extends Enemy {
 			}
 		}
 		if (life <= LIFE_THRESHOLD) {
-//			alive = false;
 			updateState(States.LEADER_DEAD_KILL_PLAYER);
 		}
 	}
@@ -196,9 +204,7 @@ public class Enemy_Flocker_Leader extends Enemy {
 	
 	@Override
 	public void display() {
-		for(Enemy_Flocker_Follower follower : followers)
-			if(follower.isAlive())
-				follower.display();
+		followers.forEach(Enemy_Flocker_Follower::display);
 		if(state != States.LEADER_DEAD_KILL_PLAYER)
 			super.display();
 	}
@@ -208,9 +214,8 @@ public class Enemy_Flocker_Leader extends Enemy {
 	}
 	
 	private boolean allFollowersDead() {
-		for(Enemy_Flocker_Follower follower : followers)
-			if(follower.isAlive())
-				return false;
-		return true;
+		if (followers.size() == 0)
+				return true;
+		return false;
 	}
 }
