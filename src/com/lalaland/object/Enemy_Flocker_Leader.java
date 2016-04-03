@@ -25,6 +25,9 @@ public class Enemy_Flocker_Leader extends Enemy {
 	List<Enemy_Flocker_Follower> followers;
 	public int followedNodes;
 
+	private static int spawnCount = 0;
+	public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
+
 	public Enemy_Flocker_Leader(float positionX, float positionY, PApplet parent, Environment environment) {
 		super(positionX, positionY, parent, environment, LEADER_RADIUS, LEADER_COLOR.copy());
 		followers = new ArrayList<>();
@@ -37,9 +40,20 @@ public class Enemy_Flocker_Leader extends Enemy {
 		targetPosition = new PVector(position.x, position.y);
 		lifeReductionRate = 5;
 		state = States.SEEK_PLAYER;
+		spawnCount++;
 		
 		for (int i = 0; i < NUM_FOLLOWERS; i++)
 			followers.add(new Enemy_Flocker_Follower(positionX, positionY, parent, environment, this));
+	}
+
+	public static int getSpawnCount() {
+		return spawnCount;
+	}
+
+	public static void initializeSpawnDetails(int frameRate) {
+		SPAWN_OFFSET = frameRate * 20;
+		SPAWN_INTERVAL = frameRate * 60;
+		SPAWN_MAX = 1;
 	}
 
 	@Override
@@ -159,7 +173,7 @@ public class Enemy_Flocker_Leader extends Enemy {
 		position.add(velocity);
 
 		Kinematic target = new Kinematic(targetPosition, null, 0, 0);
-		SteeringOutput steering = new SteeringOutput();
+		SteeringOutput steering;
 
 		steering = Seek.getSteering(this, target, MAX_ACCELERATION, RADIUS_SATISFACTION);
 		if (steering.linear.mag() == 0) {

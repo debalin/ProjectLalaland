@@ -139,7 +139,7 @@ public class Enemy_Flocker_Follower extends Enemy {
 		position.add(velocity);
 
 		Kinematic target = new Kinematic(targetPosition, null, 0, 0);
-		SteeringOutput steering = new SteeringOutput();
+		SteeringOutput steering;
 		ArrayList<Kinematic> followers = new ArrayList<>(leader.followers);
 
 		if(state == States.STAY_WITH_LEADER) {

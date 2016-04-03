@@ -44,6 +44,7 @@ public class Engine extends PApplet {
     Enemy_Soldier.initializeSpawnDetails(FRAME_RATE);
     Enemy_Hermit.initializeSpawnDetails(FRAME_RATE);
     Enemy_Grunt.initializeSpawnDetails(FRAME_RATE);
+    Enemy_Flocker_Leader.initializeSpawnDetails(FRAME_RATE);
   }
   
   public void setup() {
@@ -122,6 +123,12 @@ public class Engine extends PApplet {
           if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
             spawnSpot = getRandomSpawnSpot();
             enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
+          }
+          break;
+        case FLOCKER:
+          if ((Enemy_Flocker_Leader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Flocker_Leader.SPAWN_OFFSET) % Enemy_Flocker_Leader.SPAWN_INTERVAL == 0) && (Enemy_Flocker_Leader.getSpawnCount() < Enemy_Flocker_Leader.SPAWN_MAX)) {
+            spawnSpot = getRandomSpawnSpot();
+            enemies.add(new Enemy_Flocker_Leader(spawnSpot.x, spawnSpot.y, this, environment));
           }
           break;
       }
