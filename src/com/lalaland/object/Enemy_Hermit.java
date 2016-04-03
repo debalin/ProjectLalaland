@@ -137,7 +137,7 @@ public class Enemy_Hermit extends Enemy {
 		
 		// update position vectors
 		// check if colliding
-		if(!checkForObstacleAvoidance())
+		if(!checkForObstacleAvoidance(velocity))
 			position.add(velocity);
 		else
 			avoidObstacleOnWander();

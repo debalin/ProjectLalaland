@@ -7,21 +7,23 @@ import processing.core.PVector;
 import com.lalaland.environment.*;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 public abstract class Enemy extends GameObject {
 
 	protected PVector acceleration;
 	protected PVector targetPosition;
+  float targetOrientation;
 	protected boolean reached;
 	protected boolean alive;
 	protected GraphSearch graphSearch;
 	protected LinkedList<Integer> solutionPath;
 	protected float RADIUS_SATISFACTION;
 	protected float MAX_ACCELERATION;
-	protected float TTA = 120;
-  protected boolean USE_ACCEL = true;
-  protected boolean rotationInProg = false;
-  protected final int BORDER_PADDING = 12;
+	float TTA ;
+  boolean USE_ACCEL = true;
+  boolean rotationInProg = false;
+  protected final int BORDER_PADDING = 100;
 
 	private int wa_counter = 0;
 	private final int WA_LIMIT = 300;
@@ -60,28 +62,13 @@ public abstract class Enemy extends GameObject {
 	/*************methods*************/
 	
 	protected void rotateShapeDirection(float angle) {
-		angle = scaleRotationAngle(angle);
-		if (!USE_ACCEL) TTA = 1;
-		angle = angle / TTA;
+		angle = (angle-orientation) / 30;
 		orientation += angle;
-		group.rotateZ(angle);		
-	}
-
-	float scaleRotationAngle(float angle) {
-		angle = angle % PConstants.TWO_PI;
-		if (Math.abs(angle) <= PConstants.PI) return angle;
-		if (angle > PConstants.PI) {
-			angle -= PConstants.TWO_PI;
-		}
-		else if (angle < -PConstants.PI) {
-			angle += PConstants.TWO_PI;
-		}
-		return angle;
 	}
 
 	protected void updateVelocityPerOrientation() {
-		velocity.x = MAX_VELOCITY * PApplet.cos(orientation);
-		velocity.y = MAX_VELOCITY * PApplet.sin(orientation);
+    velocity = PVector.fromAngle(orientation);
+    velocity.setMag(MAX_VELOCITY);
 	}
 
 	protected float randomWallAvoidanceAngle() {
@@ -93,53 +80,63 @@ public abstract class Enemy extends GameObject {
 		return wa_angle;
 	}
 
-	protected float randomBinomial() {
+	float randomBinomial() {
 		return parent.random(0, 1) - parent.random(0, 1);
 	}
 	
-	protected boolean checkForObstacleAvoidance(){
-		PVector future_ray1 = PVector.add(position, PVector.mult(velocity, 1.5f));
-		PVector future_ray2 = PVector.add(position, PVector.mult(velocity, 3f));
-		if (
+	boolean checkForObstacleAvoidance(PVector target){
+		PVector future_ray1 = PVector.add(position, PVector.mult(target, 15f));
+		PVector future_ray2 = PVector.add(position, PVector.mult(target, 30f));
+    PVector future_ray3 = PVector.add(position, PVector.mult(target, 3.5f));
+    PVector future_ray4 = PVector.add(position, PVector.mult(target, 1.5f));
+    PVector future_ray5 = PVector.add(position, PVector.mult(target, 50f));
+		return(
 				environment.onObstacle(future_ray1) || 
-				environment.onObstacle(future_ray2)
-				)
-		{
-			return true;
-		}
-		return false;		
-	}
-	
-	protected void avoidObstacleOnWander(){
-		float avoidance_orient = randomWallAvoidanceAngle();
-    rotateShapeDirection(avoidance_orient);
-    if(USE_ACCEL)
-      rotationInProg = true;    
-    updateVelocityPerOrientation();
+				environment.onObstacle(future_ray2) ||
+        environment.onObstacle(future_ray3) ||
+        environment.onObstacle(future_ray4) ||
+        environment.onObstacle(future_ray5)
+				);
 	}
 
-	protected void avoidBoundary(){
-		if(position.x < BORDER_PADDING  ){
-    	position.x = BORDER_PADDING;
-      rotateShapeDirection(randomWallAvoidanceAngle());
-      updateVelocityPerOrientation();
-    }
-    else if(position.x > parent.width - BORDER_PADDING){
-    	position.x = parent.width - BORDER_PADDING; 
-      rotateShapeDirection(randomWallAvoidanceAngle());
-      updateVelocityPerOrientation();
-    }    
-    else if(position.y < BORDER_PADDING){
-    	position.y = BORDER_PADDING;
-      rotateShapeDirection(randomWallAvoidanceAngle());
-      updateVelocityPerOrientation();
-    }
-    else if(position.y > parent.height - BORDER_PADDING){
-    	position.y = parent.height - BORDER_PADDING; 
-      rotateShapeDirection(randomWallAvoidanceAngle());
-      updateVelocityPerOrientation();
-    }
+  boolean checkForBoundaryAvoidance(PVector target){
+    PVector future_ray =  PVector.add(position, target);
+    //// TODO: 4/2/2016 add more future rays in condn check
+    return(
+        future_ray.x <= BORDER_PADDING ||
+        future_ray.x >= parent.width - BORDER_PADDING ||
+        future_ray.y <= BORDER_PADDING ||
+        future_ray.y >= parent.height - BORDER_PADDING
+        );
+  }
+
+  boolean checkForBoundaryAvoidance(){
+    return checkForBoundaryAvoidance(velocity);
+  }
+
+  void avoidObstacle() {
+    float orient;
+    Random random = new Random();
+    do {
+      orient = random.nextInt(180) - random.nextInt(180);
+      targetOrientation = parent.radians(orient) + orientation;
+    } while (checkForObstacleAvoidance(PVector.fromAngle(targetOrientation).setMag(20)));
+  }
+
+  void avoidBoundary(){
+      float orient;
+      Random random = new Random();
+      do{
+        orient = random.nextInt(180) - random.nextInt(180);
+        targetOrientation = parent.radians(orient) +  orientation;
+      }while(checkForBoundaryAvoidance(PVector.fromAngle(targetOrientation).setMag(100)));
 	}
+
+  void avoidObstacleOnWander(){
+    float avoidance_orient = randomWallAvoidanceAngle();
+    rotateShapeDirection(avoidance_orient);
+    updateVelocityPerOrientation();
+  }
 
   protected void enlarge(){
     IND_RADIUS += 0.5f;

@@ -15,12 +15,11 @@ public class Enemy_Grunt extends Enemy {
 	private static final int LIFE_THRESHOLD = 5;
 	
 	private int randomiser_counter = 0;
-	private int randomiser_limit = 30;	
+	private int randomiser_limit = 150;
 	private int rotcounter = 0;
   private float rand_orient;
-  private float TTA = 120;
-	private boolean rotationInProg = false;	
-	private boolean USE_ACCEL = true;
+//	private boolean rotationInProg = false;
+//	private boolean USE_ACCEL = true;
 
   private static int spawnCount = 0;
   public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
@@ -28,9 +27,12 @@ public class Enemy_Grunt extends Enemy {
 	public Enemy_Grunt(float positionX, float positionY, PApplet parent, Environment environment) {
 		super(positionX, positionY, parent, environment, GRUNT_RADIUS, GRUNT_COLOR);
 		DRAW_BREADCRUMBS = false;
-		MAX_VELOCITY = 1.0f;
+		MAX_VELOCITY = 1.5f;
 		lifeReductionRate = 5;
+    TTA = 30;
+    spawnCount++;
 	}
+  //// TODO: 4/3/2016 add state machines !!
 
 	@Override
 	public void move() {		
@@ -49,43 +51,25 @@ public class Enemy_Grunt extends Enemy {
   }
 	
 	private void wander(){
-    //// TODO: 4/2/2016
-    // wander waits too long when stuck to wall.s fix maybe using timetorotation var
-
-    //// TODO: 4/2/2016
-    // padding along border increase that.
-
-
-    //to smooth out rotation. used only when USE_ACCEL is set true
-    if(rotationInProg){
-      rotcounter++;
-      rotateShapeDirection(rand_orient);
-      updateVelocityPerOrientation();
-      if(rotcounter == TTA){
-        rotcounter = 0;
-        rotationInProg = false;
-      }
-    }
-
-    //get a random orientation and rotate marker
     randomiser_counter++;
     if(randomiser_counter == randomiser_limit){
-      rand_orient = randomBinomial() * PConstants.PI;
-      rotateShapeDirection(rand_orient);
-      if(USE_ACCEL)
-        rotationInProg = true;
-      updateVelocityPerOrientation();
+      targetOrientation = randomBinomial() * PConstants.PI + orientation;
       randomiser_counter = 0;
     }
-  
-    //update position vectors
-    //check if colliding, returns if future position is on obstacle
-    boolean onObstacle = checkForObstacleAvoidance();
-    if(!onObstacle)
-    	position.add(velocity);
-    
-    //handle behavior near window boundary
-    avoidBoundary();
+
+    //// TODO: 4/3/2016 move all the movement shit to wander
+    boolean onObstacle = checkForObstacleAvoidance(velocity);
+    if(onObstacle) {
+//      System.out.println("On OBS");
+      avoidObstacle();
+    }
+    else if(checkForBoundaryAvoidance()){
+//      System.out.println("On BND");
+      avoidBoundary();
+    }
+    rotateShapeDirection(targetOrientation);
+    updateVelocityPerOrientation();
+    position.add(velocity);
 	}
 	
 
