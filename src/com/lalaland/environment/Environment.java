@@ -15,7 +15,6 @@ public class Environment {
   private Set<PVector> invalidNodes;
   private PVector tileSize, numTiles;
   private Map<Integer, List<Utility.Neighbour>> adjacencyList;
-  private Map<Integer, Utility.NodeInfo> nodesList;
   private Utility utility;
   private Player player;
   private List<BonusItem> bonusItems;
@@ -24,16 +23,8 @@ public class Environment {
     return adjacencyList;
   }
 
-  public Map<Integer, Utility.NodeInfo> getNodesList() {
-    return nodesList;
-  }
-
   public Utility getUtility() {
     return utility;
-  }
-
-  public Set<PVector> getInvalidNodes() {
-    return invalidNodes;
   }
 
   public PVector getNumTiles() {
@@ -109,7 +100,6 @@ public class Environment {
   
   public void buildGraph() {
     adjacencyList = utility.buildGraph(invalidNodes, numTiles);
-    nodesList = utility.getNodesList();
   }
   
   public boolean onObstacle(PVector position) {

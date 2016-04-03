@@ -20,7 +20,7 @@ public class Utility {
   }
 
   public Utility() {
-    nodesList = new HashMap<Integer, Utility.NodeInfo>();
+    nodesList = new HashMap<>();
   }
   
   public class Neighbour {
@@ -42,16 +42,9 @@ public class Utility {
       this.gridY = gridY;
     }
 
-    public int getGridX() {
-      return gridX;
-    }
-
-    public int getGridY() {
-      return gridY;
-    }
   }
   
-  public double calculateHeuristic(int index1, int index2) {
+  public double calculateHeuristicLatLong(int index1, int index2) {
     return(Math.sqrt(Math.pow((69.5 * (nodesList.get(index1).gridX - nodesList.get(index2).gridX)), 2) + Math.pow((69.5 * Math.cos((nodesList.get(index1).gridX + nodesList.get(index2).gridX)/360 * Math.PI) * (nodesList.get(index1).gridY - nodesList.get(index2).gridY)), 2)));
   }
   
@@ -90,13 +83,13 @@ public class Utility {
         if (j + 1 <= numTiles.x - 1 && !invalidNodes.contains(new PVector(j + 1, i)))
           neighbours.add(new Neighbour(i * (int)numTiles.x + (j + 1), 1));
         if (i + 1 <= numTiles.y - 1 && j + 1 <= numTiles.x - 1 && !invalidNodes.contains(new PVector(j + 1, i)) && !invalidNodes.contains(new PVector(j, i + 1)) && !invalidNodes.contains(new PVector(j + 1, i + 1)))
-          neighbours.add(new Neighbour((i + 1) * (int)numTiles.x + (j + 1), 2));
+          neighbours.add(new Neighbour((i + 1) * (int)numTiles.x + (j + 1), Math.sqrt(2)));
         if (i + 1 <= numTiles.y - 1 && j - 1 >= 0 && !invalidNodes.contains(new PVector(j - 1, i)) && !invalidNodes.contains(new PVector(j, i + 1)) && !invalidNodes.contains(new PVector(j - 1, i + 1)))
-          neighbours.add(new Neighbour((i + 1) * (int)numTiles.x + (j - 1), 2));
+          neighbours.add(new Neighbour((i + 1) * (int)numTiles.x + (j - 1), Math.sqrt(2)));
         if (i - 1 >= 0 && j + 1 <= numTiles.x - 1 && !invalidNodes.contains(new PVector(j + 1, i)) && !invalidNodes.contains(new PVector(j, i - 1)) && !invalidNodes.contains(new PVector(j + 1, i - 1)))
-          neighbours.add(new Neighbour((i - 1) * (int)numTiles.x + (j + 1), 2));
+          neighbours.add(new Neighbour((i - 1) * (int)numTiles.x + (j + 1), Math.sqrt(2)));
         if (i - 1 >= 0 && j - 1 >= 0 && !invalidNodes.contains(new PVector(j - 1, i)) && !invalidNodes.contains(new PVector(j, i - 1)) && !invalidNodes.contains(new PVector(j - 1, i - 1)))
-          neighbours.add(new Neighbour((i - 1) * (int)numTiles.x + (j - 1), 2));
+          neighbours.add(new Neighbour((i - 1) * (int)numTiles.x + (j - 1), Math.sqrt(2)));
         adjacencyList.put(node, neighbours);
       }
     }

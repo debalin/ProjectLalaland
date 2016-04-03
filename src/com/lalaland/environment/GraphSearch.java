@@ -19,10 +19,6 @@ public class GraphSearch {
   
   public enum SearchType {
     ASTAR, DJIKSTRAS
-  };
-  
-  public int[] getVisited() {
-    return visited;
   }
   
   public double getPathCost() {
@@ -31,10 +27,6 @@ public class GraphSearch {
 
   public LinkedList<Integer> getSolutionPath() {
     return solutionPath;
-  }
-
-  public int getExpandedNodes() {
-    return expandedNodes;
   }
 
   public GraphSearch(Environment environment, int numOfNodes) {
@@ -70,14 +62,14 @@ public class GraphSearch {
     SolutionPath(int lastNode, double pathCost, List<Integer> path, int depthLevel) {
       this.lastNode = lastNode;
       this.pathCost = pathCost;
-      this.path = new LinkedList<Integer>();
+      this.path = new LinkedList<>();
       this.path.addAll(path);
       this.depthLevel = depthLevel;
     }
     SolutionPath(SolutionPath otherPath) {
       this.lastNode = otherPath.lastNode;
       this.pathCost = otherPath.pathCost;
-      this.path = new LinkedList<Integer>();
+      this.path = new LinkedList<>();
       this.path.addAll(otherPath.path);
       this.depthLevel = otherPath.depthLevel + 2;
     }
@@ -120,8 +112,8 @@ public class GraphSearch {
 
   public boolean djikstrasSearch(int origin, int destination) {
     int originIndex;
-    PriorityQueue<SolutionPath> djikstraQueue = new PriorityQueue<SolutionPath>(10, new PathComparator());
-    LinkedList<Integer> path = new LinkedList<Integer>();
+    PriorityQueue<SolutionPath> djikstraQueue = new PriorityQueue<>(10, new PathComparator());
+    LinkedList<Integer> path = new LinkedList<>();
     path.add(origin);
     SolutionPath headPath = new SolutionPath(origin, 0, path, 0);
     headPath.totalCost = headPath.pathCost;
@@ -175,8 +167,8 @@ public class GraphSearch {
   
   public boolean aStarSearch(int origin, int destination) {
     int originIndex;
-    PriorityQueue<SolutionPath> aStarQueue = new PriorityQueue<SolutionPath>(10, new PathComparator());
-    LinkedList<Integer> path = new LinkedList<Integer>();
+    PriorityQueue<SolutionPath> aStarQueue = new PriorityQueue<>(10, new PathComparator());
+    LinkedList<Integer> path = new LinkedList<>();
     path.add(origin);
     SolutionPath headPath = new SolutionPath(origin, 0, path, 0);
     headPath.totalCost = headPath.pathCost;
