@@ -88,6 +88,7 @@ public class Enemy_Grunt extends Enemy {
     }
     if (life <= LIFE_THRESHOLD) {
       alive = false;
+      spawnCount--;
     }
   }
 
