@@ -1,5 +1,6 @@
 package com.lalaland.engine;
 
+import com.lalaland.utility.Utility;
 import processing.core.*;
 
 import java.util.Iterator;
@@ -55,6 +56,7 @@ public class Engine extends PApplet {
     player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this, environment);
     environment.setPlayer(player);
     enemies = new LinkedList<>();
+    enemies.add(new Enemy_Grunt(200, 100, this, environment));
 
     bonusItems = new LinkedList<>();
     environment.setBonusItems(bonusItems);
@@ -71,10 +73,11 @@ public class Engine extends PApplet {
     
     environment.drawObstacles();
 
-    controlPlayer();
-    controlEnemies();
     controlItems();
     spawnBonusItems();
+    controlEnemies();
+    controlPlayer();
+    controlHUD();
   }
 
   private void controlPlayer() {
@@ -84,8 +87,17 @@ public class Engine extends PApplet {
   }
 
   private void controlPlayerGun(){
-  	if(mousePressed && frameCount % Player.getGUN_FIRE_INTERVAL() == 0)
-    	player.shootBullet();  	
+  	if(mousePressed && frameCount % Player.getGUN_FIRE_INTERVAL() == 0){
+//      if(keyPressed && keyCode == SHIFT){
+//        player.shootRadialBullets();
+//      }
+      if(mousePressed && mouseButton == RIGHT)
+        player.shootRadialBullets();
+      else{
+        player.shootBullet();
+      }
+    }
+
   }
   
   private void controlEnemies() {
@@ -162,6 +174,10 @@ public class Engine extends PApplet {
   		else
   			i.remove();
   	}
+  }
+
+  private void controlHUD(){
+    Utility.drawText(String.valueOf(Enemy.getTotalHPDamage()), width - 50, 30, this);
   }
 
   private void spawnBonusItems(){

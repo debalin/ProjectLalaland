@@ -66,7 +66,7 @@ public class Enemy_Soldier extends Enemy {
       case SEEK:
         targetPosition.x = environment.getPlayer().getPosition().x;
         targetPosition.y = environment.getPlayer().getPosition().y;
-        if (checkForObstacleAvoidance())
+        if (checkForObstacleAvoidance(velocity))
           updateState(States.PATH_FIND_PLAYER);
         break;
       case PATH_FIND_COVER:
@@ -124,6 +124,7 @@ public class Enemy_Soldier extends Enemy {
         Bullet bullet = i.next();
         if (environment.inSameGrid(bullet.getPosition(), position)) {
           life -= lifeReductionRate;
+          super.incrementTotalHPDamage((int)lifeReductionRate);
           if (state == States.REGAIN_HEALTH)
             updateState(States.PATH_FIND_COVER);
           i.remove();
