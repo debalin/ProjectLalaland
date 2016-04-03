@@ -2,6 +2,7 @@ package com.lalaland.object;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.lalaland.environment.Environment;
@@ -140,14 +141,17 @@ public class Enemy_Flocker_Follower extends Enemy {
 		position.add(velocity);
 
 		Kinematic target = new Kinematic(targetPosition, null, 0, 0);
-		SteeringOutput steering = new SteeringOutput();
+		SteeringOutput steering;
 		ArrayList<Kinematic> followers = new ArrayList<>(leader.followers);
 
 		if(state == States.STAY_WITH_LEADER) {
 			steering = Seek.getSteering(this, target, MAX_ACCELERATION, RADIUS_SATISFACTION);
-			PVector alignment = Alignment.getSteering(this, followers, MAX_ACCELERATION, ALIGNMENT_THRESHOLD).linear.mult(0.6f);
-			PVector separation = Separation.getSteering(this, followers, MAX_ACCELERATION, SEPARATION_THRESHOLD).linear.mult(0.8f);
-			PVector cohesion = Cohesion.getSteering(this, followers, MAX_ACCELERATION).linear.mult(0.2f);
+			ArrayList<Kinematic> flockers = new ArrayList<>();
+			flockers.addAll(followers);
+			flockers.add(leader);
+			PVector alignment = Alignment.getSteering(this, flockers, MAX_ACCELERATION, ALIGNMENT_THRESHOLD).linear.mult(0.6f);
+			PVector separation = Separation.getSteering(this, flockers, MAX_ACCELERATION, SEPARATION_THRESHOLD).linear.mult(0.8f);
+			PVector cohesion = Cohesion.getSteering(this, flockers, MAX_ACCELERATION).linear.mult(0.2f);
 			steering.linear.add(alignment);
 			steering.linear.add(separation);
 			steering.linear.add(cohesion);
@@ -165,7 +169,10 @@ public class Enemy_Flocker_Follower extends Enemy {
 				return;
 			}
 			reached = false;
-			PVector separation = Separation.getSteering(this, followers, MAX_ACCELERATION, SEPARATION_THRESHOLD).linear.mult(0.8f);
+			ArrayList<Kinematic> flockers = new ArrayList<>();
+			flockers.addAll(followers);
+			flockers.add(leader);
+			PVector separation = Separation.getSteering(this, flockers, MAX_ACCELERATION, SEPARATION_THRESHOLD + 10).linear.mult(0.8f);
 			steering.linear.add(separation);
 			steering.linear.setMag(MAX_ACCELERATION);		
 			velocity.add(steering.linear);

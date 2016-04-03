@@ -43,7 +43,7 @@ public abstract class Enemy extends GameObject {
 	protected static final GraphSearch.SearchType searchType = GraphSearch.SearchType.ASTAR;
 
   public enum EnemyTypes {
-    SOLDIER, GRUNT, HERMIT
+    SOLDIER, GRUNT, HERMIT, FLOCKER
   }
 
 	public boolean isAlive() {
