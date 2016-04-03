@@ -12,7 +12,7 @@ public class BonusItem {
 	private Environment environment;
 	private float IND_RADIUS;
 	private PVector IND_COLOR;
-	protected PShape group, core, halo;
+	private PShape group, core, halo;
 	private boolean isConsumed = false;
 		
 	
@@ -21,7 +21,7 @@ public class BonusItem {
 		this.environment = environment;
 		this.position = new PVector(positionX, positionY);
 		this.IND_RADIUS = 5;
-		this.IND_COLOR = new PVector(245, 245, 245);
+		this.IND_COLOR = new PVector(153, 204, 255);
 		group = parent.createShape();
 		group = parent.createShape(PApplet.GROUP);
     core = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
@@ -47,7 +47,7 @@ public class BonusItem {
 		this.drawShape();
 	}
 	
-	protected void drawShape() {
+	private void drawShape() {
     parent.pushMatrix();
     PShape[] children = group.getChildren();
     for (PShape child : children)

@@ -1,6 +1,5 @@
 package com.lalaland.engine;
 
-import jdk.internal.dynalink.beans.StaticClass;
 import processing.core.*;
 
 import java.util.Iterator;
@@ -146,7 +145,7 @@ public class Engine extends PApplet {
 
     return randomSpawnSpot;
   }
-  
+
   private void controlItems(){
   	Iterator<BonusItem> i = bonusItems.iterator();
   	while(i.hasNext()){
