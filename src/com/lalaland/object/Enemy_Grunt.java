@@ -11,7 +11,7 @@ import processing.core.PVector;
 
 public class Enemy_Grunt extends Enemy {
 	private static final float GRUNT_RADIUS = 7;
-	private static final PVector GRUNT_COLOR = new PVector(230, 115, 0);
+	private static final PVector GRUNT_COLOR = new PVector(153, 51, 51);
 	private static final int LIFE_THRESHOLD = 5;
 	
 	private int randomiser_counter = 0;
@@ -20,7 +20,10 @@ public class Enemy_Grunt extends Enemy {
   private float rand_orient;
   private float TTA = 120;
 	private boolean rotationInProg = false;	
-	private boolean USE_ACCEL = true;	  
+	private boolean USE_ACCEL = true;
+
+  private static int spawnCount = 0;
+  public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
 	
 	public Enemy_Grunt(float positionX, float positionY, PApplet parent, Environment environment) {
 		super(positionX, positionY, parent, environment, GRUNT_RADIUS, GRUNT_COLOR);
@@ -32,13 +35,18 @@ public class Enemy_Grunt extends Enemy {
 	@Override
 	public void move() {		
 		updateLife();
-    if (life <= LIFE_THRESHOLD) {
-      alive = false;
-    }
-    else {
-    	wander();      
-    }    
+    wander();
 	}
+
+  public static int getSpawnCount() {
+    return spawnCount;
+  }
+
+  public static void initializeSpawnDetails(int frameRate) {
+    SPAWN_OFFSET = frameRate * 2;
+    SPAWN_INTERVAL = frameRate * 20;
+    SPAWN_MAX = 4;
+  }
 	
 	private void wander(){
 	//to smooth out rotation. used only when USE_ACCEL is set true
@@ -85,6 +93,9 @@ public class Enemy_Grunt extends Enemy {
           i.remove();
         }
       }
+    }
+    if (life <= LIFE_THRESHOLD) {
+      alive = false;
     }
   }
 

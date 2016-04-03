@@ -15,7 +15,7 @@ import processing.core.PVector;
 
 public class Enemy_Hermit extends Enemy {
 	private static final float HERMIT_RADIUS = 7;
-	private static final PVector HERMIT_COLOR = new PVector(102, 255, 51);
+	private static final PVector HERMIT_COLOR = new PVector(255, 153, 102);
 	private static final PVector HERMIT_RAGE_COLOR = new PVector(255, 255, 0);
 	private static final float HERMIT_VIEW_RADIUS = 180;
 	private static final float MAX_LINEAR_ACC = 0.5f;
@@ -25,6 +25,9 @@ public class Enemy_Hermit extends Enemy {
 	private boolean rageModeEntered = false;
 	private float TTA = 50;
 
+	private static int spawnCount = 0;
+	public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
+
 	public Enemy_Hermit(float positionX, float positionY, PApplet parent, Environment environment) {
 		super(positionX, positionY, parent, environment, HERMIT_RADIUS, HERMIT_COLOR);
 		DRAW_BREADCRUMBS = false;
@@ -32,15 +35,23 @@ public class Enemy_Hermit extends Enemy {
 		MAX_VELOCITY = 1.0f;		
 		lifeReductionRate = 4;
 		targetPosition = new PVector(position.x, position.y);
+		spawnCount++;
+	}
+
+	public static void initializeSpawnDetails(int frameRate) {
+		SPAWN_OFFSET = frameRate * 5;
+		SPAWN_INTERVAL = frameRate * 20;
+		SPAWN_MAX = 3;
+	}
+
+	public static int getSpawnCount() {
+		return spawnCount;
 	}
 
 	@Override
 	public void move() {
 		updateLife();
-    if (life <= LIFE_THRESHOLD) {
-      alive = false;
-    }
-    else if(isPlayerVisible()){
+    if(isPlayerVisible()){
     	rageModeOn();
     	seekPlayer();
     }
@@ -61,6 +72,10 @@ public class Enemy_Hermit extends Enemy {
 					i.remove();
 				}
 			}
+		}
+		if (life <= LIFE_THRESHOLD) {
+			alive = false;
+			spawnCount--;
 		}
 	}
 	

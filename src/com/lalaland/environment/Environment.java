@@ -58,7 +58,7 @@ public class Environment {
     buildGraph();
   }
   
-  public void makeTiles(int numTilesX, int numTilesY) {
+  private void makeTiles(int numTilesX, int numTilesY) {
     numTiles = new PVector(numTilesX, numTilesY);
     tileSize = new PVector(width / numTiles.x, height / numTiles.y);
     Logger.log("numTiles = " + numTiles + " tileSize = " + tileSize);

@@ -17,6 +17,8 @@ public class Enemy_Soldier extends Enemy {
   private static final int OBSTACLE_OFFSET = 20;
   private static final int MAX_FOLLOW_NODE_COUNT = 10;
 
+  private static int spawnCount = 0;
+
   private boolean startTakingCover;
   private int followedNodes;
   private enum States {
@@ -25,6 +27,8 @@ public class Enemy_Soldier extends Enemy {
   private States state;
   private float lifeRegainRate;
   private Obstacle lastCoverObstacle;
+
+  public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
   
   public Enemy_Soldier(float positionX, float positionY, PApplet parent, Environment environment) {
     super(positionX, positionY, parent, environment, SOLDIER_RADIUS, SOLDIER_COLOR.copy());
@@ -35,12 +39,23 @@ public class Enemy_Soldier extends Enemy {
     MAX_VELOCITY = 1;
     MAX_ACCELERATION = 0.3f;
     targetPosition = new PVector(position.x, position.y);
-    lifeReductionRate = 5;
+    lifeReductionRate = 7;
     lifeRegainRate = 0.08f;
     startTakingCover = false;
     followedNodes = 0;
     state = States.SEEK;
     lastCoverObstacle = null;
+    spawnCount++;
+  }
+
+  public static int getSpawnCount() {
+    return spawnCount;
+  }
+
+  public static void initializeSpawnDetails(int frameRate) {
+    SPAWN_OFFSET = frameRate * 2;
+    SPAWN_INTERVAL = frameRate * 10;
+    SPAWN_MAX = 6;
   }
 
   @Override
@@ -115,8 +130,10 @@ public class Enemy_Soldier extends Enemy {
         }
       }
     }
-    if (life <= LIFE_THRESHOLD)
+    if (life <= LIFE_THRESHOLD) {
       alive = false;
+      spawnCount--;
+    }
     if (life <= COVER_THRESHOLD && state == States.SEEK)
       updateState(States.PATH_FIND_COVER);
   }

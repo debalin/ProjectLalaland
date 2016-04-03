@@ -18,16 +18,20 @@ public abstract class Enemy extends GameObject {
 	protected LinkedList<Integer> solutionPath;
 	protected float RADIUS_SATISFACTION;
 	protected float MAX_ACCELERATION;
-
 	protected float TTA = 120;
-	boolean USE_ACCEL = true;
+  protected boolean USE_ACCEL = true;
+  protected boolean rotationInProg = false;
+  protected final int BORDER_PADDING = 12;
+
 	private int wa_counter = 0;
 	private final int WA_LIMIT = 300;
 	private float wa_angle = PConstants.PI;
-	protected boolean rotationInProg = false;
-	protected final int BORDER_PADDING = 12;
 
 	protected static final GraphSearch.SearchType searchType = GraphSearch.SearchType.ASTAR;
+
+  public enum EnemyTypes {
+    SOLDIER, GRUNT, HERMIT
+  }
 
 	public boolean isAlive() {
 		return alive;

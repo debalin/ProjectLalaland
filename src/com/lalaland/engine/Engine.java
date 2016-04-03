@@ -1,5 +1,6 @@
 package com.lalaland.engine;
 
+import jdk.internal.dynalink.beans.StaticClass;
 import processing.core.*;
 
 import java.util.Iterator;
@@ -10,10 +11,9 @@ import com.lalaland.environment.*;
 import com.lalaland.object.*;
 
 public class Engine extends PApplet {
-  
-	public static float time = 0f;
-  public static final PVector RESOLUTION = new PVector(1000, 800);
-  
+
+  private static final PVector RESOLUTION = new PVector(1000, 800);
+  private static final int FRAME_RATE = 55;
   private static final int SMOOTH_FACTOR = 4;
   private static final int BONUS_DROP_INTERVAL = 800;
   private static final PVector BACKGROUND_RGB = new PVector(60, 60, 60);
@@ -24,24 +24,37 @@ public class Engine extends PApplet {
   private Player player;
   private List<Enemy> enemies;
   private List<BonusItem> bonusItems;
-  
+
+  private static float time = 0f;
+
+  public static float getTime() {
+    return time;
+  }
+
+  public static PVector getResolution() {
+    return RESOLUTION;
+  }
+
   public void settings() {
     size((int)RESOLUTION.x, (int)RESOLUTION.y, P3D);
     smooth(SMOOTH_FACTOR);
+    initializeEnemySpawnDetails();
+  }
+
+  private void initializeEnemySpawnDetails() {
+    Enemy_Soldier.initializeSpawnDetails(FRAME_RATE);
+    Enemy_Hermit.initializeSpawnDetails(FRAME_RATE);
+    Enemy_Grunt.initializeSpawnDetails(FRAME_RATE);
   }
   
   public void setup() {
     noStroke();    
-    frameRate(55);
+    frameRate(FRAME_RATE);
     environment = new Environment(this, RESOLUTION, NUM_TILES);
     
     player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this, environment);
     environment.setPlayer(player);
     enemies = new LinkedList<>();
-
-    enemies.add(new Enemy_Grunt(200, 50, this, environment));
-    enemies.add(new Enemy_Hermit(300, 50, this, environment));
-    enemies.add(new Enemy_Soldier(400, -50, this, environment));
 
     bonusItems = new LinkedList<>();
     environment.setBonusItems(bonusItems);
@@ -52,7 +65,8 @@ public class Engine extends PApplet {
   }
   
   public void draw() {
-  	time = millis();
+    time = millis();
+
     background(BACKGROUND_RGB.x, BACKGROUND_RGB.y, BACKGROUND_RGB.z);
     
     environment.drawObstacles();
@@ -75,6 +89,7 @@ public class Engine extends PApplet {
   }
   
   private void controlEnemies() {
+    spawnEnemies();
     Iterator<Enemy> i = enemies.iterator();
     while (i.hasNext()) {
       Enemy enemy = i.next();
@@ -86,6 +101,50 @@ public class Engine extends PApplet {
       	i.remove();
       }
     }
+  }
+
+  private void spawnEnemies() {
+    PVector spawnSpot;
+    for (Enemy.EnemyTypes enemyType : Enemy.EnemyTypes.values()) {
+      switch (enemyType) {
+        case SOLDIER:
+          if ((Enemy_Soldier.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Soldier.SPAWN_OFFSET) % Enemy_Soldier.SPAWN_INTERVAL == 0) && (Enemy_Soldier.getSpawnCount() < Enemy_Soldier.SPAWN_MAX)) {
+            spawnSpot = getRandomSpawnSpot();
+            enemies.add(new Enemy_Soldier(spawnSpot.x, spawnSpot.y, this, environment));
+          }
+          break;
+        case HERMIT:
+          if ((Enemy_Hermit.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Hermit.SPAWN_OFFSET) % Enemy_Hermit.SPAWN_INTERVAL == 0) && (Enemy_Hermit.getSpawnCount() < Enemy_Hermit.SPAWN_MAX)) {
+            spawnSpot = getRandomSpawnSpot();
+            enemies.add(new Enemy_Hermit(spawnSpot.x, spawnSpot.y, this, environment));
+          }
+          break;
+        case GRUNT:
+          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
+            spawnSpot = getRandomSpawnSpot();
+            enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
+          }
+          break;
+      }
+    }
+  }
+
+  private PVector getRandomSpawnSpot() {
+    PVector randomSpawnSpot = new PVector();
+
+    float random = random(1, 100);
+    if (random < 50)
+      randomSpawnSpot.x = random + 20;
+    else
+      randomSpawnSpot.x = RESOLUTION.x - 20 - (random - 50);
+
+    random = random(1, 100);
+    if (random < 50)
+      randomSpawnSpot.y = random + 20;
+    else
+      randomSpawnSpot.y = RESOLUTION.y - 20 - (random - 50);
+
+    return randomSpawnSpot;
   }
   
   private void controlItems(){
