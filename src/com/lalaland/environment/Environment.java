@@ -171,16 +171,25 @@ public class Environment {
     return nearestObstacle;
   }
 
+  public Obstacle getFarthestObstacle(PVector position, Obstacle exceptThisObstacle) {
+    Obstacle farthestObstacle = null;
+    float maximumDistance = 0;
+    for (Obstacle obstacle : obstacles) {
+      float distance = PVector.dist(obstacle.getCenterPosition(), position);
+      if (distance > maximumDistance && obstacle != exceptThisObstacle) {
+        maximumDistance = distance;
+        farthestObstacle = obstacle;
+      }
+    }
+    return farthestObstacle;
+  }
+
   public Player getPlayer() {
     return player;
   }
 
   public void setPlayer(Player player) {
     this.player = player;
-  }
-
-  public List<BonusItem> getBonusItems(){
-  	return bonusItems;
   }
 
   public void setBonusItems(List<BonusItem> items){

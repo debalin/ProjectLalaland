@@ -56,7 +56,6 @@ public class Engine extends PApplet {
     player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this, environment);
     environment.setPlayer(player);
     enemies = new LinkedList<>();
-    enemies.add(new Enemy_Grunt(200, 100, this, environment));
 
     bonusItems = new LinkedList<>();
     environment.setBonusItems(bonusItems);
@@ -88,9 +87,6 @@ public class Engine extends PApplet {
 
   private void controlPlayerGun(){
   	if(mousePressed && frameCount % Player.getGUN_FIRE_INTERVAL() == 0){
-//      if(keyPressed && keyCode == SHIFT){
-//        player.shootRadialBullets();
-//      }
       if(mousePressed && mouseButton == RIGHT)
         player.shootRadialBullets();
       else{
@@ -131,18 +127,18 @@ public class Engine extends PApplet {
 //            enemies.add(new Enemy_Hermit(spawnSpot.x, spawnSpot.y, this, environment));
 //          }
 //          break;
-        case GRUNT:
-          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
-            spawnSpot = getRandomSpawnSpot();
-            enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
-          }
-          break;
-        case FLOCKER:
-          if ((Enemy_Flocker_Leader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Flocker_Leader.SPAWN_OFFSET) % Enemy_Flocker_Leader.SPAWN_INTERVAL == 0) && (Enemy_Flocker_Leader.getSpawnCount() < Enemy_Flocker_Leader.SPAWN_MAX)) {
-            spawnSpot = new PVector(-100, -100);
-            enemies.add(new Enemy_Flocker_Leader(spawnSpot.x, spawnSpot.y, this, environment));
-          }
-          break;
+//        case GRUNT:
+//          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
+//            spawnSpot = getRandomSpawnSpot();
+//            enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
+//          }
+//          break;
+//        case FLOCKER:
+//          if ((Enemy_Flocker_Leader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Flocker_Leader.SPAWN_OFFSET) % Enemy_Flocker_Leader.SPAWN_INTERVAL == 0) && (Enemy_Flocker_Leader.getSpawnCount() < Enemy_Flocker_Leader.SPAWN_MAX)) {
+//            spawnSpot = new PVector(-100, -100);
+//            enemies.add(new Enemy_Flocker_Leader(spawnSpot.x, spawnSpot.y, this, environment));
+//          }
+//          break;
       }
     }
   }

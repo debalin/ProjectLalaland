@@ -16,6 +16,7 @@ public class Enemy_Soldier extends Enemy {
   private static final float FLEE_VELOCITY = 2;
   private static final int OBSTACLE_OFFSET = 20;
   private static final int MAX_FOLLOW_NODE_COUNT = 10;
+  private static final  PathFindTypes PATH_FIND_TYPE = PathFindTypes.FARTHEST_FROM_PLAYER;
 
   private static int spawnCount = 0;
 
@@ -23,6 +24,9 @@ public class Enemy_Soldier extends Enemy {
   private int followedNodes;
   private enum States {
     SEEK, PATH_FIND_COVER, PATH_FOLLOW_COVER, PATH_FIND_PLAYER, PATH_FOLLOW_PLAYER, REGAIN_HEALTH
+  }
+  private enum PathFindTypes {
+    NEAREST_TO_SOLDIER, FARTHEST_FROM_PLAYER
   }
   private States state;
   private float lifeRegainRate;
@@ -146,7 +150,14 @@ public class Enemy_Soldier extends Enemy {
   }
 
   private void findCover() {
-    lastCoverObstacle = environment.getNearestObstacle(position, lastCoverObstacle);
+    switch (PATH_FIND_TYPE) {
+      case NEAREST_TO_SOLDIER:
+        lastCoverObstacle = environment.getNearestObstacle(position, lastCoverObstacle);
+        break;
+      case FARTHEST_FROM_PLAYER:
+        lastCoverObstacle = environment.getFarthestObstacle(environment.getPlayer().getPosition(), lastCoverObstacle);
+        break;
+    }
     PVector left, right, up, down;
     left = new PVector(lastCoverObstacle.getCenterPosition().x - lastCoverObstacle.getSize().x / 2, lastCoverObstacle.getCenterPosition().y);
     right = new PVector(lastCoverObstacle.getCenterPosition().x + lastCoverObstacle.getSize().x / 2, lastCoverObstacle.getCenterPosition().y);

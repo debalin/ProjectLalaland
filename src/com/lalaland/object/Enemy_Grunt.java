@@ -16,10 +16,6 @@ public class Enemy_Grunt extends Enemy {
 	
 	private int randomiser_counter = 0;
 	private int randomiser_limit = 150;
-	private int rotcounter = 0;
-  private float rand_orient;
-//	private boolean rotationInProg = false;
-//	private boolean USE_ACCEL = true;
 
   private static int spawnCount = 0;
   public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
@@ -27,7 +23,7 @@ public class Enemy_Grunt extends Enemy {
 	public Enemy_Grunt(float positionX, float positionY, PApplet parent, Environment environment) {
 		super(positionX, positionY, parent, environment, GRUNT_RADIUS, GRUNT_COLOR);
 		DRAW_BREADCRUMBS = false;
-		MAX_VELOCITY = 1.5f;
+		MAX_VELOCITY = 1.0f;
 		lifeReductionRate = 5;
     TTA = 30;
     spawnCount++;
