@@ -21,7 +21,6 @@ public class Enemy_Flocker_Follower extends Enemy {
 	private static final float FOLLOWER_RADIUS = 5f;
 	private static final PVector FOLLOWER_COLOR = new PVector(200, 180, 200);
 	private static final float ALIGNMENT_THRESHOLD = 50f;
-	private static final float SEPARATION_THRESHOLD = 20f;
 	private static final float MAX_KILL_VELOCITY = 2f;
 
 	private enum States {
@@ -35,6 +34,7 @@ public class Enemy_Flocker_Follower extends Enemy {
 			Enemy_Flocker_Leader leader) {
 		super(positionX - (float)(Math.random()*20 + Math.random()*20), positionY - (float)(Math.random()*20 + Math.random()*20), parent, environment, FOLLOWER_RADIUS, FOLLOWER_COLOR.copy());
 		this.leader = leader;
+		SEPARATION_THRESHOLD = 20f;
 		POSITION_MATCHING = true;
 		DRAW_BREADCRUMBS = false;
 		TIME_TARGET_ROT = 20;
@@ -142,11 +142,11 @@ public class Enemy_Flocker_Follower extends Enemy {
 
 		Kinematic target = new Kinematic(targetPosition, null, 0, 0);
 		SteeringOutput steering;
-		ArrayList<Kinematic> followers = new ArrayList<>(leader.followers);
+		List<Enemy> followers = new ArrayList<>(leader.followers);
 
 		if(state == States.STAY_WITH_LEADER) {
 			steering = Seek.getSteering(this, target, MAX_ACCELERATION, RADIUS_SATISFACTION);
-			ArrayList<Kinematic> flockers = new ArrayList<>();
+			List<Kinematic> flockers = new ArrayList<>();
 			flockers.addAll(followers);
 			flockers.add(leader);
 			PVector alignment = Alignment.getSteering(this, flockers, MAX_ACCELERATION, ALIGNMENT_THRESHOLD).linear.mult(0.6f);

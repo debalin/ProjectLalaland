@@ -1,19 +1,16 @@
 package com.lalaland.steering;
 
-import java.util.ArrayList;
-
+import java.util.List;
 import com.lalaland.object.Kinematic;
-
 import processing.core.PVector;
 
 public class Alignment {
 
-	public static SteeringOutput getSteering(Kinematic character, ArrayList<Kinematic> targets, float maxAcceleration, float threshold) {
+	public static SteeringOutput getSteering(Kinematic character, List<Kinematic> targets, float maxAcceleration, float threshold) {
 		SteeringOutput steering = new SteeringOutput();
 		PVector v = new PVector();
 		int neighbourCount = 0;
-		for(int i=0; i<targets.size(); i++) {
-			Kinematic target = targets.get(i);
+		for(Kinematic target : targets) {
 			if(character == target)
 				continue;
 			PVector direction = PVector.sub(target.position, character.position);

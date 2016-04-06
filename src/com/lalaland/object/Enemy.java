@@ -20,34 +20,17 @@ public abstract class Enemy extends GameObject {
 	protected LinkedList<Integer> solutionPath;
 	protected float RADIUS_SATISFACTION;
 	protected float MAX_ACCELERATION;
-	float TTA ;
-  boolean USE_ACCEL = true;
-  boolean rotationInProg = false;
+	float TTA;
   protected final int BORDER_PADDING = 100;
+	protected float SEPARATION_THRESHOLD;
 
 	private int wa_counter = 0;
 	private final int WA_LIMIT = 300;
 	private float wa_angle = PConstants.PI;
 	private static int totalHPDamage = 0;
 
-	public static int getTotalHPDamage() {
-		return totalHPDamage;
-	}
-
-	void incrementTotalHPDamage(int damage) {
-		totalHPDamage += damage;
-	}
-
-
-
-	protected static final GraphSearch.SearchType searchType = GraphSearch.SearchType.ASTAR;
-
-  public enum EnemyTypes {
-    SOLDIER, GRUNT, HERMIT, FLOCKER
-  }
-
-	public boolean isAlive() {
-		return alive;
+	public enum EnemyTypes {
+		SOLDIER, GRUNT, HERMIT, FLOCKER
 	}
 
 	public Enemy(float positionX, float positionY, PApplet parent, Environment environment,
@@ -60,7 +43,21 @@ public abstract class Enemy extends GameObject {
 	}
 	
 	/*************methods*************/
-	
+
+	public static int getTotalHPDamage() {
+		return totalHPDamage;
+	}
+
+	protected void incrementTotalHPDamage(int damage) {
+		totalHPDamage += damage;
+	}
+
+	protected static final GraphSearch.SearchType searchType = GraphSearch.SearchType.ASTAR;
+
+	public boolean isAlive() {
+		return alive;
+	}
+
 	protected void rotateShapeDirection(float angle) {
 		angle = (angle-orientation) / 30;
 		orientation += angle;

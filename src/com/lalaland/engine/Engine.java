@@ -56,6 +56,7 @@ public class Engine extends PApplet {
     player = new Player(PLAYER_INITIAL_POSITION.x, PLAYER_INITIAL_POSITION.y, this, environment);
     environment.setPlayer(player);
     enemies = new LinkedList<>();
+    environment.setEnemies(enemies);
 
     bonusItems = new LinkedList<>();
     environment.setBonusItems(bonusItems);
@@ -173,7 +174,7 @@ public class Engine extends PApplet {
   }
 
   private void controlHUD(){
-    Utility.drawText(String.valueOf(Enemy.getTotalHPDamage()), width - 50, 30, this);
+    Utility.drawText("HP DAMAGE: " + Enemy.getTotalHPDamage(), width - 120, 30, this);
   }
 
   private void spawnBonusItems(){
@@ -190,5 +191,5 @@ public class Engine extends PApplet {
   public void keyReleased() {
     player.setDirection(key, false);
   }
-  
+
 }

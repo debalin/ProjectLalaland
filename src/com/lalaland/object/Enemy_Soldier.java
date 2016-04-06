@@ -4,6 +4,8 @@ import com.lalaland.utility.Logger;
 import processing.core.*;
 import com.lalaland.environment.*;
 import com.lalaland.steering.*;
+
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,7 +38,7 @@ public class Enemy_Soldier extends Enemy {
   
   public Enemy_Soldier(float positionX, float positionY, PApplet parent, Environment environment) {
     super(positionX, positionY, parent, environment, SOLDIER_RADIUS, SOLDIER_COLOR.copy());
-    POSITION_MATCHING = true;
+    SEPARATION_THRESHOLD = 30f;
     DRAW_BREADCRUMBS = false;
     TIME_TARGET_ROT = 10;
     RADIUS_SATISFACTION = 10;
@@ -239,8 +241,13 @@ public class Enemy_Soldier extends Enemy {
     KinematicOutput kinematic;
     SteeringOutput steering = new SteeringOutput();
 
+    List<Kinematic> targets = new ArrayList<>();
+    targets.addAll(environment.getEnemies());
+
     if (state == States.PATH_FOLLOW_COVER || state == States.PATH_FIND_COVER) {
       kinematic = Seek.getKinematic(this, target, FLEE_VELOCITY);
+      PVector separation = Separation.getSteering(this, targets, MAX_ACCELERATION, SEPARATION_THRESHOLD).linear.mult(0.8f);
+      kinematic.velocity.add(separation);
       velocity = kinematic.velocity;
       if (velocity.mag() >= FLEE_VELOCITY)
         velocity.setMag(FLEE_VELOCITY);
@@ -250,8 +257,12 @@ public class Enemy_Soldier extends Enemy {
       }
       reached = false;
     }
-    else {
+    else if (state != States.REGAIN_HEALTH){
       steering = Seek.getSteering(this, target, MAX_ACCELERATION, RADIUS_SATISFACTION);
+      PVector separation = Separation.getSteering(this, targets, MAX_ACCELERATION, SEPARATION_THRESHOLD).linear.mult(0.8f);
+      System.out.println(separation);
+      steering.linear.add(separation);
+      steering.linear.setMag(MAX_ACCELERATION);
       if (steering.linear.mag() == 0) {
         velocity.set(0, 0);
         acceleration.set(0, 0);
@@ -262,6 +273,12 @@ public class Enemy_Soldier extends Enemy {
       velocity.add(steering.linear);
       if (velocity.mag() >= MAX_VELOCITY)
         velocity.setMag(MAX_VELOCITY);
+    }
+    else {
+      velocity.set(0, 0);
+      acceleration.set(0, 0);
+      reached = true;
+      return;
     }
     steering.angular = LookWhereYoureGoing.getSteering(this, target, TIME_TARGET_ROT).angular;
     orientation += steering.angular;

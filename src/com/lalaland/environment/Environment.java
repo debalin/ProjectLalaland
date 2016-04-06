@@ -1,10 +1,8 @@
 package com.lalaland.environment;
 
+import com.lalaland.object.*;
 import processing.core.*;
 import java.util.*;
-
-import com.lalaland.object.BonusItem;
-import com.lalaland.object.Player;
 import com.lalaland.utility.*;
 
 public class Environment {
@@ -17,6 +15,7 @@ public class Environment {
   private Map<Integer, List<Utility.Neighbour>> adjacencyList;
   private Utility utility;
   private Player player;
+  private List<Enemy> enemies;
   private List<BonusItem> bonusItems;
 
   public Map<Integer, List<Utility.Neighbour>> getAdjacencyList() {
@@ -33,6 +32,14 @@ public class Environment {
 
   public PVector getTileSize() {
     return tileSize;
+  }
+
+  public List<Enemy> getEnemies() {
+    return enemies;
+  }
+
+  public void setEnemies(List<Enemy> enemies) {
+    this.enemies = enemies;
   }
 
   public Environment(PApplet parent, PVector resolution, PVector numTiles) {
