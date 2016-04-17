@@ -9,8 +9,9 @@ import java.util.*;
 public class Enemy_MartyrLeader extends Enemy {
 
   private static final float LEADER_RADIUS = 12;
-  private static final PVector LEADER_COLOR = new PVector(200, 45, 200);
+  private static final PVector LEADER_COLOR = new PVector(112, 71, 231);
   private static final int NUM_FOLLOWERS = 8;
+  private static final boolean DYNAMIC_FORMATION = false;
   private static final int PURSUE_FORESIGHT = 5;
   private static final int[] RANK_PRIORITIES = {1, 0, 2, 7, 3, 4, 5, 6};
 
@@ -22,7 +23,7 @@ public class Enemy_MartyrLeader extends Enemy {
   List<Enemy_MartyrFollower> followers;
 
   private static int spawnCount = 0;
-  Set<Integer> deadFollowers;
+  private Set<Integer> deadFollowers;
   public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
 
   public Enemy_MartyrLeader(float positionX, float positionY, PApplet parent, Environment environment) {
@@ -40,7 +41,7 @@ public class Enemy_MartyrLeader extends Enemy {
     spawnCount++;
 
     for (int i = 0; i < NUM_FOLLOWERS; i++)
-      followers.add(new Enemy_MartyrFollower(positionX, positionY, parent, environment, this, i));
+      followers.add(new Enemy_MartyrFollower(positionX, positionY, parent, environment, this, i, DYNAMIC_FORMATION));
   }
 
   public static int getSpawnCount() {
@@ -85,21 +86,30 @@ public class Enemy_MartyrLeader extends Enemy {
     updateFollowers();
   }
 
+  public int getNumFollowers() {
+    return followers.size();
+  }
+
   private void adjustFollowerRanks() {
-    for (int x = 0; x <= RANK_PRIORITIES.length - 1; x++) {
-      if (deadFollowers.contains(RANK_PRIORITIES[x])) {
-        for (int y = RANK_PRIORITIES.length - 1; y > x; y--) {
-          if (!deadFollowers.contains(RANK_PRIORITIES[y])) {
-            int index = followers.indexOf(new Enemy_MartyrFollower(0, 0, null, null, null, RANK_PRIORITIES[y]));
-            Enemy_MartyrFollower follower = followers.get(index);
-            follower.setRank(RANK_PRIORITIES[x]);
-            deadFollowers.remove(RANK_PRIORITIES[x]);
-            deadFollowers.add(RANK_PRIORITIES[y]);
-            break;
+    if (!DYNAMIC_FORMATION) {
+      for (int x = 0; x <= RANK_PRIORITIES.length - 1; x++) {
+        if (deadFollowers.contains(RANK_PRIORITIES[x])) {
+          for (int y = RANK_PRIORITIES.length - 1; y > x; y--) {
+            if (!deadFollowers.contains(RANK_PRIORITIES[y])) {
+              int index = followers.indexOf(new Enemy_MartyrFollower(0, 0, null, null, null, RANK_PRIORITIES[y], false));
+              Enemy_MartyrFollower follower = followers.get(index);
+              follower.setRank(RANK_PRIORITIES[x]);
+              deadFollowers.remove(RANK_PRIORITIES[x]);
+              deadFollowers.add(RANK_PRIORITIES[y]);
+              break;
+            }
           }
         }
       }
     }
+    else
+      for (int i = 0; i <= followers.size() - 1; i++) followers.get(i).setRank(i);
+
     followers.forEach(follower -> follower.setState(Enemy_MartyrFollower.States.UPDATE_FORMATION));
   }
 

@@ -63,16 +63,16 @@ public abstract class GameObject extends Kinematic {
   }
 
   public float getOrientation() { return orientation; }
-  
-  protected static float mapToRange(float rotation) {
-    float r = rotation % (2 * (float)Math.PI);
-    if (Math.abs(r) <= Math.PI) 
+
+  public static float mapToRange(float rotation) {
+    float r = rotation % (2 * PConstants.PI);
+    if (Math.abs(r) <= Math.PI)
       return r;
     else {
       if (r > Math.PI)
-        return (r - 2 * (float)Math.PI);
+        return (r - 2 * PConstants.PI);
       else
-        return (r + 2 * (float)Math.PI);
+        return (r + 2 * PConstants.PI);
     }
   }
   

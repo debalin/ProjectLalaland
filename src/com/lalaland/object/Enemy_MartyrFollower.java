@@ -8,14 +8,14 @@ import com.lalaland.environment.Environment;
 import com.lalaland.steering.*;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 public class Enemy_MartyrFollower extends Enemy {
 
   private static final float FOLLOWER_RADIUS = 7;
-  private static final PVector FOLLOWER_COLOR = new PVector(200, 180, 200);
+  private static final PVector FOLLOWER_COLOR = new PVector(186, 250, 99);
   private static final float ALIGNMENT_THRESHOLD = 50f;
-  private static final boolean DYNAMIC_FORMATION = false;
   private static final float SEPARATION_OFFSET = 50f;
   private static final float MAX_VELOCITY_FORMATION = 0.8f;
 
@@ -26,12 +26,14 @@ public class Enemy_MartyrFollower extends Enemy {
   private States state;
   private Enemy_MartyrLeader leader;
   private int rank;
+  private boolean DYNAMIC_FORMATION;
 
-  public Enemy_MartyrFollower(float positionX, float positionY, PApplet parent, Environment environment, Enemy_MartyrLeader leader, int rank) {
+  public Enemy_MartyrFollower(float positionX, float positionY, PApplet parent, Environment environment, Enemy_MartyrLeader leader, int rank, boolean DYNAMIC_FORMATION) {
     super(positionX, positionY, parent, environment, FOLLOWER_RADIUS, FOLLOWER_COLOR.copy());
     this.leader = leader;
     this.rank = rank;
     SEPARATION_THRESHOLD = 20f;
+    this.DYNAMIC_FORMATION = DYNAMIC_FORMATION;
     DRAW_BREADCRUMBS = false;
     TIME_TARGET_ROT = 60;
     RADIUS_SATISFACTION = 1.5f;
@@ -62,10 +64,15 @@ public class Enemy_MartyrFollower extends Enemy {
 
   private void updateTargetFromRank() {
     PVector separationVector;
-    if (rank % 2 == 0)
-      separationVector = PVector.fromAngle(leader.getOrientation() - (float)Math.PI / 4f + (float)Math.PI / 4f * rank).setMag(SEPARATION_OFFSET);
-    else
-      separationVector = PVector.fromAngle(leader.getOrientation() - (float)Math.PI / 4f + (float)Math.PI / 4f * rank).setMag(SEPARATION_OFFSET - 3);
+    if (!DYNAMIC_FORMATION) {
+      if (rank % 2 == 0)
+        separationVector = PVector.fromAngle(leader.getOrientation() - PConstants.PI / 4f + PConstants.PI / 4f * rank).setMag(SEPARATION_OFFSET);
+      else
+        separationVector = PVector.fromAngle(leader.getOrientation() - PConstants.PI / 4f + PConstants.PI / 4f * rank).setMag(SEPARATION_OFFSET - 3);
+    }
+    else {
+      separationVector = PVector.fromAngle(leader.getOrientation() + 2 * PConstants.PI * rank / leader.getNumFollowers()).setMag(SEPARATION_OFFSET);
+    }
     targetPosition.x = leader.getPosition().x + separationVector.x;
     targetPosition.y = leader.getPosition().y + separationVector.y;
   }
@@ -81,8 +88,7 @@ public class Enemy_MartyrFollower extends Enemy {
   @Override
   public void move() {
     updateLife();
-    if (!DYNAMIC_FORMATION)
-      updateTargetFromRank();
+    updateTargetFromRank();
 
     switch (state) {
       case UPDATE_FORMATION:
@@ -152,6 +158,10 @@ public class Enemy_MartyrFollower extends Enemy {
 
     if (!DYNAMIC_FORMATION)
       steering.angular = Align.getSteering(this, leader, TIME_TARGET_ROT).angular;
+    else {
+      steering.angular = (leader.getOrientation() + 2 * PConstants.PI * rank / leader.getNumFollowers()) - orientation;
+      steering.angular = mapToRange(steering.angular) / TIME_TARGET_ROT;
+    }
     orientation += steering.angular;
 
     if (DRAW_BREADCRUMBS)
