@@ -4,14 +4,13 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.lalaland.environment.Environment;
-import com.lalaland.steering.LookWhereYoureGoing;
-import com.lalaland.steering.Seek;
-import com.lalaland.steering.SteeringOutput;
-import com.lalaland.steering.Wander;
+import com.lalaland.steering.*;
 import com.lalaland.utility.Utility;
 
 import processing.core.PApplet;
 import processing.core.PVector;
+
+import static com.lalaland.steering.ObstacleSteering.checkForObstacleAvoidance;
 
 public class Enemy_Hermit extends Enemy {
 	private static final float HERMIT_RADIUS = 7;
@@ -19,12 +18,14 @@ public class Enemy_Hermit extends Enemy {
 	private static final PVector HERMIT_RAGE_COLOR = new PVector(255, 255, 0);
 	private static final float HERMIT_VIEW_RADIUS = 180;
 	private static final float MAX_LINEAR_ACC = 0.5f;
-	private static final float MAX_ANGULAR_ACC = 0.1f;
 	private static final float RADIUS_SATISFACTION = 0.1f;
 	private static final float SEEK_MAX_VELOCITY = 1.9f;
-	private boolean rageModeEntered = false;
-	private float TTA = 50;
 
+	private enum States {
+		WANDER, RAGE_MODE
+	}
+	private States state;
+	private Wander wander;
 	private static int spawnCount = 0;
 	public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
 
@@ -36,12 +37,18 @@ public class Enemy_Hermit extends Enemy {
 		lifeReductionRate = 4;
 		targetPosition = new PVector(position.x, position.y);
 		spawnCount++;
+		wander = new Wander(150);
+		state = States.WANDER;
 	}
 
 	public static void initializeSpawnDetails(int frameRate) {
 		SPAWN_OFFSET = frameRate * 5;
 		SPAWN_INTERVAL = frameRate * 20;
 		SPAWN_MAX = 3;
+	}
+
+	private void updateState(States state) {
+		this.state = state;
 	}
 
 	public static int getSpawnCount() {
@@ -51,14 +58,23 @@ public class Enemy_Hermit extends Enemy {
 	@Override
 	public void move() {
 		updateLife();
-    if(isPlayerVisible()){
-    	rageModeOn();
-    	seekPlayer();
-    }
-    else {
-    	rageModeOff();
-    	wander();      
-    }
+
+		switch (state) {
+			case WANDER:
+				updatePositionWander();
+				if (isPlayerVisible()) {
+					rageModeOn();
+					updateState(States.RAGE_MODE);
+				}
+				break;
+			case RAGE_MODE:
+				updatePositionSeek();
+				if (!isPlayerVisible()) {
+					rageModeOff();
+					updateState(States.WANDER);
+				}
+				break;
+		}
 	}
 
 	private void updateLife() {
@@ -81,28 +97,22 @@ public class Enemy_Hermit extends Enemy {
 	}
 	
 	private void rageModeOn(){
-		if(rageModeEntered)
-			return;
 		IND_COLOR = HERMIT_RAGE_COLOR;
-		for(int i=7;i>0;i--)
+		for (int i = 7; i > 0; i--)
 			enlarge();
-		rageModeEntered = true;
 	}
 	
 	private void rageModeOff(){
-		if(!rageModeEntered)
-			return;
-		for(int i=7;i>0;i--)
+		for (int i = 7; i > 0; i--)
 			diminish();
 		IND_COLOR = HERMIT_COLOR;
-		rageModeEntered = false;
 	}
 	
 	private boolean isPlayerVisible(){
 		return Utility.calculateEuclideanDistance(environment.getPlayer().position, position) <= HERMIT_VIEW_RADIUS;
 	}
 	
-	private void seekPlayer(){
+	private void updatePositionSeek(){
 		targetPosition.x = environment.getPlayer().getPosition().x;
     targetPosition.y = environment.getPlayer().getPosition().y;
     position.add(velocity);
@@ -127,25 +137,10 @@ public class Enemy_Hermit extends Enemy {
       storeHistory();
 	}
 
-	private void wander() {
-		SteeringOutput steering = Wander.getPositionMatchingSteering(this, MAX_LINEAR_ACC, MAX_ANGULAR_ACC, TTA, RADIUS_SATISFACTION);
-
-		velocity.add(steering.linear);
-		rotation = steering.angular;
-		if (velocity.mag() >= MAX_VELOCITY)
-			velocity.setMag(MAX_VELOCITY);
-		
-		// update position vectors
-		// check if colliding
-		if(!checkForObstacleAvoidance(velocity))
-			position.add(velocity);
-		else
-			avoidObstacleOnWander();
-		
-		orientation += rotation;
-
-		// handle behavior near window boundary
-		avoidBoundary();
-	}	
+	private void updatePositionWander() {
+		KinematicOutput kinematic = wander.getOrientationMatchingSteering(this, environment, parent, BORDER_PADDING, MAX_VELOCITY);
+		orientation += kinematic.rotation;
+		position.add(kinematic.velocity);
+	}
 
 }

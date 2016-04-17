@@ -54,10 +54,6 @@ public class Enemy_Soldier extends Enemy {
     spawnCount++;
   }
 
-  public static int getSpawnCount() {
-    return spawnCount;
-  }
-
   public static void initializeSpawnDetails(int frameRate) {
     SPAWN_OFFSET = frameRate * 2;
     SPAWN_INTERVAL = frameRate * 10;
@@ -72,7 +68,7 @@ public class Enemy_Soldier extends Enemy {
       case SEEK:
         targetPosition.x = environment.getPlayer().getPosition().x;
         targetPosition.y = environment.getPlayer().getPosition().y;
-        if (checkForObstacleAvoidance(velocity))
+        if (ObstacleSteering.checkForObstacleAvoidance(this, environment))
           updateState(States.PATH_FIND_PLAYER);
         break;
       case PATH_FIND_COVER:
