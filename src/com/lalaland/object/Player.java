@@ -29,6 +29,10 @@ public class Player extends GameObject {
     LEFT = RIGHT = UP = DOWN = false;
     bullets = Collections.synchronizedList(new LinkedList<>());
   }
+
+  public PVector getVelocity() {
+    return velocity;
+  }
   
   @Override
   public void move() {

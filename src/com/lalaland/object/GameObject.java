@@ -34,16 +34,18 @@ public abstract class GameObject extends Kinematic {
     this.environment = environment;
     this.IND_RADIUS = IND_RADIUS;
     this.IND_COLOR = this.CRUMB_COLOR = IND_COLOR;
-    
-    group = parent.createShape(PApplet.GROUP);
-    head = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
-    head.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
-    head.setStroke(parent.color(255, 0));
-    group.addChild(head);
-    beak = parent.createShape(PApplet.TRIANGLE, -IND_RADIUS, IND_RADIUS / 4, IND_RADIUS, IND_RADIUS / 4, 0, 2.1f * IND_RADIUS);
-    beak.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
-    beak.setStroke(parent.color(255, 0));
-    group.addChild(beak);
+
+    if (parent != null) {
+      group = parent.createShape(PApplet.GROUP);
+      head = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
+      head.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
+      head.setStroke(parent.color(255, 0));
+      group.addChild(head);
+      beak = parent.createShape(PApplet.TRIANGLE, -IND_RADIUS, IND_RADIUS / 4, IND_RADIUS, IND_RADIUS / 4, 0, 2.1f * IND_RADIUS);
+      beak.setFill(parent.color(IND_COLOR.x, IND_COLOR.y, IND_COLOR.z, 255));
+      beak.setStroke(parent.color(255, 0));
+      group.addChild(beak);
+    }
     
     history = new HashSet<>();
     interval = 0;
@@ -59,6 +61,8 @@ public abstract class GameObject extends Kinematic {
   public PVector getPosition() {
     return position;
   }
+
+  public float getOrientation() { return orientation; }
   
   protected static float mapToRange(float rotation) {
     float r = rotation % (2 * (float)Math.PI);

@@ -16,11 +16,11 @@ public class Align {
 	}
 	
 	private static float mapToRange(float rotation) {
-		rotation = rotation % (2*PConstants.PI);
+		rotation = rotation % (2 * PConstants.PI);
 		if(Math.abs(rotation) <= PConstants.PI)
 			return rotation;
 		if(rotation > PConstants.PI)
-			return rotation - PConstants.PI*2;
-		return rotation + PConstants.PI*2;
+			return rotation - PConstants.PI * 2;
+		return rotation + PConstants.PI * 2;
 	}
 }

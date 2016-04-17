@@ -45,7 +45,8 @@ public class Engine extends PApplet {
     Enemy_Soldier.initializeSpawnDetails(FRAME_RATE);
     Enemy_Hermit.initializeSpawnDetails(FRAME_RATE);
     Enemy_Grunt.initializeSpawnDetails(FRAME_RATE);
-    Enemy_Flocker_Leader.initializeSpawnDetails(FRAME_RATE);
+    Enemy_FlockerLeader.initializeSpawnDetails(FRAME_RATE);
+    Enemy_MartyrLeader.initializeSpawnDetails(FRAME_RATE);
   }
   
   public void setup() {
@@ -116,12 +117,12 @@ public class Engine extends PApplet {
     PVector spawnSpot;
     for (Enemy.EnemyTypes enemyType : Enemy.EnemyTypes.values()) {
       switch (enemyType) {
-        case SOLDIER:
-          if ((Enemy_Soldier.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Soldier.SPAWN_OFFSET) % Enemy_Soldier.SPAWN_INTERVAL == 0) && (Enemy_Soldier.getSpawnCount() < Enemy_Soldier.SPAWN_MAX)) {
-            spawnSpot = getRandomSpawnSpot();
-            enemies.add(new Enemy_Soldier(spawnSpot.x, spawnSpot.y, this, environment));
-          }
-          break;
+//        case SOLDIER:
+//          if ((Enemy_Soldier.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Soldier.SPAWN_OFFSET) % Enemy_Soldier.SPAWN_INTERVAL == 0) && (Enemy_Soldier.getSpawnCount() < Enemy_Soldier.SPAWN_MAX)) {
+//            spawnSpot = getRandomSpawnSpot();
+//            enemies.add(new Enemy_Soldier(spawnSpot.x, spawnSpot.y, this, environment));
+//          }
+//          break;
 //        case HERMIT:
 //          if ((Enemy_Hermit.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Hermit.SPAWN_OFFSET) % Enemy_Hermit.SPAWN_INTERVAL == 0) && (Enemy_Hermit.getSpawnCount() < Enemy_Hermit.SPAWN_MAX)) {
 //            spawnSpot = getRandomSpawnSpot();
@@ -135,11 +136,17 @@ public class Engine extends PApplet {
 //          }
 //          break;
 //        case FLOCKER:
-//          if ((Enemy_Flocker_Leader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Flocker_Leader.SPAWN_OFFSET) % Enemy_Flocker_Leader.SPAWN_INTERVAL == 0) && (Enemy_Flocker_Leader.getSpawnCount() < Enemy_Flocker_Leader.SPAWN_MAX)) {
+//          if ((Enemy_FlockerLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_FlockerLeader.SPAWN_OFFSET) % Enemy_FlockerLeader.SPAWN_INTERVAL == 0) && (Enemy_FlockerLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
 //            spawnSpot = new PVector(-100, -100);
-//            enemies.add(new Enemy_Flocker_Leader(spawnSpot.x, spawnSpot.y, this, environment));
+//            enemies.add(new Enemy_FlockerLeader(spawnSpot.x, spawnSpot.y, this, environment));
 //          }
 //          break;
+        case MARTYR:
+          if ((Enemy_MartyrLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_MartyrLeader.SPAWN_OFFSET) % Enemy_MartyrLeader.SPAWN_INTERVAL == 0) && (Enemy_MartyrLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
+            spawnSpot = new PVector(50, 50);
+            enemies.add(new Enemy_MartyrLeader(spawnSpot.x, spawnSpot.y, this, environment));
+          }
+          break;
       }
     }
   }

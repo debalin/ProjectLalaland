@@ -30,7 +30,7 @@ public abstract class Enemy extends GameObject {
 	private static int totalHPDamage = 0;
 
 	public enum EnemyTypes {
-		SOLDIER, GRUNT, HERMIT, FLOCKER
+		SOLDIER, GRUNT, HERMIT, FLOCKER, MARTYR
 	}
 
 	public Enemy(float positionX, float positionY, PApplet parent, Environment environment,
@@ -39,7 +39,8 @@ public abstract class Enemy extends GameObject {
 		acceleration = new PVector();
 		reached = false;
 		alive = true;
-		graphSearch = environment.getNewGraphSearch();
+		if (environment != null)
+			graphSearch = environment.getNewGraphSearch();
 	}
 	
 	/*************methods*************/
@@ -123,10 +124,10 @@ public abstract class Enemy extends GameObject {
   void avoidBoundary(){
       float orient;
       Random random = new Random();
-      do{
+      do {
         orient = random.nextInt(180) - random.nextInt(180);
         targetOrientation = parent.radians(orient) +  orientation;
-      }while(checkForBoundaryAvoidance(PVector.fromAngle(targetOrientation).setMag(100)));
+      } while(checkForBoundaryAvoidance(PVector.fromAngle(targetOrientation).setMag(100)));
 	}
 
   void avoidObstacleOnWander(){
