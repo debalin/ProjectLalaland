@@ -10,8 +10,6 @@ import com.lalaland.utility.Utility;
 import processing.core.PApplet;
 import processing.core.PVector;
 
-import static com.lalaland.steering.ObstacleSteering.checkForObstacleAvoidance;
-
 public class Enemy_Hermit extends Enemy {
 	private static final float HERMIT_RADIUS = 7;
 	private static final PVector HERMIT_COLOR = new PVector(255, 153, 102);

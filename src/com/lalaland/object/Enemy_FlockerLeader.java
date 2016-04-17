@@ -66,7 +66,7 @@ public class Enemy_FlockerLeader extends Enemy {
 			targetPosition.y = environment.getPlayer().getPosition().y;
 			if(playerWithinSight())
 				updateState(States.KILL_PLAYER);
-			if (checkForObstacleAvoidance(velocity))
+			if (ObstacleSteering.checkForObstacleAvoidance(this, environment))
 				updateState(States.PATH_FIND_PLAYER);
 			break;
 		case PATH_FIND_PLAYER:
@@ -80,7 +80,7 @@ public class Enemy_FlockerLeader extends Enemy {
 			targetPosition.y = environment.getPlayer().getPosition().y;
 			if(!playerWithinSight())
 				updateState(States.SEEK_PLAYER);
-			if (checkForObstacleAvoidance(velocity))
+			if (ObstacleSteering.checkForObstacleAvoidance(this, environment))
 				updateState(States.PATH_FIND_PLAYER);
 			break;
 		case LEADER_DEAD_KILL_PLAYER:
