@@ -13,10 +13,10 @@ public class ObstacleSteering {
   private static final float FUTURE_RAY_VEL_BASE = 15f;
 
   public static boolean checkForObstacleAvoidance(Kinematic character, PApplet parent, Environment environment){
-    PVector futureRay1 = PVector.add(character.position, PVector.mult(PVector.fromAngle(character.orientation).setMag(FUTURE_RAY_VEL_BASE), 2f));
-    PVector futureRay2 = PVector.add(character.position, PVector.mult(PVector.fromAngle(character.orientation).setMag(FUTURE_RAY_VEL_BASE), 5f));
-    PVector futureRay3 = PVector.add(character.position, PVector.fromAngle(character.orientation - PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * 2f));
-    PVector futureRay4 = PVector.add(character.position, PVector.fromAngle(character.orientation + PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * 2f));
+    PVector futureRay1 = PVector.add(character.position, PVector.mult(character.velocity.copy().setMag(FUTURE_RAY_VEL_BASE), 2f));
+    PVector futureRay2 = PVector.add(character.position, PVector.mult(character.velocity.copy().setMag(FUTURE_RAY_VEL_BASE), 5f));
+    PVector futureRay3 = PVector.add(character.position, PVector.fromAngle(character.velocity.heading() - PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * 2f));
+    PVector futureRay4 = PVector.add(character.position, PVector.fromAngle(character.velocity.heading() + PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * 2f));
 
 //    parent.ellipse(futureRay1.x, futureRay1.y, 2, 2);
 //    parent.ellipse(futureRay2.x, futureRay2.y, 2, 2);
@@ -38,7 +38,7 @@ public class ObstacleSteering {
     do {
       orient = random.nextInt(180) - random.nextInt(180);
       targetOrientation = parent.radians(orient) + character.orientation;
-    } while (checkForObstacleAvoidance(new Kinematic(character.position, null, targetOrientation, 0), parent, environment));
+    } while (checkForObstacleAvoidance(new Kinematic(character.position, PVector.fromAngle(targetOrientation), 0, 0), parent, environment));
     return targetOrientation;
   }
 

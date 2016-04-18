@@ -12,9 +12,9 @@ public class BoundarySteering {
   private static final float FUTURE_RAY_VEL_BASE = 15f;
 
   public static boolean checkForBoundaryAvoidance(Kinematic character, PApplet parent, int BORDER_PADDING){
-    PVector futureRay1 = PVector.add(character.position, PVector.mult(PVector.fromAngle(character.orientation).setMag(FUTURE_RAY_VEL_BASE), 3f));
-    PVector futureRay2 = PVector.add(character.position, PVector.fromAngle(character.orientation - PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * 2f));
-    PVector futureRay3 = PVector.add(character.position, PVector.fromAngle(character.orientation + PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * 2f));
+    PVector futureRay1 = PVector.add(character.position, PVector.mult(character.velocity.copy().setMag(FUTURE_RAY_VEL_BASE), 3f));
+    PVector futureRay2 = PVector.add(character.position, PVector.fromAngle(character.velocity.heading() - PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * 2f));
+    PVector futureRay3 = PVector.add(character.position, PVector.fromAngle(character.velocity.heading() + PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * 2f));
 
     PVector boundary = new PVector(parent.width, parent.height);
     return (
@@ -39,7 +39,7 @@ public class BoundarySteering {
     do {
       orient = random.nextInt(180) - random.nextInt(180);
       targetOrientation = parent.radians(orient) +  character.orientation;
-    } while(checkForBoundaryAvoidance(new Kinematic(character.position, null, targetOrientation, 0), parent, BORDER_PADDING));
+    } while(checkForBoundaryAvoidance(new Kinematic(character.position, PVector.fromAngle(targetOrientation), 0, 0), parent, BORDER_PADDING));
     return targetOrientation;
   }
 
