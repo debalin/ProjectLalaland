@@ -54,12 +54,12 @@ public class Wander {
 			targetOrientation = randomBinomial() * PConstants.PI + character.orientation;
 			randomiserCounter = 0;
 		}
-
-		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(character, environment);
-		if(onObstacle) {
+		
+		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(character, parent, environment);
+		if (onObstacle) {
 			targetOrientation = ObstacleSteering.avoidObstacleOnWander(character, parent, environment);
 		}
-		else if(BoundarySteering.checkForBoundaryAvoidance(character, parent, BORDER_PADDING)){
+		else if (BoundarySteering.checkForBoundaryAvoidance(character, parent, BORDER_PADDING)) {
 			targetOrientation = BoundarySteering.avoidBoundaryOnWander(character, parent, BORDER_PADDING);
 		}
 		kinematicOutput.rotation = rotateShapeDirection(character, targetOrientation);

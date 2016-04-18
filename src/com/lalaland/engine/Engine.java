@@ -123,12 +123,12 @@ public class Engine extends PApplet {
 //            enemies.add(new Enemy_Soldier(spawnSpot.x, spawnSpot.y, this, environment));
 //          }
 //          break;
-//        case HERMIT:
-//          if ((Enemy_Hermit.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Hermit.SPAWN_OFFSET) % Enemy_Hermit.SPAWN_INTERVAL == 0) && (Enemy_Hermit.getSpawnCount() < Enemy_Hermit.SPAWN_MAX)) {
-//            spawnSpot = getRandomSpawnSpot();
-//            enemies.add(new Enemy_Hermit(spawnSpot.x, spawnSpot.y, this, environment));
-//          }
-//          break;
+        case HERMIT:
+          if ((Enemy_Hermit.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Hermit.SPAWN_OFFSET) % Enemy_Hermit.SPAWN_INTERVAL == 0) && (Enemy_Hermit.getSpawnCount() < Enemy_Hermit.SPAWN_MAX)) {
+            spawnSpot = getRandomSpawnSpot();
+            enemies.add(new Enemy_Hermit(spawnSpot.x, spawnSpot.y, this, environment));
+          }
+          break;
         case GRUNT:
           if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
             spawnSpot = getRandomSpawnSpot();
