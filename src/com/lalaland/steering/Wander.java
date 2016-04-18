@@ -15,6 +15,7 @@ public class Wander {
 
 	private int randomiserCounter;
 	private int randomiserLimit;
+	private float targetOrientation;
 	
 	static {
 		time = -2001;
@@ -24,6 +25,7 @@ public class Wander {
 	public Wander(int randomiserLimit) {
 		randomiserCounter = 0;
 		this.randomiserLimit = randomiserLimit;
+		targetOrientation = 0f;
 	}
 	
 	public static SteeringOutput getPositionMatchingSteering(Kinematic character, float maxLinearAcc, float maxAngularAcc, float timeToTarget, float ros) {
@@ -47,7 +49,6 @@ public class Wander {
 	
 	public KinematicOutput getOrientationMatchingSteering(Kinematic character, Environment environment, PApplet parent, int BORDER_PADDING, float MAX_VELOCITY) {
 		KinematicOutput kinematicOutput = new KinematicOutput();
-		float targetOrientation = 0f;
 		randomiserCounter++;
 		if(randomiserCounter == randomiserLimit){
 			targetOrientation = randomBinomial() * PConstants.PI + character.orientation;
