@@ -12,6 +12,7 @@ public class Wander {
 
 	private static Kinematic target;
 	private static float time;
+	private static float TIME_TO_TARGET_ROTATION = 30;
 
 	private int randomiserCounter;
 	private int randomiserLimit;
@@ -68,7 +69,7 @@ public class Wander {
 	}
 
 	protected float rotateShapeDirection(Kinematic character, float angle) {
-		angle = (angle - character.orientation) / 30;
+		angle = (angle - character.orientation) / TIME_TO_TARGET_ROTATION;
 		return angle;
 	}
 

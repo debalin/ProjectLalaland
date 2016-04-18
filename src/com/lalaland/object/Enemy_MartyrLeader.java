@@ -185,6 +185,8 @@ public class Enemy_MartyrLeader extends Enemy {
       reached = true;
       return;
     }
+    SteeringOutput obstacleSteering = ObstacleSteering.checkAndAvoidObstacle(this, environment, 0.5f, 10f);
+    steering.linear.add(obstacleSteering.linear);
     reached = false;
     velocity.add(steering.linear);
     if (velocity.mag() >= MAX_VELOCITY)
