@@ -21,8 +21,7 @@ public abstract class Enemy extends GameObject {
 	protected LinkedList<Integer> solutionPath;
 	protected float RADIUS_SATISFACTION;
 	protected float MAX_ACCELERATION;
-	float TTA;
-  protected final int BORDER_PADDING = 100;
+  public static final int BORDER_PADDING = 100;
 	protected float SEPARATION_THRESHOLD;
 
 	private static int totalHPDamage = 0;

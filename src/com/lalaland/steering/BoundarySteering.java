@@ -1,6 +1,5 @@
 package com.lalaland.steering;
 
-import com.lalaland.environment.Environment;
 import com.lalaland.object.Kinematic;
 import processing.core.PApplet;
 import processing.core.PVector;

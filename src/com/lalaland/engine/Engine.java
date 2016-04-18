@@ -129,24 +129,24 @@ public class Engine extends PApplet {
 //            enemies.add(new Enemy_Hermit(spawnSpot.x, spawnSpot.y, this, environment));
 //          }
 //          break;
-//        case GRUNT:
-//          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
-//            spawnSpot = getRandomSpawnSpot();
-//            enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
-//          }
-//          break;
+        case GRUNT:
+          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
+            spawnSpot = getRandomSpawnSpot();
+            enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
+          }
+          break;
 //        case FLOCKER:
 //          if ((Enemy_FlockerLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_FlockerLeader.SPAWN_OFFSET) % Enemy_FlockerLeader.SPAWN_INTERVAL == 0) && (Enemy_FlockerLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
 //            spawnSpot = new PVector(-100, -100);
 //            enemies.add(new Enemy_FlockerLeader(spawnSpot.x, spawnSpot.y, this, environment));
 //          }
 //          break;
-        case MARTYR:
-          if ((Enemy_MartyrLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_MartyrLeader.SPAWN_OFFSET) % Enemy_MartyrLeader.SPAWN_INTERVAL == 0) && (Enemy_MartyrLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
-            spawnSpot = new PVector(-100, -100);
-            enemies.add(new Enemy_MartyrLeader(spawnSpot.x, spawnSpot.y, this, environment));
-          }
-          break;
+//        case MARTYR:
+//          if ((Enemy_MartyrLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_MartyrLeader.SPAWN_OFFSET) % Enemy_MartyrLeader.SPAWN_INTERVAL == 0) && (Enemy_MartyrLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
+//            spawnSpot = new PVector(-100, -100);
+//            enemies.add(new Enemy_MartyrLeader(spawnSpot.x, spawnSpot.y, this, environment));
+//          }
+//          break;
       }
     }
   }
@@ -156,15 +156,15 @@ public class Engine extends PApplet {
 
     float random = random(1, 100);
     if (random < 50)
-      randomSpawnSpot.x = random + 20;
+      randomSpawnSpot.x = random + Enemy.BORDER_PADDING;
     else
-      randomSpawnSpot.x = RESOLUTION.x - 20 - (random - 50);
+      randomSpawnSpot.x = RESOLUTION.x - Enemy.BORDER_PADDING - (random - 50);
 
     random = random(1, 100);
     if (random < 50)
-      randomSpawnSpot.y = random + 20;
+      randomSpawnSpot.y = random + Enemy.BORDER_PADDING;
     else
-      randomSpawnSpot.y = RESOLUTION.y - 20 - (random - 50);
+      randomSpawnSpot.y = RESOLUTION.y - Enemy.BORDER_PADDING - (random - 50);
 
     return randomSpawnSpot;
   }

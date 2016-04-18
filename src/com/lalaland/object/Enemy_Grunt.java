@@ -22,7 +22,7 @@ public class Enemy_Grunt extends Enemy {
   public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
 
   private enum States {
-    TRACKING_WANDER, DIRECTED_WANDER
+    TRACKING_WANDER, DIRECTED_WANDER, WANDER
   }
 	
 	public Enemy_Grunt(float positionX, float positionY, PApplet parent, Environment environment) {
@@ -31,7 +31,7 @@ public class Enemy_Grunt extends Enemy {
 		MAX_VELOCITY = 1.0f;
 		lifeReductionRate = 5;
     spawnCount++;
-    state = States.DIRECTED_WANDER;
+    state = States.WANDER;
     wander = new Wander(RANDOMISER_INTERVAL);
 	}
 
@@ -45,9 +45,10 @@ public class Enemy_Grunt extends Enemy {
         break;
       case DIRECTED_WANDER:
         break;
+      case WANDER:
+        updatePositionWander();
+        break;
     }
-
-    updatePosition();
 	}
 
   private void trackPlayer() {
@@ -64,7 +65,7 @@ public class Enemy_Grunt extends Enemy {
     SPAWN_MAX = 4;
   }
 	
-	private void updatePosition(){
+	private void updatePositionWander(){
     KinematicOutput kinematic = wander.getOrientationMatchingSteering(this, environment, parent, BORDER_PADDING, MAX_VELOCITY);
     orientation += kinematic.rotation;
     position.add(kinematic.velocity);
