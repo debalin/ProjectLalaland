@@ -118,7 +118,7 @@ public class Player extends GameObject {
     int RADIAL_NUM = 5;
     float orient;
     for(int i = 0; i< RADIAL_NUM; i++ ){
-      orient = i*PConstants.TWO_PI/RADIAL_NUM;
+      orient = orientation + i*PConstants.TWO_PI/RADIAL_NUM;
       bullets.add(new Bullet(position.x, position.y, orient, parent, 3, new PVector(255, 0, 0)));
     }
 
