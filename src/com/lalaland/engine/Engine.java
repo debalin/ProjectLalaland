@@ -153,6 +153,12 @@ public class Engine extends PApplet {
             spawnSpot = getRandomSpawnSpot();
             enemies.add(new Enemy_Blender(spawnSpot.x, spawnSpot.y, this, environment));
           }
+//        case MARTYR:
+//          if ((Enemy_MartyrLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_MartyrLeader.SPAWN_OFFSET) % Enemy_MartyrLeader.SPAWN_INTERVAL == 0) && (Enemy_MartyrLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
+//            spawnSpot = new PVector(-100, -100);
+//            enemies.add(new Enemy_MartyrLeader(spawnSpot.x, spawnSpot.y, this, environment));
+//          }
+//          break;
       }
     }
   }

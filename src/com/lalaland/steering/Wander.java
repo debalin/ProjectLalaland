@@ -12,9 +12,11 @@ public class Wander {
 
 	private static Kinematic target;
 	private static float time;
+	private static float TIME_TO_TARGET_ROTATION = 30;
 
 	private int randomiserCounter;
 	private int randomiserLimit;
+	private float targetOrientation;
 	
 	static {
 		time = -2001;
@@ -24,6 +26,7 @@ public class Wander {
 	public Wander(int randomiserLimit) {
 		randomiserCounter = 0;
 		this.randomiserLimit = randomiserLimit;
+		targetOrientation = 0f;
 	}
 	
 	public static SteeringOutput getPositionMatchingSteering(Kinematic character, float maxLinearAcc, float maxAngularAcc, float timeToTarget, float ros) {
@@ -47,18 +50,17 @@ public class Wander {
 	
 	public KinematicOutput getOrientationMatchingSteering(Kinematic character, Environment environment, PApplet parent, int BORDER_PADDING, float MAX_VELOCITY) {
 		KinematicOutput kinematicOutput = new KinematicOutput();
-		float targetOrientation = 0f;
 		randomiserCounter++;
 		if(randomiserCounter == randomiserLimit){
 			targetOrientation = randomBinomial() * PConstants.PI + character.orientation;
 			randomiserCounter = 0;
 		}
-
-		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(character, environment);
-		if(onObstacle) {
+		
+		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(character, parent, environment);
+		if (onObstacle) {
 			targetOrientation = ObstacleSteering.avoidObstacleOnWander(character, parent, environment);
 		}
-		else if(BoundarySteering.checkForBoundaryAvoidance(character, parent, BORDER_PADDING)){
+		else if (BoundarySteering.checkForBoundaryAvoidance(character, parent, BORDER_PADDING)) {
 			targetOrientation = BoundarySteering.avoidBoundaryOnWander(character, parent, BORDER_PADDING);
 		}
 		kinematicOutput.rotation = rotateShapeDirection(character, targetOrientation);
@@ -67,7 +69,7 @@ public class Wander {
 	}
 
 	protected float rotateShapeDirection(Kinematic character, float angle) {
-		angle = (angle - character.orientation) / 30;
+		angle = (angle - character.orientation) / TIME_TO_TARGET_ROTATION;
 		return angle;
 	}
 

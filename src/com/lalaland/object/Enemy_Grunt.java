@@ -68,7 +68,8 @@ public class Enemy_Grunt extends Enemy {
 	private void updatePositionWander(){
     KinematicOutput kinematic = wander.getOrientationMatchingSteering(this, environment, parent, BORDER_PADDING, MAX_VELOCITY);
     orientation += kinematic.rotation;
-    position.add(kinematic.velocity);
+    velocity.set(kinematic.velocity);
+    position.add(velocity);
 	}
 
 	private void updateLife() {
