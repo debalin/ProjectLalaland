@@ -27,7 +27,7 @@ public abstract class Enemy extends GameObject {
 	private static int totalHPDamage = 0;
 
 	public enum EnemyTypes {
-		SOLDIER, GRUNT, HERMIT, FLOCKER, MARTYR
+		SOLDIER, GRUNT, HERMIT, FLOCKER, MARTYR, BLENDER
 	}
 
 	public Enemy(float positionX, float positionY, PApplet parent, Environment environment,
@@ -59,10 +59,20 @@ public abstract class Enemy extends GameObject {
     updateShape();
   }
 
+	void enlarge(float delta){
+		IND_RADIUS += delta;
+		updateShape();
+	}
+
   protected void diminish(){
     IND_RADIUS -= 0.5f;
     updateShape();
   }
+
+	void diminish(float delta){
+		IND_RADIUS -= delta;
+		updateShape();
+	}
   
   protected void updateShape(){
   	group = parent.createShape(PApplet.GROUP);

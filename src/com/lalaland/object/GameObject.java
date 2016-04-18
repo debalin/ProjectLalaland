@@ -20,8 +20,8 @@ public abstract class GameObject extends Kinematic {
   protected boolean DRAW_BREADCRUMBS;
   protected float TIME_TARGET_ROT;
   protected float MAX_VELOCITY;
-  protected float IND_RADIUS;
-  protected PVector IND_COLOR;
+  float IND_RADIUS;
+  PVector IND_COLOR;
   protected PVector CRUMB_COLOR;
 
   protected static final int LIFE_THRESHOLD = 0;

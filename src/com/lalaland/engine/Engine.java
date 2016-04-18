@@ -47,6 +47,7 @@ public class Engine extends PApplet {
     Enemy_Grunt.initializeSpawnDetails(FRAME_RATE);
     Enemy_FlockerLeader.initializeSpawnDetails(FRAME_RATE);
     Enemy_MartyrLeader.initializeSpawnDetails(FRAME_RATE);
+    Enemy_Blender.initializeSpawnDetails(FRAME_RATE);
   }
   
   public void setup() {
@@ -129,12 +130,12 @@ public class Engine extends PApplet {
 //            enemies.add(new Enemy_Hermit(spawnSpot.x, spawnSpot.y, this, environment));
 //          }
 //          break;
-        case GRUNT:
-          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
-            spawnSpot = getRandomSpawnSpot();
-            enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
-          }
-          break;
+//        case GRUNT:
+//          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
+//            spawnSpot = getRandomSpawnSpot();
+//            enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
+//          }
+//          break;
 //        case FLOCKER:
 //          if ((Enemy_FlockerLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_FlockerLeader.SPAWN_OFFSET) % Enemy_FlockerLeader.SPAWN_INTERVAL == 0) && (Enemy_FlockerLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
 //            spawnSpot = new PVector(-100, -100);
@@ -147,6 +148,11 @@ public class Engine extends PApplet {
 //            enemies.add(new Enemy_MartyrLeader(spawnSpot.x, spawnSpot.y, this, environment));
 //          }
 //          break;
+        case BLENDER:
+          if ((Enemy_Blender.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Blender.SPAWN_OFFSET) % Enemy_Blender.SPAWN_INTERVAL == 0) && (Enemy_Blender.getSpawnCount() < Enemy_Blender.SPAWN_MAX)) {
+            spawnSpot = getRandomSpawnSpot();
+            enemies.add(new Enemy_Blender(spawnSpot.x, spawnSpot.y, this, environment));
+          }
       }
     }
   }
