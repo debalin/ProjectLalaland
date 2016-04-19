@@ -4,6 +4,7 @@ import com.lalaland.engine.Engine;
 import com.lalaland.environment.Environment;
 import com.lalaland.object.Kinematic;
 
+import com.lalaland.utility.Utility;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
@@ -52,16 +53,33 @@ public class Wander {
 		KinematicOutput kinematicOutput = new KinematicOutput();
 		randomiserCounter++;
 		if(randomiserCounter == randomiserLimit){
-			targetOrientation = randomBinomial() * PConstants.PI + character.orientation;
+			targetOrientation = Utility.randomBinomial() * PConstants.PI + character.orientation;
 			randomiserCounter = 0;
 		}
-		
+
 		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(character, parent, environment);
 		if (onObstacle) {
 			targetOrientation = ObstacleSteering.avoidObstacleOnWander(character, parent, environment);
 		}
 		else if (BoundarySteering.checkForBoundaryAvoidance(character, parent, BORDER_PADDING)) {
 			targetOrientation = BoundarySteering.avoidBoundaryOnWander(character, parent, BORDER_PADDING);
+		}
+		kinematicOutput.rotation = rotateShapeDirection(character, targetOrientation);
+		kinematicOutput.velocity = calculateVelocityPerOrientation(character, MAX_VELOCITY);
+		return kinematicOutput;
+	}
+
+	public KinematicOutput getOrientationMatchingSteering(Kinematic character, Environment environment, PApplet parent, int BORDER_PADDING, float MAX_VELOCITY, PVector desiredLocation, float TRACK_CONE_RANGE) {
+		KinematicOutput kinematicOutput = new KinematicOutput();
+
+		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(character, parent, environment);
+		if (onObstacle) {
+			targetOrientation = ObstacleSteering.avoidObstacleOnWander(character, parent, environment);
+		}
+		else {
+			System.out.println("Wander: heading = " + PVector.sub(desiredLocation, character.position).heading());
+			targetOrientation = PVector.sub(desiredLocation, character.position).heading() + Utility.randomBinomial() * TRACK_CONE_RANGE;
+			System.out.println("Wander: targetOrientation = " + targetOrientation);
 		}
 		kinematicOutput.rotation = rotateShapeDirection(character, targetOrientation);
 		kinematicOutput.velocity = calculateVelocityPerOrientation(character, MAX_VELOCITY);
@@ -85,8 +103,5 @@ public class Wander {
 		v.x = PApplet.cos(orientation);
 		return v;
 	}
-	
-	private static float randomBinomial() {
-		return (float) (Math.random() - Math.random());
-	}
+
 }

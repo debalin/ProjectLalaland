@@ -183,7 +183,6 @@ public class Enemy_Blender extends Enemy {
       return 2;
   }
 
-
   private void updatePositionSeek(){
     position.add(velocity);
 
@@ -206,8 +205,6 @@ public class Enemy_Blender extends Enemy {
     if (DRAW_BREADCRUMBS)
       storeHistory();
   }
-
-
 
   private void updateLife() {
     List<Bullet> bullets = environment.getPlayer().getBullets();

@@ -14,10 +14,6 @@ public class Utility {
   
   private static final PVector TEXT_COLOR = new PVector(255, 255, 255);
   private static final int TEXT_SIZE = 18;
-  
-  public Map<Integer, NodeInfo> getNodesList() {
-    return nodesList;
-  }
 
   public Utility() {
     nodesList = new HashMap<>();
@@ -43,6 +39,10 @@ public class Utility {
     }
 
   }
+
+  public static float randomBinomial() {
+    return (float) (Math.random() - Math.random());
+  }
   
   public double calculateHeuristicLatLong(int index1, int index2) {
     return(Math.sqrt(Math.pow((69.5 * (nodesList.get(index1).gridX - nodesList.get(index2).gridX)), 2) + Math.pow((69.5 * Math.cos((nodesList.get(index1).gridX + nodesList.get(index2).gridX)/360 * Math.PI) * (nodesList.get(index1).gridY - nodesList.get(index2).gridY)), 2)));
@@ -57,7 +57,7 @@ public class Utility {
   }
   
   public static float calculateEuclideanDistance(float x1, float y1, float x2, float y2){
-  	return (float)Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)); 
+  	return (float)Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
   }
   
   public static float calculateEuclideanDistance(PVector v1, PVector v2){
