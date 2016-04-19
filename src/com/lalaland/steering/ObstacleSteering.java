@@ -87,6 +87,8 @@ public class ObstacleSteering {
       }
     }
 
+    steeringOutput.linear.setMag(steeringWeight);
+
     return steeringOutput;
   }
 

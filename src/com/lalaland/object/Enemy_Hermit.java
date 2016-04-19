@@ -16,12 +16,12 @@ public class Enemy_Hermit extends Enemy {
 	private static final float HERMIT_RADIUS = 7;
 	private static final PVector HERMIT_COLOR = new PVector(255, 153, 102);
 	private static final PVector HERMIT_RAGE_COLOR = new PVector(255, 255, 0);
-	private static final float HERMIT_VIEW_RADIUS = 180;
+	private static final float HERMIT_VIEW_RADIUS = 200;
 	private static final float MAX_LINEAR_ACC = 0.5f;
 	private static final float RADIUS_SATISFACTION = 0.1f;
-	private static final float SEEK_MAX_VELOCITY = 1.9f;
-	private static final boolean SPIRAL_RAGE = true;
-	private static final float SPIRAL_WIDTH_CONSTANT = 1.5f;
+	private static final float SEEK_MAX_VELOCITY = 2.0f;
+	private static final boolean SPIRAL_RAGE = false;
+	private static final float SPIRAL_WIDTH_CONSTANT = 2f;
 
 	private enum States {
 		WANDER, RAGE_MODE
@@ -33,7 +33,7 @@ public class Enemy_Hermit extends Enemy {
 
 	public Enemy_Hermit(float positionX, float positionY, PApplet parent, Environment environment) {
 		super(positionX, positionY, parent, environment, HERMIT_RADIUS, HERMIT_COLOR);
-		DRAW_BREADCRUMBS = true;
+		DRAW_BREADCRUMBS = false;
 		TIME_TARGET_ROT = 7;
 		MAX_VELOCITY = 1.0f;		
 		lifeReductionRate = 4;
@@ -131,8 +131,6 @@ public class Enemy_Hermit extends Enemy {
       return;
     }
     reached = false;
-		SteeringOutput obstacleSteering = ObstacleSteering.checkAndAvoidObstacle(this, environment, 5f, 10f);
-		steering.linear.add(obstacleSteering.linear);
 		if (SPIRAL_RAGE)
 			steering.linear.add(PVector.fromAngle(PVector.sub(environment.getPlayer().getPosition(), position).heading() + PConstants.PI / 2).setMag(steering.linear.mag() * SPIRAL_WIDTH_CONSTANT));
     velocity.add(steering.linear);

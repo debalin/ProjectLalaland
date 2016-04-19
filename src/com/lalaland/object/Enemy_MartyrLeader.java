@@ -6,8 +6,6 @@ import com.lalaland.steering.*;
 
 import java.util.*;
 
-import static com.lalaland.steering.ObstacleSteering.checkForObstacleAvoidance;
-
 public class Enemy_MartyrLeader extends Enemy {
 
   private static final float LEADER_RADIUS = 12;
