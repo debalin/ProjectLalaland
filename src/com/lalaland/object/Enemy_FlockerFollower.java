@@ -8,11 +8,13 @@ import com.lalaland.environment.Environment;
 import com.lalaland.steering.Alignment;
 import com.lalaland.steering.Cohesion;
 import com.lalaland.steering.LookWhereYoureGoing;
+import com.lalaland.steering.ObstacleSteering;
 import com.lalaland.steering.Seek;
 import com.lalaland.steering.Separation;
 import com.lalaland.steering.SteeringOutput;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 public class Enemy_FlockerFollower extends Enemy {
@@ -21,18 +23,24 @@ public class Enemy_FlockerFollower extends Enemy {
 	private static final PVector FOLLOWER_COLOR = new PVector(200, 180, 200);
 	private static final float ALIGNMENT_THRESHOLD = 50f;
 	private static final float MAX_KILL_VELOCITY = 2f;
+	private static final float SURROUND_CIRCLE_RADIUS = 50f;
 
 	private enum States {
-		STAY_WITH_LEADER, KILL_PLAYER
+		STAY_WITH_LEADER, SURROUND_PLAYER, CONVERGE_ON_PLAYER
 	}
 
 	private States state;
 	private Enemy_FlockerLeader leader;
+	private int id;
+	private static boolean SURROUND_VERSION;
+	private boolean surrounded, allSurrounded;
 
-	public Enemy_FlockerFollower(float positionX, float positionY, PApplet parent, Environment environment,
-															 Enemy_FlockerLeader leader) {
+	public Enemy_FlockerFollower(int id, float positionX, float positionY, PApplet parent, Environment environment,
+															 Enemy_FlockerLeader leader, boolean surroundVersion) {
 		super(positionX - (float)(Math.random()*20 + Math.random()*20), positionY - (float)(Math.random()*20 + Math.random()*20), parent, environment, FOLLOWER_RADIUS, FOLLOWER_COLOR.copy());
 		this.leader = leader;
+		this.id = id;
+		SURROUND_VERSION = surroundVersion;
 		SEPARATION_THRESHOLD = 20f;
 		POSITION_MATCHING = true;
 		DRAW_BREADCRUMBS = false;
@@ -43,6 +51,7 @@ public class Enemy_FlockerFollower extends Enemy {
 		targetPosition = new PVector(position.x, position.y);
 		lifeReductionRate = 20;
 		state = States.STAY_WITH_LEADER;
+		surrounded = allSurrounded = false;
 	}
 
 	@Override
@@ -52,6 +61,8 @@ public class Enemy_FlockerFollower extends Enemy {
 		switch (state) {
 		case STAY_WITH_LEADER:
 			targetPosition = leader.getPosition().copy();
+			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment))
+				targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment);
 			// if (checkForObstacleAvoidance())
 			// updateState(States.PATH_FIND_LEADER);
 			break;
@@ -61,9 +72,30 @@ public class Enemy_FlockerFollower extends Enemy {
 		// case PATH_FOLLOW_PLAYER:
 		// followPathForSometime();
 		// break;
-		case KILL_PLAYER:
-			targetPosition = environment.getPlayer().getPosition().copy();
+		case SURROUND_PLAYER:
+			PVector positionToSeek = PVector.fromAngle(leader.getOrientation() + 2 * PConstants.PI * id / leader.getNumFollowers()).setMag(SURROUND_CIRCLE_RADIUS);
+			targetPosition = environment.getPlayer().getPosition().copy().add(positionToSeek);
+			if(position.dist(targetPosition) < RADIUS_SATISFACTION) {
+				surrounded = true;
+				if(allSurrounded)
+					state = States.CONVERGE_ON_PLAYER;
+			}
+			else {
+				surrounded = false;
+				allSurrounded = false;
+			}
+			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment))
+				targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment);
 			break;
+		case CONVERGE_ON_PLAYER:
+			targetPosition = environment.getPlayer().getPosition().copy();
+			if(allSurrounded == false || position.dist(targetPosition) > SURROUND_CIRCLE_RADIUS) {
+				surrounded = allSurrounded = false;
+				state = States.SURROUND_PLAYER;
+			}
+			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment))
+				targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment);
+			break;	
 		}
 
 		updatePosition();
@@ -187,10 +219,20 @@ public class Enemy_FlockerFollower extends Enemy {
 	}
 	
 	public void updateStateToKill() {
-		updateState(States.KILL_PLAYER);
+		surrounded = allSurrounded = false;
+		updateState(States.SURROUND_PLAYER);
 	}
 	
 	public void updateStateToFollow() {
+		surrounded = allSurrounded = false;
 		updateState(States.STAY_WITH_LEADER);
+	}
+	
+	public void setAllSurrounded(boolean value) {
+		allSurrounded = value;
+	}
+	
+	public boolean isSurrounded() {
+		return surrounded;
 	}
 }

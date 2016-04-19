@@ -1,14 +1,23 @@
 package com.lalaland.engine;
 
-import com.lalaland.utility.Utility;
-import processing.core.*;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.lalaland.environment.*;
-import com.lalaland.object.*;
+import com.lalaland.environment.Environment;
+import com.lalaland.object.BonusItem;
+import com.lalaland.object.Enemy;
+import com.lalaland.object.Enemy_Blender;
+import com.lalaland.object.Enemy_FlockerLeader;
+import com.lalaland.object.Enemy_Grunt;
+import com.lalaland.object.Enemy_Hermit;
+import com.lalaland.object.Enemy_MartyrLeader;
+import com.lalaland.object.Enemy_Soldier;
+import com.lalaland.object.Player;
+import com.lalaland.utility.Utility;
+
+import processing.core.PApplet;
+import processing.core.PVector;
 
 public class Engine extends PApplet {
 
