@@ -24,6 +24,7 @@ public class Engine extends PApplet {
   private Player player;
   private List<Enemy> enemies;
   private List<BonusItem> bonusItems;
+  private boolean inDEVMode = true;
 
   private static float time = 0f;
 
@@ -115,51 +116,69 @@ public class Engine extends PApplet {
   }
 
   private void spawnEnemies() {
-    PVector spawnSpot;
     for (Enemy.EnemyTypes enemyType : Enemy.EnemyTypes.values()) {
       switch (enemyType) {
 //        case SOLDIER:
 //          if ((Enemy_Soldier.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Soldier.SPAWN_OFFSET) % Enemy_Soldier.SPAWN_INTERVAL == 0) && (Enemy_Soldier.getSpawnCount() < Enemy_Soldier.SPAWN_MAX)) {
-//            spawnSpot = getRandomSpawnSpot();
-//            enemies.add(new Enemy_Soldier(spawnSpot.x, spawnSpot.y, this, environment));
+//            spawnEnemyNow(Enemy.EnemyTypes.SOLDIER);
 //          }
 //          break;
-        case HERMIT:
-          if ((Enemy_Hermit.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Hermit.SPAWN_OFFSET) % Enemy_Hermit.SPAWN_INTERVAL == 0) && (Enemy_Hermit.getSpawnCount() < Enemy_Hermit.SPAWN_MAX)) {
-            spawnSpot = getRandomSpawnSpot();
-            enemies.add(new Enemy_Hermit(spawnSpot.x, spawnSpot.y, this, environment));
-          }
-          break;
+//        case HERMIT:
+//          if ((Enemy_Hermit.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Hermit.SPAWN_OFFSET) % Enemy_Hermit.SPAWN_INTERVAL == 0) && (Enemy_Hermit.getSpawnCount() < Enemy_Hermit.SPAWN_MAX)) {
+//            spawnEnemyNow(Enemy.EnemyTypes.HERMIT);
+//          }
+//          break;
 //        case GRUNT:
 //          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
-//            spawnSpot = getRandomSpawnSpot();
-//            enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
+//          spawnEnemyNow(Enemy.EnemyTypes.GRUNT);
 //          }
 //          break;
 //        case FLOCKER:
 //          if ((Enemy_FlockerLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_FlockerLeader.SPAWN_OFFSET) % Enemy_FlockerLeader.SPAWN_INTERVAL == 0) && (Enemy_FlockerLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
-//            spawnSpot = new PVector(-100, -100);
-//            enemies.add(new Enemy_FlockerLeader(spawnSpot.x, spawnSpot.y, this, environment));
+//          spawnEnemyNow(Enemy.EnemyTypes.FLOCKER);
 //          }
 //          break;
 //        case MARTYR:
 //          if ((Enemy_MartyrLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_MartyrLeader.SPAWN_OFFSET) % Enemy_MartyrLeader.SPAWN_INTERVAL == 0) && (Enemy_MartyrLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
-//            spawnSpot = new PVector(-100, -100);
-//            enemies.add(new Enemy_MartyrLeader(spawnSpot.x, spawnSpot.y, this, environment));
+//        spawnEnemyNow(Enemy.EnemyTypes.MARTYR);
 //          }
 //          break;
-//        case BLENDER:
-//          if ((Enemy_Blender.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Blender.SPAWN_OFFSET) % Enemy_Blender.SPAWN_INTERVAL == 0) && (Enemy_Blender.getSpawnCount() < Enemy_Blender.SPAWN_MAX)) {
-//            spawnSpot = getRandomSpawnSpot();
-//            enemies.add(new Enemy_Blender(spawnSpot.x, spawnSpot.y, this, environment));
-//          }
-//        case MARTYR:
-//          if ((Enemy_MartyrLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_MartyrLeader.SPAWN_OFFSET) % Enemy_MartyrLeader.SPAWN_INTERVAL == 0) && (Enemy_MartyrLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
-//            spawnSpot = new PVector(-100, -100);
-//            enemies.add(new Enemy_MartyrLeader(spawnSpot.x, spawnSpot.y, this, environment));
-//          }
-//          break;
+        case BLENDER:
+          if ((Enemy_Blender.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Blender.SPAWN_OFFSET) % Enemy_Blender.SPAWN_INTERVAL == 0) && (Enemy_Blender.getSpawnCount() < Enemy_Blender.SPAWN_MAX)) {
+            spawnEnemyNow(Enemy.EnemyTypes.BLENDER);
+          }
+          break;
       }
+    }
+  }
+
+  private void spawnEnemyNow(Enemy.EnemyTypes enemytype){
+    PVector spawnSpot;
+    switch (enemytype){
+      case SOLDIER:
+          spawnSpot = getRandomSpawnSpot();
+          enemies.add(new Enemy_Soldier(spawnSpot.x, spawnSpot.y, this, environment));
+          break;
+      case HERMIT:
+          spawnSpot = getRandomSpawnSpot();
+          enemies.add(new Enemy_Hermit(spawnSpot.x, spawnSpot.y, this, environment));
+          break;
+      case GRUNT:
+          spawnSpot = getRandomSpawnSpot();
+          enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
+          break;
+      case FLOCKER:
+          spawnSpot = new PVector(-100, -100);
+          enemies.add(new Enemy_FlockerLeader(spawnSpot.x, spawnSpot.y, this, environment));
+          break;
+      case MARTYR:
+          spawnSpot = new PVector(-100, -100);
+          enemies.add(new Enemy_MartyrLeader(spawnSpot.x, spawnSpot.y, this, environment));
+          break;
+      case BLENDER:
+          spawnSpot = getRandomSpawnSpot();
+          enemies.add(new Enemy_Blender(spawnSpot.x, spawnSpot.y, this, environment));
+          break;
     }
   }
 
@@ -209,6 +228,32 @@ public class Engine extends PApplet {
   
   public void keyReleased() {
     player.setDirection(key, false);
+    handleEnemySpawn();
+  }
+
+  private void handleEnemySpawn(){
+    if(!inDEVMode)
+      return;
+    switch (key){
+      case '1':
+        spawnEnemyNow(Enemy.EnemyTypes.SOLDIER);
+        break;
+      case '2':
+        spawnEnemyNow(Enemy.EnemyTypes.HERMIT);
+        break;
+      case '3':
+        spawnEnemyNow(Enemy.EnemyTypes.GRUNT);
+        break;
+      case '4':
+        spawnEnemyNow(Enemy.EnemyTypes.MARTYR);
+        break;
+      case '5':
+        spawnEnemyNow(Enemy.EnemyTypes.FLOCKER);
+        break;
+      case '6':
+        spawnEnemyNow(Enemy.EnemyTypes.BLENDER);
+        break;
+    }
   }
 
 }
