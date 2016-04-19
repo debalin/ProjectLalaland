@@ -16,7 +16,8 @@ public class Enemy_Blender extends Enemy {
   private static final PVector BLENDER_COLOR = new PVector(255, 103, 255);
   private static final float HEALTH_THRESHOLD = 70.0f;
   private static final float SIZE_CONFIDENCE_MARK = BLENDER_MAX_RADIUS - 10;
-  private static final float MIN_LRR = 4;
+  private static final float MIN_LRR = 3;
+  private static final float LRR_LOSS_RATE = 2.1f;
   private static final float BLENDER_VIEW_RADIUS = 250;
   private static final float MAX_LINEAR_ACC = 0.5f;
   private static final float SEEK_MAX_VELOCITY = 1.3f;
@@ -33,8 +34,10 @@ public class Enemy_Blender extends Enemy {
     targetPosition = new PVector(position.x, position.y);
     DRAW_BREADCRUMBS = false;
     TIME_TARGET_ROT = 7;
+    DAMAGE_RADIUS = 16f;
+    PLAYER_DAMAGE = 1.2f;
     MAX_VELOCITY = 0.8f;
-    lifeReductionRate = 20;
+    lifeReductionRate = 12;
     spawnCount++;
   }
 
@@ -132,6 +135,8 @@ public class Enemy_Blender extends Enemy {
         if(IND_RADIUS < BLENDER_MAX_RADIUS){
           enlarge(1);
         }
+        DAMAGE_RADIUS += 1;
+        PLAYER_DAMAGE += 0.2f;
         absorbOtherBlenderHealth();
         updateLRR();
         setPlayerAsTarget();
@@ -146,7 +151,7 @@ public class Enemy_Blender extends Enemy {
   }
 
   private void updateLRR(){
-    lifeReductionRate = lifeReductionRate > MIN_LRR ? lifeReductionRate-3:lifeReductionRate;
+    lifeReductionRate = lifeReductionRate > MIN_LRR ? lifeReductionRate - LRR_LOSS_RATE : lifeReductionRate;
     if(lifeReductionRate < MIN_LRR)
       lifeReductionRate = MIN_LRR;
   }
