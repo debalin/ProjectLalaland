@@ -35,6 +35,8 @@ public class Enemy_MartyrLeader extends Enemy {
     RADIUS_SATISFACTION = 10;
     MAX_VELOCITY = 0.2f;
     MAX_ACCELERATION = 0.2f;
+    DAMAGE_RADIUS = 40f;
+    PLAYER_DAMAGE = 5f;
     targetPosition = new PVector(position.x, position.y);
     lifeReductionRate = 1;
     state = States.WAIT_FOR_FORMATION;

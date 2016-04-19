@@ -39,6 +39,8 @@ public class Enemy_MartyrFollower extends Enemy {
     RADIUS_SATISFACTION = 1.5f;
     MAX_VELOCITY = 0.5f;
     MAX_ACCELERATION = 0.3f;
+    DAMAGE_RADIUS = 15f;
+    PLAYER_DAMAGE = 2f;
     targetPosition = new PVector();
     if (!DYNAMIC_FORMATION && leader != null)
       updateTargetFromRank();
