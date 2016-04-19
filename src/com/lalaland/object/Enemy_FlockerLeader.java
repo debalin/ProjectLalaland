@@ -16,6 +16,9 @@ public class Enemy_FlockerLeader extends Enemy {
 	private static final int NUM_FOLLOWERS = 10;
 	private static final int MAX_FOLLOW_NODE_COUNT = 10;
 	private static final float SIGHT_RADIUS = 200f;
+	private static final float FUTURE_RAY_VEL_BASE = 15f;
+
+	private static final boolean SURROUND_VERSION = true;
 
 	private enum States {
 		SEEK_PLAYER, PATH_FIND_PLAYER, PATH_FOLLOW_PLAYER, KILL_PLAYER, LEADER_DEAD_KILL_PLAYER
@@ -41,9 +44,9 @@ public class Enemy_FlockerLeader extends Enemy {
 		lifeReductionRate = 3;
 		state = States.SEEK_PLAYER;
 		spawnCount++;
-		
-		for (int i = 0; i < NUM_FOLLOWERS; i++)
-			followers.add(new Enemy_FlockerFollower(positionX, positionY, parent, environment, this));
+
+		for (int i = 1; i <= NUM_FOLLOWERS; i++)
+			followers.add(new Enemy_FlockerFollower(i, positionX, positionY, parent, environment, this, SURROUND_VERSION));
 	}
 
 	public static int getSpawnCount() {
@@ -51,8 +54,8 @@ public class Enemy_FlockerLeader extends Enemy {
 	}
 
 	public static void initializeSpawnDetails(int frameRate) {
-		SPAWN_OFFSET = frameRate * 20;
-		SPAWN_INTERVAL = frameRate * 20;
+		SPAWN_OFFSET = frameRate;
+		SPAWN_INTERVAL = frameRate;
 		SPAWN_MAX = 1;
 	}
 
@@ -64,21 +67,26 @@ public class Enemy_FlockerLeader extends Enemy {
 		case SEEK_PLAYER:
 			targetPosition.x = environment.getPlayer().getPosition().x;
 			targetPosition.y = environment.getPlayer().getPosition().y;
-			if(playerWithinSight())
+			if (playerWithinSight())
 				updateState(States.KILL_PLAYER);
 			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment))
-				updateState(States.PATH_FIND_PLAYER);
+				 updateState(States.PATH_FIND_PLAYER);
+//				targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment);
 			break;
 		case PATH_FIND_PLAYER:
 			findPlayer();
 			break;
 		case PATH_FOLLOW_PLAYER:
 			followPathForSometime();
+			if (playerWithinSight())
+				updateState(States.KILL_PLAYER);
 			break;
 		case KILL_PLAYER:
 			targetPosition.x = environment.getPlayer().getPosition().x;
 			targetPosition.y = environment.getPlayer().getPosition().y;
-			if(!playerWithinSight())
+			if (allFollowersSurrounded())
+				commandFollowerToCloseIn();
+			if (!playerWithinSight())
 				updateState(States.SEEK_PLAYER);
 			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment))
 				updateState(States.PATH_FIND_PLAYER);
@@ -109,6 +117,7 @@ public class Enemy_FlockerLeader extends Enemy {
 	}
 
 	private void findPlayer() {
+		followedNodes = 0;
 		PVector pointToFleeTo = targetPosition.copy();
 		pathFind(pointToFleeTo);
 		updateState(States.PATH_FOLLOW_PLAYER);
@@ -137,7 +146,7 @@ public class Enemy_FlockerLeader extends Enemy {
 
 	private void updateState(States state) {
 		this.state = state;
-		if(state == States.KILL_PLAYER || state == States.LEADER_DEAD_KILL_PLAYER)
+		if (state == States.KILL_PLAYER || state == States.LEADER_DEAD_KILL_PLAYER)
 			followers.forEach(Enemy_FlockerFollower::updateStateToKill);
 		else
 			followers.forEach(Enemy_FlockerFollower::updateStateToFollow);
@@ -151,7 +160,7 @@ public class Enemy_FlockerLeader extends Enemy {
 				Bullet bullet = i.next();
 				if (environment.inSameGrid(bullet.getPosition(), position)) {
 					life -= lifeReductionRate;
-					super.incrementTotalHPDamage((int)lifeReductionRate);
+					super.incrementTotalHPDamage((int) lifeReductionRate);
 					i.remove();
 				}
 			}
@@ -202,21 +211,47 @@ public class Enemy_FlockerLeader extends Enemy {
 		if (DRAW_BREADCRUMBS)
 			storeHistory();
 	}
-	
+
 	@Override
 	public void display() {
 		followers.forEach(Enemy_FlockerFollower::display);
-		if(state != States.LEADER_DEAD_KILL_PLAYER)
+		if (state != States.LEADER_DEAD_KILL_PLAYER)
 			super.display();
 	}
-	
+
 	private boolean playerWithinSight() {
-		return position.dist(environment.getPlayer().getPosition()) <= SIGHT_RADIUS;
+		if (position.dist(environment.getPlayer().getPosition()) > SIGHT_RADIUS)
+			return false;
+		PVector direction = PVector.sub(environment.getPlayer().getPosition().copy(), position.copy());
+		for (int i = 1; i <= 10; i++) {
+			PVector ray = PVector.add(position.copy(),
+					PVector.fromAngle(direction.heading()).mult(direction.mag()).div(10).mult(i));
+			parent.ellipse(ray.x, ray.y, 2, 2);
+			if (environment.onObstacle(ray))
+				return false;
+		}
+		return true;
 	}
-	
+
 	private boolean allFollowersDead() {
 		if (followers.size() == 0)
-				return true;
+			return true;
 		return false;
+	}
+
+	public int getNumFollowers() {
+		return NUM_FOLLOWERS;
+	}
+
+	private boolean allFollowersSurrounded() {
+		for (int i = 0; i < NUM_FOLLOWERS; i++)
+			if (!followers.get(i).isSurrounded())
+				return false;
+		return true;
+	}
+
+	private void commandFollowerToCloseIn() {
+		for (int i = 0; i < NUM_FOLLOWERS; i++)
+			followers.get(i).setAllSurrounded(true);
 	}
 }

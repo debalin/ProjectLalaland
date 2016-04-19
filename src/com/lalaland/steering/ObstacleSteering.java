@@ -32,6 +32,32 @@ public class ObstacleSteering {
     );
   }
 
+  public static PVector avoidObstacleOnSeek(Kinematic character, Kinematic target, Environment environment) {
+		float angle, checkAngle;
+		int i;
+		PVector direction = character.velocity.copy();
+		
+		checkAngle = (float) (direction.heading() - Math.PI / 8);
+		if(checkAngle < 0)
+			checkAngle += 360f;
+		
+		for (i=0, angle = direction.heading(); i < 16; i++, angle += Math.PI / 8) {
+			if(angle > 360)
+				angle -= 360f;
+			
+			PVector ray1 = PVector.add(character.position.copy(), PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * 2f));
+			PVector ray2 = PVector.add(character.position.copy(), PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * 5f));
+			
+//			parent.ellipse(ray1.x, ray1.y, 2, 2);
+//			parent.ellipse(ray2.x, ray2.y, 2, 2);
+			
+			if (!environment.onObstacle(ray1) && !environment.onObstacle(ray2))
+				break;
+		}
+		PVector targetPosition = PVector.add(character.position.copy(), PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * 5f));
+		return targetPosition;
+	}
+  
   public static float avoidObstacleOnWander(Kinematic character, PApplet parent, Environment environment) {
     float orient;
     Random random = new Random();

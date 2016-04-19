@@ -1,14 +1,23 @@
 package com.lalaland.engine;
 
-import com.lalaland.utility.Utility;
-import processing.core.*;
-
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.lalaland.environment.*;
-import com.lalaland.object.*;
+import com.lalaland.environment.Environment;
+import com.lalaland.object.BonusItem;
+import com.lalaland.object.Enemy;
+import com.lalaland.object.Enemy_Blender;
+import com.lalaland.object.Enemy_FlockerLeader;
+import com.lalaland.object.Enemy_Grunt;
+import com.lalaland.object.Enemy_Hermit;
+import com.lalaland.object.Enemy_MartyrLeader;
+import com.lalaland.object.Enemy_Soldier;
+import com.lalaland.object.Player;
+import com.lalaland.utility.Utility;
+
+import processing.core.PApplet;
+import processing.core.PVector;
 
 public class Engine extends PApplet {
 
@@ -130,18 +139,18 @@ public class Engine extends PApplet {
 //            enemies.add(new Enemy_Hermit(spawnSpot.x, spawnSpot.y, this, environment));
 //          }
 //          break;
-        case GRUNT:
-          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
-            spawnSpot = getRandomSpawnSpot();
-            enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
-          }
-          break;
-//        case FLOCKER:
-//          if ((Enemy_FlockerLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_FlockerLeader.SPAWN_OFFSET) % Enemy_FlockerLeader.SPAWN_INTERVAL == 0) && (Enemy_FlockerLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
-//            spawnSpot = new PVector(-100, -100);
-//            enemies.add(new Enemy_FlockerLeader(spawnSpot.x, spawnSpot.y, this, environment));
+//        case GRUNT:
+//          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
+//            spawnSpot = getRandomSpawnSpot();
+//            enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
 //          }
 //          break;
+        case FLOCKER:
+          if ((Enemy_FlockerLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_FlockerLeader.SPAWN_OFFSET) % Enemy_FlockerLeader.SPAWN_INTERVAL == 0) && (Enemy_FlockerLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
+            spawnSpot = new PVector(100, 100);
+            enemies.add(new Enemy_FlockerLeader(spawnSpot.x, spawnSpot.y, this, environment));
+          }
+          break;
 //        case MARTYR:
 //          if ((Enemy_MartyrLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_MartyrLeader.SPAWN_OFFSET) % Enemy_MartyrLeader.SPAWN_INTERVAL == 0) && (Enemy_MartyrLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
 //            spawnSpot = new PVector(-100, -100);
