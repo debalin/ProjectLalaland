@@ -166,6 +166,9 @@ public class Enemy_Blender extends Enemy {
   private void updatePositionSeek(){
     position.add(velocity);
 
+    if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5f))
+      targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment, 5f);
+
     Kinematic target = new Kinematic(targetPosition, null, 0, 0);
     SteeringOutput steering;
 
@@ -176,8 +179,6 @@ public class Enemy_Blender extends Enemy {
       reached = true;
       return;
     }
-    SteeringOutput obstacleSteering = ObstacleSteering.checkAndAvoidObstacle(this, environment, 1f, 10f);
-    steering.linear.add(obstacleSteering.linear);
     reached = false;
     velocity.add(steering.linear);
     if (velocity.mag() >= SEEK_MAX_VELOCITY)
