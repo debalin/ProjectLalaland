@@ -20,11 +20,13 @@ public class Enemy_Blender extends Enemy {
   private static final float BLENDER_VIEW_RADIUS = 250;
   private static final float MAX_LINEAR_ACC = 0.5f;
   private static final float SEEK_MAX_VELOCITY = 1.3f;
-
+  public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
   private static int spawnCount = 0;
   private Enemy_Blender targetBlender = null;
-  private boolean isAltBehaviour = true;
-  public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
+
+
+  private boolean isAltBehaviour = false;
+
 
   public Enemy_Blender(float positionX, float positionY, PApplet parent, Environment environment){
     super(positionX, positionY, parent, environment, BLENDER_RADIUS, BLENDER_COLOR);
@@ -55,7 +57,7 @@ public class Enemy_Blender extends Enemy {
     return spawnCount;
   }
 
-  public void makeDecision(){
+  private void makeDecision(){
     if(life > HEALTH_THRESHOLD){
       if(!isAltBehaviour && IND_RADIUS > SIZE_CONFIDENCE_MARK){
         setPlayerAsTarget();
