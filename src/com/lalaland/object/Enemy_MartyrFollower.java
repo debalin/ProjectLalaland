@@ -125,8 +125,25 @@ public class Enemy_MartyrFollower extends Enemy {
     checkAndReducePlayerLife();
   }
 
+  private List<PVector> buildAvoidanceRays() {
+    List<PVector> futureRays = new ArrayList<>();
+
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation).setMag(30f)));
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation - PConstants.PI / 4f).setMag(15f)));
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation + PConstants.PI / 4f).setMag(15f)));
+
+    futureRays.forEach(futureRay -> parent.ellipse(futureRay.x, futureRay.y, 5, 5));
+
+    return futureRays;
+  }
+
   private void updatePosition() {
     position.add(velocity);
+
+    boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5);;
+    if (onObstacle) {
+      targetPosition.set(ObstacleSteering.avoidObstacleOnSeek(this, environment, 5));
+    }
 
     Kinematic target = new Kinematic(targetPosition, null, 0, 0);
     SteeringOutput steering;

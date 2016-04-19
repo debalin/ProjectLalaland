@@ -124,7 +124,7 @@ public class Enemy_Hermit extends Enemy {
 		position.add(velocity);
 		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 6f);
 		if (onObstacle)
-			targetPosition.set(ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment, 6f));
+			targetPosition.set(ObstacleSteering.avoidObstacleOnSeek(this, environment, 6f));
     Kinematic target = new Kinematic(targetPosition, null, 0, 0);
     SteeringOutput steering;
     steering = Seek.getSteering(this, target, MAX_LINEAR_ACC, RADIUS_SATISFACTION);

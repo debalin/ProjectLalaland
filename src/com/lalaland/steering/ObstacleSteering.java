@@ -45,14 +45,10 @@ public class ObstacleSteering {
     return onObstacle;
   }
 
-  public static PVector avoidObstacleOnSeek(Kinematic character, Kinematic target, Environment environment, float rayOffset) {
-		float angle, checkAngle;
+  public static PVector avoidObstacleOnSeek(Kinematic character, Environment environment, float rayOffset) {
+		float angle;
 		int i;
 		PVector direction = character.velocity.copy();
-		
-		checkAngle = (float) (direction.heading() - Math.PI / 8);
-		if(checkAngle < 0)
-			checkAngle += 360f;
 		
 		for (i = 0, angle = direction.heading(); i < 16; i++, angle += PConstants.PI / 8) {
 			if (angle > 2 * PConstants.PI)
@@ -78,7 +74,7 @@ public class ObstacleSteering {
 		return targetPosition;
 	}
 
-  public static PVector avoidObstacleOnSeek(Kinematic character, Environment environment, List<PVector> futureRays, float rayOffset) {
+  public static PVector avoidObstacleOnSeek(Kinematic character, Environment environment, List<PVector> futureRays, PApplet parent) {
     float angle;
     int i;
 
@@ -88,7 +84,8 @@ public class ObstacleSteering {
 
       boolean onObstacle = false;
       for (PVector futureRay : futureRays) {
-        futureRay.set(PVector.fromAngle(PVector.sub(character.position, futureRay).heading() - angle).setMag(futureRay.mag()));
+        futureRay.set(PVector.add(character.position, PVector.fromAngle(PVector.sub(futureRay, character.position).heading() - angle).setMag(30)));
+        //parent.ellipse(futureRay.x, futureRay.y, 5, 5);
         if (environment.onObstacle(futureRay)) {
           onObstacle = true;
           break;
@@ -97,7 +94,7 @@ public class ObstacleSteering {
       if (!onObstacle)
         break;
     }
-    PVector targetPosition = PVector.add(character.position, PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * rayOffset));
+    PVector targetPosition = PVector.add(character.position, PVector.fromAngle(angle).setMag(futureRays.get(0).mag()));
     return targetPosition;
   }
   

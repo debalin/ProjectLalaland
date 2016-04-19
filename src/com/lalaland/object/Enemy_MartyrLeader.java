@@ -174,9 +174,12 @@ public class Enemy_MartyrLeader extends Enemy {
   private List<PVector> buildAvoidanceRays() {
     List<PVector> futureRays = new ArrayList<>();
 
-    futureRays.add(PVector.add(position, PVector.fromAngle(orientation).setMag(75f)));
-    futureRays.add(PVector.add(position, PVector.fromAngle(orientation - PConstants.PI / 4f).setMag(75f)));
-    futureRays.add(PVector.add(position, PVector.fromAngle(orientation + PConstants.PI / 4f).setMag(75f)));
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation).setMag(70f)));
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation - PConstants.PI / 4f).setMag(70f)));
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation + PConstants.PI / 4f).setMag(70f)));
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation).setMag(35f)));
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation - PConstants.PI / 4f).setMag(35f)));
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation + PConstants.PI / 4f).setMag(35f)));
 
     futureRays.forEach(futureRay -> parent.ellipse(futureRay.x, futureRay.y, 5, 5));
 
@@ -186,10 +189,9 @@ public class Enemy_MartyrLeader extends Enemy {
   private void updatePosition() {
     position.add(velocity);
 
-    List<PVector> futureRays = buildAvoidanceRays();
-    boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(environment, futureRays);
+    boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5);
     if (onObstacle) {
-      targetPosition.set(ObstacleSteering.avoidObstacleOnSeek(this, environment, futureRays, 5f));
+      targetPosition.set(ObstacleSteering.avoidObstacleOnSeek(this, environment, 5));
     }
 
     Kinematic target = new Kinematic(targetPosition, null, 0, 0);

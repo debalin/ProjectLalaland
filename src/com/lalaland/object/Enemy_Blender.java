@@ -169,7 +169,7 @@ public class Enemy_Blender extends Enemy {
     position.add(velocity);
 
     if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5f))
-      targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment, 5f);
+      targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment, 5f);
 
     Kinematic target = new Kinematic(targetPosition, null, 0, 0);
     SteeringOutput steering;

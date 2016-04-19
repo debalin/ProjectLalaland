@@ -44,8 +44,8 @@ public class Enemy_Soldier extends Enemy {
     RADIUS_SATISFACTION = 10;
     MAX_VELOCITY = 1;
     MAX_ACCELERATION = 0.3f;
-    DAMAGE_RADIUS = 10f;
-    PLAYER_DAMAGE = 0.7f;
+    DAMAGE_RADIUS = 15f;
+    PLAYER_DAMAGE = 0.9f;
     targetPosition = new PVector(position.x, position.y);
     lifeReductionRate = 7;
     lifeRegainRate = 0.08f;
@@ -249,8 +249,6 @@ public class Enemy_Soldier extends Enemy {
 
     if (state == States.PATH_FOLLOW_COVER || state == States.PATH_FIND_COVER) {
       kinematic = Seek.getKinematic(this, target, FLEE_VELOCITY);
-      PVector separation = Separation.getSteering(this, targets, MAX_ACCELERATION, SEPARATION_THRESHOLD).linear.mult(0.8f);
-      kinematic.velocity.add(separation);
       velocity = kinematic.velocity;
       if (velocity.mag() >= FLEE_VELOCITY)
         velocity.setMag(FLEE_VELOCITY);
@@ -262,8 +260,6 @@ public class Enemy_Soldier extends Enemy {
     }
     else if (state != States.REGAIN_HEALTH){
       steering = Seek.getSteering(this, target, MAX_ACCELERATION, RADIUS_SATISFACTION);
-      PVector separation = Separation.getSteering(this, targets, MAX_ACCELERATION, SEPARATION_THRESHOLD).linear.mult(0.8f);
-      steering.linear.add(separation);
       steering.linear.setMag(MAX_ACCELERATION);
       if (steering.linear.mag() == 0) {
         velocity.set(0, 0);
