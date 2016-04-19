@@ -143,11 +143,11 @@ public class Engine extends PApplet {
 //        spawnEnemyNow(Enemy.EnemyTypes.MARTYR);
 //          }
 //          break;
-        case BLENDER:
-          if ((Enemy_Blender.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Blender.SPAWN_OFFSET) % Enemy_Blender.SPAWN_INTERVAL == 0) && (Enemy_Blender.getSpawnCount() < Enemy_Blender.SPAWN_MAX)) {
-            spawnEnemyNow(Enemy.EnemyTypes.BLENDER);
-          }
-          break;
+//        case BLENDER:
+//          if ((Enemy_Blender.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Blender.SPAWN_OFFSET) % Enemy_Blender.SPAWN_INTERVAL == 0) && (Enemy_Blender.getSpawnCount() < Enemy_Blender.SPAWN_MAX)) {
+//            spawnEnemyNow(Enemy.EnemyTypes.BLENDER);
+//          }
+//          break;
       }
     }
   }

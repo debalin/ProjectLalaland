@@ -256,7 +256,6 @@ public class Enemy_Soldier extends Enemy {
     else if (state != States.REGAIN_HEALTH){
       steering = Seek.getSteering(this, target, MAX_ACCELERATION, RADIUS_SATISFACTION);
       PVector separation = Separation.getSteering(this, targets, MAX_ACCELERATION, SEPARATION_THRESHOLD).linear.mult(0.8f);
-      System.out.println(separation);
       steering.linear.add(separation);
       steering.linear.setMag(MAX_ACCELERATION);
       if (steering.linear.mag() == 0) {
