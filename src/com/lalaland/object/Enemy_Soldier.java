@@ -68,7 +68,7 @@ public class Enemy_Soldier extends Enemy {
       case SEEK:
         targetPosition.x = environment.getPlayer().getPosition().x;
         targetPosition.y = environment.getPlayer().getPosition().y;
-        if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment))
+        if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5f))
           updateState(States.PATH_FIND_PLAYER);
         break;
       case PATH_FIND_COVER:

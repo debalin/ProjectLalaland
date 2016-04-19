@@ -49,7 +49,7 @@ public class Wander {
 		return steering;
 	}
 	
-	public KinematicOutput getOrientationMatchingSteering(Kinematic character, Environment environment, PApplet parent, int BORDER_PADDING, float MAX_VELOCITY) {
+	public KinematicOutput getOrientationMatchingSteering(Kinematic character, Environment environment, PApplet parent, int BORDER_PADDING, float MAX_VELOCITY, float rayOffset) {
 		KinematicOutput kinematicOutput = new KinematicOutput();
 		randomiserCounter++;
 		if(randomiserCounter == randomiserLimit){
@@ -57,9 +57,9 @@ public class Wander {
 			randomiserCounter = 0;
 		}
 
-		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(character, parent, environment);
+		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(character, parent, environment, rayOffset);
 		if (onObstacle) {
-			targetOrientation = ObstacleSteering.avoidObstacleOnWander(character, parent, environment);
+			targetOrientation = ObstacleSteering.avoidObstacleOnWander(character, parent, environment, rayOffset);
 		}
 		else if (BoundarySteering.checkForBoundaryAvoidance(character, parent, BORDER_PADDING)) {
 			targetOrientation = BoundarySteering.avoidBoundaryOnWander(character, parent, BORDER_PADDING);
@@ -69,12 +69,12 @@ public class Wander {
 		return kinematicOutput;
 	}
 
-	public KinematicOutput getOrientationMatchingSteering(Kinematic character, Environment environment, PApplet parent, int BORDER_PADDING, float MAX_VELOCITY, PVector desiredLocation, float randomAngle) {
+	public KinematicOutput getOrientationMatchingSteering(Kinematic character, Environment environment, PApplet parent, int BORDER_PADDING, float MAX_VELOCITY, PVector desiredLocation, float randomAngle, float rayOffset) {
 		KinematicOutput kinematicOutput = new KinematicOutput();
 
-		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(character, parent, environment);
+		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(character, parent, environment, rayOffset);
 		if (onObstacle) {
-			targetOrientation = ObstacleSteering.avoidObstacleOnWander(character, parent, environment);
+			targetOrientation = ObstacleSteering.avoidObstacleOnWander(character, parent, environment, rayOffset);
 		}
 		else if (BoundarySteering.checkForBoundaryAvoidance(character, parent, BORDER_PADDING)) {
 			targetOrientation = BoundarySteering.avoidBoundaryOnWander(character, parent, BORDER_PADDING);

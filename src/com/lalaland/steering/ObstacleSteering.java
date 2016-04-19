@@ -15,11 +15,11 @@ public class ObstacleSteering {
 
   private static final float FUTURE_RAY_VEL_BASE = 15f;
 
-  public static boolean checkForObstacleAvoidance(Kinematic character, PApplet parent, Environment environment){
-    PVector futureRay1 = PVector.add(character.position, PVector.mult(character.velocity.copy().setMag(FUTURE_RAY_VEL_BASE), 2f));
-    PVector futureRay2 = PVector.add(character.position, PVector.mult(character.velocity.copy().setMag(FUTURE_RAY_VEL_BASE), 5f));
-    PVector futureRay3 = PVector.add(character.position, PVector.fromAngle(character.velocity.heading() - PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * 2f));
-    PVector futureRay4 = PVector.add(character.position, PVector.fromAngle(character.velocity.heading() + PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * 2f));
+  public static boolean checkForObstacleAvoidance(Kinematic character, PApplet parent, Environment environment, float rayOffset){
+    PVector futureRay1 = PVector.add(character.position, PVector.mult(character.velocity.copy().setMag(FUTURE_RAY_VEL_BASE), rayOffset / 2f));
+    PVector futureRay2 = PVector.add(character.position, PVector.mult(character.velocity.copy().setMag(FUTURE_RAY_VEL_BASE), rayOffset));
+    PVector futureRay3 = PVector.add(character.position, PVector.fromAngle(character.velocity.heading() - PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * rayOffset / 2));
+    PVector futureRay4 = PVector.add(character.position, PVector.fromAngle(character.velocity.heading() + PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * rayOffset / 2));
 
 //    parent.ellipse(futureRay1.x, futureRay1.y, 2, 2);
 //    parent.ellipse(futureRay2.x, futureRay2.y, 2, 2);
@@ -32,6 +32,17 @@ public class ObstacleSteering {
       environment.onObstacle(futureRay3) ||
       environment.onObstacle(futureRay4)
     );
+  }
+
+  public static boolean checkForObstacleAvoidance(Environment environment, List<PVector> futureRays){
+    boolean onObstacle = false;
+    for (PVector futureRay : futureRays) {
+      if (environment.onObstacle(futureRay)) {
+        onObstacle = true;
+        break;
+      }
+    }
+    return onObstacle;
   }
 
   public static PVector avoidObstacleOnSeek(Kinematic character, Kinematic target, Environment environment, float rayOffset) {
@@ -66,15 +77,38 @@ public class ObstacleSteering {
 		PVector targetPosition = PVector.add(character.position.copy(), PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * rayOffset));
 		return targetPosition;
 	}
+
+  public static PVector avoidObstacleOnSeek(Kinematic character, Environment environment, List<PVector> futureRays, float rayOffset) {
+    float angle;
+    int i;
+
+    for (i = 0, angle = 0; i < 16; i++, angle += PConstants.PI / 8) {
+      if (angle > 2 * PConstants.PI)
+        angle -= 2 * PConstants.PI;
+
+      boolean onObstacle = false;
+      for (PVector futureRay : futureRays) {
+        futureRay.set(PVector.fromAngle(PVector.sub(character.position, futureRay).heading() - angle).setMag(futureRay.mag()));
+        if (environment.onObstacle(futureRay)) {
+          onObstacle = true;
+          break;
+        }
+      }
+      if (!onObstacle)
+        break;
+    }
+    PVector targetPosition = PVector.add(character.position, PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * rayOffset));
+    return targetPosition;
+  }
   
-  public static float avoidObstacleOnWander(Kinematic character, PApplet parent, Environment environment) {
+  public static float avoidObstacleOnWander(Kinematic character, PApplet parent, Environment environment, float rayOffset) {
     float orient;
     Random random = new Random();
     float targetOrientation;
     do {
       orient = random.nextInt(180) - random.nextInt(180);
       targetOrientation = parent.radians(orient) + character.orientation;
-    } while (checkForObstacleAvoidance(new Kinematic(character.position, PVector.fromAngle(targetOrientation), 0, 0), parent, environment));
+    } while (checkForObstacleAvoidance(new Kinematic(character.position, PVector.fromAngle(targetOrientation), 0, 0), parent, environment, rayOffset));
     return targetOrientation;
   }
 

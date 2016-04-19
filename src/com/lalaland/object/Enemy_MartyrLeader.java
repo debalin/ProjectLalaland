@@ -170,8 +170,26 @@ public class Enemy_MartyrLeader extends Enemy {
     }
   }
 
+  private List<PVector> buildAvoidanceRays() {
+    List<PVector> futureRays = new ArrayList<>();
+
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation).setMag(75f)));
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation - PConstants.PI / 4f).setMag(75f)));
+    futureRays.add(PVector.add(position, PVector.fromAngle(orientation + PConstants.PI / 4f).setMag(75f)));
+
+    futureRays.forEach(futureRay -> parent.ellipse(futureRay.x, futureRay.y, 5, 5));
+
+    return futureRays;
+  }
+
   private void updatePosition() {
     position.add(velocity);
+
+    List<PVector> futureRays = buildAvoidanceRays();
+    boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(environment, futureRays);
+    if (onObstacle) {
+      targetPosition.set(ObstacleSteering.avoidObstacleOnSeek(this, environment, futureRays, 5f));
+    }
 
     Kinematic target = new Kinematic(targetPosition, null, 0, 0);
     SteeringOutput steering;
@@ -183,8 +201,6 @@ public class Enemy_MartyrLeader extends Enemy {
       reached = true;
       return;
     }
-    SteeringOutput obstacleSteering = ObstacleSteering.checkAndAvoidObstacle(this, environment, 0.5f, 10f);
-    steering.linear.add(obstacleSteering.linear);
     reached = false;
     velocity.add(steering.linear);
     if (velocity.mag() >= MAX_VELOCITY)

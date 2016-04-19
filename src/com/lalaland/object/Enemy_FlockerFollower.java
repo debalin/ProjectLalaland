@@ -61,7 +61,7 @@ public class Enemy_FlockerFollower extends Enemy {
 		switch (state) {
 		case STAY_WITH_LEADER:
 			targetPosition.set(leader.getPosition());
-			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment))
+			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5f))
 				targetPosition.set(ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment, 5f));
 			// if (checkForObstacleAvoidance())
 			// updateState(States.PATH_FIND_LEADER);
@@ -84,7 +84,7 @@ public class Enemy_FlockerFollower extends Enemy {
 				surrounded = false;
 				allSurrounded = false;
 			}
-			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment))
+			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5f))
 				targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment, 5f);
 			break;
 		case CONVERGE_ON_PLAYER:
@@ -93,7 +93,7 @@ public class Enemy_FlockerFollower extends Enemy {
 				surrounded = allSurrounded = false;
 				state = States.SURROUND_PLAYER;
 			}
-			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment))
+			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5f))
 				targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment, 5f);
 			break;	
 		}

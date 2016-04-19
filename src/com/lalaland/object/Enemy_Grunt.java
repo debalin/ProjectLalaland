@@ -115,7 +115,7 @@ public class Enemy_Grunt extends Enemy {
   }
 
   private void moveInPlayerNeighbourhood() {
-    KinematicOutput kinematic = wander.getOrientationMatchingSteering(this, environment, parent, BORDER_PADDING, MAX_VELOCITY, playerAveragePosition, randomAngle);
+    KinematicOutput kinematic = wander.getOrientationMatchingSteering(this, environment, parent, BORDER_PADDING, MAX_VELOCITY, playerAveragePosition, randomAngle, 5f);
     orientation += kinematic.rotation;
     velocity.set(kinematic.velocity);
     position.add(velocity);
@@ -132,7 +132,7 @@ public class Enemy_Grunt extends Enemy {
   }
 	
 	private void updatePositionWander(){
-    KinematicOutput kinematic = wander.getOrientationMatchingSteering(this, environment, parent, BORDER_PADDING, MAX_VELOCITY);
+    KinematicOutput kinematic = wander.getOrientationMatchingSteering(this, environment, parent, BORDER_PADDING, MAX_VELOCITY, 5f);
     orientation += kinematic.rotation;
     velocity.set(kinematic.velocity);
     position.add(velocity);

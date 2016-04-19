@@ -121,7 +121,7 @@ public class Enemy_Hermit extends Enemy {
     targetPosition.y = environment.getPlayer().getPosition().y;
 
 		position.add(velocity);
-		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(this, parent, environment);
+		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 6f);
 		if (onObstacle)
 			targetPosition.set(ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment, 6f));
     Kinematic target = new Kinematic(targetPosition, null, 0, 0);
@@ -145,7 +145,7 @@ public class Enemy_Hermit extends Enemy {
 	}
 
 	private void updatePositionWander() {
-		KinematicOutput kinematic = wander.getOrientationMatchingSteering(this, environment, parent, BORDER_PADDING, MAX_VELOCITY);
+		KinematicOutput kinematic = wander.getOrientationMatchingSteering(this, environment, parent, BORDER_PADDING, MAX_VELOCITY, 5f);
 		orientation += kinematic.rotation;
 		velocity.set(kinematic.velocity);
 		position.add(velocity);
