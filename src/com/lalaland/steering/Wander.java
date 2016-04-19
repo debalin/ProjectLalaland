@@ -69,17 +69,18 @@ public class Wander {
 		return kinematicOutput;
 	}
 
-	public KinematicOutput getOrientationMatchingSteering(Kinematic character, Environment environment, PApplet parent, int BORDER_PADDING, float MAX_VELOCITY, PVector desiredLocation, float TRACK_CONE_RANGE) {
+	public KinematicOutput getOrientationMatchingSteering(Kinematic character, Environment environment, PApplet parent, int BORDER_PADDING, float MAX_VELOCITY, PVector desiredLocation, float randomAngle) {
 		KinematicOutput kinematicOutput = new KinematicOutput();
 
 		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(character, parent, environment);
 		if (onObstacle) {
 			targetOrientation = ObstacleSteering.avoidObstacleOnWander(character, parent, environment);
 		}
+		else if (BoundarySteering.checkForBoundaryAvoidance(character, parent, BORDER_PADDING)) {
+			targetOrientation = BoundarySteering.avoidBoundaryOnWander(character, parent, BORDER_PADDING);
+		}
 		else {
-			System.out.println("Wander: heading = " + PVector.sub(desiredLocation, character.position).heading());
-			targetOrientation = PVector.sub(desiredLocation, character.position).heading() + Utility.randomBinomial() * TRACK_CONE_RANGE;
-			System.out.println("Wander: targetOrientation = " + targetOrientation);
+			targetOrientation = PVector.sub(desiredLocation, character.position).heading() + randomAngle;
 		}
 		kinematicOutput.rotation = rotateShapeDirection(character, targetOrientation);
 		kinematicOutput.velocity = calculateVelocityPerOrientation(character, MAX_VELOCITY);

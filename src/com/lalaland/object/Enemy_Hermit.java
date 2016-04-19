@@ -8,16 +8,20 @@ import com.lalaland.steering.*;
 import com.lalaland.utility.Utility;
 
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 public class Enemy_Hermit extends Enemy {
+
 	private static final float HERMIT_RADIUS = 7;
 	private static final PVector HERMIT_COLOR = new PVector(255, 153, 102);
 	private static final PVector HERMIT_RAGE_COLOR = new PVector(255, 255, 0);
-	private static final float HERMIT_VIEW_RADIUS = 180;
+	private static final float HERMIT_VIEW_RADIUS = 200;
 	private static final float MAX_LINEAR_ACC = 0.5f;
 	private static final float RADIUS_SATISFACTION = 0.1f;
-	private static final float SEEK_MAX_VELOCITY = 1.9f;
+	private static final float SEEK_MAX_VELOCITY = 2.0f;
+	private static final boolean SPIRAL_RAGE = false;
+	private static final float SPIRAL_WIDTH_CONSTANT = 2f;
 
 	private enum States {
 		WANDER, RAGE_MODE
@@ -73,6 +77,8 @@ public class Enemy_Hermit extends Enemy {
 				}
 				break;
 		}
+		if (DRAW_BREADCRUMBS)
+			storeHistory();
 	}
 
 	private void updateLife() {
@@ -100,17 +106,17 @@ public class Enemy_Hermit extends Enemy {
 			enlarge();
 	}
 	
-	private void rageModeOff(){
+	private void rageModeOff() {
 		for (int i = 7; i > 0; i--)
 			diminish();
 		IND_COLOR = HERMIT_COLOR;
 	}
 	
-	private boolean isPlayerVisible(){
+	private boolean isPlayerVisible() {
 		return Utility.calculateEuclideanDistance(environment.getPlayer().position, position) <= HERMIT_VIEW_RADIUS;
 	}
 	
-	private void updatePositionSeek(){
+	private void updatePositionSeek() {
 		targetPosition.x = environment.getPlayer().getPosition().x;
     targetPosition.y = environment.getPlayer().getPosition().y;
     position.add(velocity);
@@ -125,14 +131,13 @@ public class Enemy_Hermit extends Enemy {
       return;
     }
     reached = false;
+		if (SPIRAL_RAGE)
+			steering.linear.add(PVector.fromAngle(PVector.sub(environment.getPlayer().getPosition(), position).heading() + PConstants.PI / 2).setMag(steering.linear.mag() * SPIRAL_WIDTH_CONSTANT));
     velocity.add(steering.linear);
     if (velocity.mag() >= SEEK_MAX_VELOCITY)
       velocity.setMag(SEEK_MAX_VELOCITY);
     steering.angular = LookWhereYoureGoing.getSteering(this, target, TIME_TARGET_ROT).angular;
     orientation += steering.angular;
-
-    if (DRAW_BREADCRUMBS)
-      storeHistory();
 	}
 
 	private void updatePositionWander() {

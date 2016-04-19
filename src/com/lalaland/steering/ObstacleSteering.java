@@ -7,6 +7,8 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class ObstacleSteering {
@@ -72,46 +74,46 @@ public class ObstacleSteering {
   public static SteeringOutput checkAndAvoidObstacle(Kinematic character, Environment environment, float steeringWeight, float rayOffset) {
     SteeringOutput steeringOutput = new SteeringOutput();
 
-    PVector futureRay1 = PVector.add(character.position, PVector.mult(character.velocity.copy().setMag(FUTURE_RAY_VEL_BASE), rayOffset));
-    PVector futureRay2 = PVector.add(character.position, PVector.mult(character.velocity.copy().setMag(FUTURE_RAY_VEL_BASE), rayOffset / 2f));
-    PVector futureRay3 = PVector.add(character.position, PVector.fromAngle(character.velocity.heading() - PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * rayOffset / 2f));
-    PVector futureRay4 = PVector.add(character.position, PVector.fromAngle(character.velocity.heading() + PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * rayOffset / 2f));
+    List<PVector> futureRays = new ArrayList<>();
+    futureRays.add(PVector.add(character.position, PVector.mult(character.velocity.copy().setMag(FUTURE_RAY_VEL_BASE), rayOffset)));
+    futureRays.add(PVector.add(character.position, PVector.mult(character.velocity.copy().setMag(FUTURE_RAY_VEL_BASE), rayOffset / 2f)));
+    futureRays.add(PVector.add(character.position, PVector.fromAngle(character.velocity.heading() - PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * rayOffset / 2f)));
+    futureRays.add(PVector.add(character.position, PVector.fromAngle(character.velocity.heading() + PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * rayOffset / 2f)));
 
-    if (
-      environment.onObstacle(futureRay1) ||
-      environment.onObstacle(futureRay2) ||
-      environment.onObstacle(futureRay3) ||
-      environment.onObstacle(futureRay4)
-    ) {
-      Obstacle nearestObstacle = environment.getNearestObstacle(character.position, null);
-      PVector left, right, up, down;
-      left = new PVector(nearestObstacle.getCenterPosition().x - nearestObstacle.getSize().x / 2, nearestObstacle.getCenterPosition().y);
-      right = new PVector(nearestObstacle.getCenterPosition().x + nearestObstacle.getSize().x / 2, nearestObstacle.getCenterPosition().y);
-      up = new PVector(nearestObstacle.getCenterPosition().x, nearestObstacle.getCenterPosition().y - nearestObstacle.getSize().y / 2);
-      down = new PVector(nearestObstacle.getCenterPosition().x, nearestObstacle.getCenterPosition().y + nearestObstacle.getSize().y / 2);
-      float minimumDistance = 99999;
-      PVector steeringLinear = new PVector();
-      if (PVector.dist(left, character.position) < minimumDistance) {
-        minimumDistance = PVector.dist(left, character.position);
-        steeringLinear.x = -steeringWeight;
-        steeringLinear.y = 0f;
+    for (PVector futureRay : futureRays) {
+      if (environment.onObstacle(futureRay)) {
+        Obstacle nearestObstacle = environment.getNearestObstacle(futureRay, null);
+        PVector left, right, up, down;
+        left = new PVector(nearestObstacle.getCenterPosition().x - nearestObstacle.getSize().x / 2, nearestObstacle.getCenterPosition().y);
+        right = new PVector(nearestObstacle.getCenterPosition().x + nearestObstacle.getSize().x / 2, nearestObstacle.getCenterPosition().y);
+        up = new PVector(nearestObstacle.getCenterPosition().x, nearestObstacle.getCenterPosition().y - nearestObstacle.getSize().y / 2);
+        down = new PVector(nearestObstacle.getCenterPosition().x, nearestObstacle.getCenterPosition().y + nearestObstacle.getSize().y / 2);
+        float minimumDistance = 99999;
+        PVector steeringLinear = new PVector();
+        if (PVector.dist(left, futureRay) < minimumDistance) {
+          minimumDistance = PVector.dist(left, futureRay);
+          steeringLinear.x = -steeringWeight;
+          steeringLinear.y = 0f;
+        }
+        if (PVector.dist(right, futureRay) < minimumDistance) {
+          minimumDistance = PVector.dist(right, futureRay);
+          steeringLinear.x = steeringWeight;
+          steeringLinear.y = 0f;
+        }
+        if (PVector.dist(up, futureRay) < minimumDistance) {
+          minimumDistance = PVector.dist(up, futureRay);
+          steeringLinear.x = 0f;
+          steeringLinear.y = -steeringWeight;
+        }
+        if (PVector.dist(down, futureRay) < minimumDistance) {
+          steeringLinear.x = 0f;
+          steeringLinear.y = steeringWeight;
+        }
+        steeringOutput.linear.add(steeringLinear);
       }
-      if (PVector.dist(right, character.position) < minimumDistance) {
-        minimumDistance = PVector.dist(right, character.position);
-        steeringLinear.x = steeringWeight;
-        steeringLinear.y = 0f;
-      }
-      if (PVector.dist(up, character.position) < minimumDistance) {
-        minimumDistance = PVector.dist(up, character.position);
-        steeringLinear.x = 0f;
-        steeringLinear.y = -steeringWeight;
-      }
-      if (PVector.dist(down, character.position) < minimumDistance) {
-        steeringLinear.x = 0f;
-        steeringLinear.y = steeringWeight;
-      }
-      steeringOutput.linear.set(steeringLinear);
     }
+
+    steeringOutput.linear.setMag(steeringWeight);
 
     return steeringOutput;
   }
