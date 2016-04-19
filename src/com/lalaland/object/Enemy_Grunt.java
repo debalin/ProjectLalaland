@@ -155,6 +155,7 @@ public class Enemy_Grunt extends Enemy {
       alive = false;
       spawnCount--;
     }
+    checkAndReducePlayerLife();
   }
 
 }

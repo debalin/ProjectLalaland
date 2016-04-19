@@ -84,16 +84,19 @@ public class Engine extends PApplet {
     background(BACKGROUND_RGB.x, BACKGROUND_RGB.y, BACKGROUND_RGB.z);
     
     environment.drawObstacles();
-
     controlItems();
-    spawnBonusItems();
+    if (player.isAlive())
+      spawnBonusItems();
     controlEnemies();
     controlPlayer();
     controlHUD();
   }
 
   private void controlPlayer() {
-    player.move();
+    if (player.isAlive())
+      player.move();
+    else
+      Utility.drawText("HE'S DEAD, JIM!", RESOLUTION.x / 2f - 15f, RESOLUTION.y / 2f - 15f, this);
     player.display();
     controlPlayerGun();    
   }
@@ -110,12 +113,14 @@ public class Engine extends PApplet {
   }
   
   private void controlEnemies() {
-    spawnEnemies();
+    if (!inDEVMode)
+      spawnEnemies();
     Iterator<Enemy> i = enemies.iterator();
     while (i.hasNext()) {
       Enemy enemy = i.next();
       if (enemy.isAlive()) {
-        enemy.move();
+        if (player.isAlive())
+          enemy.move();
         enemy.display();
       }
       else{
@@ -127,36 +132,36 @@ public class Engine extends PApplet {
   private void spawnEnemies() {
     for (Enemy.EnemyTypes enemyType : Enemy.EnemyTypes.values()) {
       switch (enemyType) {
-//        case SOLDIER:
-//          if ((Enemy_Soldier.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Soldier.SPAWN_OFFSET) % Enemy_Soldier.SPAWN_INTERVAL == 0) && (Enemy_Soldier.getSpawnCount() < Enemy_Soldier.SPAWN_MAX)) {
-//            spawnEnemyNow(Enemy.EnemyTypes.SOLDIER);
-//          }
-//          break;
-//        case HERMIT:
-//          if ((Enemy_Hermit.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Hermit.SPAWN_OFFSET) % Enemy_Hermit.SPAWN_INTERVAL == 0) && (Enemy_Hermit.getSpawnCount() < Enemy_Hermit.SPAWN_MAX)) {
-//            spawnEnemyNow(Enemy.EnemyTypes.HERMIT);
-//          }
-//          break;
-//        case GRUNT:
-//          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
-//          spawnEnemyNow(Enemy.EnemyTypes.GRUNT);
-//          }
-//          break;
-//        case FLOCKER:
-//          if ((Enemy_FlockerLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_FlockerLeader.SPAWN_OFFSET) % Enemy_FlockerLeader.SPAWN_INTERVAL == 0) && (Enemy_FlockerLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
-//          spawnEnemyNow(Enemy.EnemyTypes.FLOCKER);
-//          }
-//          break;
-//        case MARTYR:
-//          if ((Enemy_MartyrLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_MartyrLeader.SPAWN_OFFSET) % Enemy_MartyrLeader.SPAWN_INTERVAL == 0) && (Enemy_MartyrLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
-//        spawnEnemyNow(Enemy.EnemyTypes.MARTYR);
-//          }
-//          break;
-//        case BLENDER:
-//          if ((Enemy_Blender.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Blender.SPAWN_OFFSET) % Enemy_Blender.SPAWN_INTERVAL == 0) && (Enemy_Blender.getSpawnCount() < Enemy_Blender.SPAWN_MAX)) {
-//            spawnEnemyNow(Enemy.EnemyTypes.BLENDER);
-//          }
-//          break;
+        case SOLDIER:
+          if ((Enemy_Soldier.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Soldier.SPAWN_OFFSET) % Enemy_Soldier.SPAWN_INTERVAL == 0) && (Enemy_Soldier.getSpawnCount() < Enemy_Soldier.SPAWN_MAX)) {
+            spawnEnemyNow(Enemy.EnemyTypes.SOLDIER);
+          }
+          break;
+        case HERMIT:
+          if ((Enemy_Hermit.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Hermit.SPAWN_OFFSET) % Enemy_Hermit.SPAWN_INTERVAL == 0) && (Enemy_Hermit.getSpawnCount() < Enemy_Hermit.SPAWN_MAX)) {
+            spawnEnemyNow(Enemy.EnemyTypes.HERMIT);
+          }
+          break;
+        case GRUNT:
+          if ((Enemy_Grunt.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Grunt.SPAWN_OFFSET) % Enemy_Grunt.SPAWN_INTERVAL == 0) && (Enemy_Grunt.getSpawnCount() < Enemy_Grunt.SPAWN_MAX)) {
+            spawnEnemyNow(Enemy.EnemyTypes.GRUNT);
+          }
+          break;
+        case FLOCKER:
+          if ((Enemy_FlockerLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_FlockerLeader.SPAWN_OFFSET) % Enemy_FlockerLeader.SPAWN_INTERVAL == 0) && (Enemy_FlockerLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
+            spawnEnemyNow(Enemy.EnemyTypes.FLOCKER);
+          }
+          break;
+        case MARTYR:
+          if ((Enemy_MartyrLeader.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_MartyrLeader.SPAWN_OFFSET) % Enemy_MartyrLeader.SPAWN_INTERVAL == 0) && (Enemy_MartyrLeader.getSpawnCount() < Enemy_FlockerLeader.SPAWN_MAX)) {
+            spawnEnemyNow(Enemy.EnemyTypes.MARTYR);
+          }
+          break;
+        case BLENDER:
+          if ((Enemy_Blender.SPAWN_OFFSET <= frameCount) && ((frameCount - Enemy_Blender.SPAWN_OFFSET) % Enemy_Blender.SPAWN_INTERVAL == 0) && (Enemy_Blender.getSpawnCount() < Enemy_Blender.SPAWN_MAX)) {
+            spawnEnemyNow(Enemy.EnemyTypes.BLENDER);
+          }
+          break;
       }
     }
   }
@@ -237,12 +242,11 @@ public class Engine extends PApplet {
   
   public void keyReleased() {
     player.setDirection(key, false);
-    handleEnemySpawn();
+    if (inDEVMode)
+      handleEnemySpawn();
   }
 
   private void handleEnemySpawn(){
-    if(!inDEVMode)
-      return;
     switch (key){
       case '1':
         spawnEnemyNow(Enemy.EnemyTypes.SOLDIER);

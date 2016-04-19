@@ -20,6 +20,7 @@ public class Player extends GameObject {
 
   private boolean LEFT, RIGHT, UP, DOWN;
   private List<Bullet> bullets;
+  private boolean alive;
   
   public Player(float positionX, float positionY, PApplet parent, Environment environment) {
     super(positionX, positionY, parent, environment, PLAYER_RADIUS, PLAYER_COLOR);
@@ -28,6 +29,7 @@ public class Player extends GameObject {
     MAX_VELOCITY = 2;
     LEFT = RIGHT = UP = DOWN = false;
     bullets = Collections.synchronizedList(new LinkedList<>());
+    alive = true;
   }
 
   public PVector getVelocity() {
@@ -57,6 +59,16 @@ public class Player extends GameObject {
     
     if (DRAW_BREADCRUMBS)
       storeHistory();
+  }
+
+  public void reduceLife(float damage) {
+    life -= damage;
+    if (life <= 0)
+      alive = false;
+  }
+
+  public boolean isAlive() {
+    return alive;
   }
   
   private void controlBonusItemPicking(){

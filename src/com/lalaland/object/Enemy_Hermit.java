@@ -98,6 +98,7 @@ public class Enemy_Hermit extends Enemy {
 			alive = false;
 			spawnCount--;
 		}
+		checkAndReducePlayerLife();
 	}
 	
 	private void rageModeOn(){

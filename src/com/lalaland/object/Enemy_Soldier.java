@@ -44,6 +44,8 @@ public class Enemy_Soldier extends Enemy {
     RADIUS_SATISFACTION = 10;
     MAX_VELOCITY = 1;
     MAX_ACCELERATION = 0.3f;
+    DAMAGE_RADIUS = 10f;
+    PLAYER_DAMAGE = 0.7f;
     targetPosition = new PVector(position.x, position.y);
     lifeReductionRate = 7;
     lifeRegainRate = 0.08f;
@@ -89,6 +91,10 @@ public class Enemy_Soldier extends Enemy {
     }
 
     updatePosition();
+  }
+
+  public static int getSpawnCount() {
+    return spawnCount;
   }
 
   private void findPlayer() {
@@ -139,6 +145,7 @@ public class Enemy_Soldier extends Enemy {
     }
     if (life <= COVER_THRESHOLD && state == States.SEEK)
       updateState(States.PATH_FIND_COVER);
+    checkAndReducePlayerLife();
   }
 
   private void regainHealth() {

@@ -122,6 +122,7 @@ public class Enemy_MartyrFollower extends Enemy {
     }
     if (life <= LIFE_THRESHOLD)
       alive = false;
+    checkAndReducePlayerLife();
   }
 
   private void updatePosition() {

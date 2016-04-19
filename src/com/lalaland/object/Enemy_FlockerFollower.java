@@ -63,15 +63,7 @@ public class Enemy_FlockerFollower extends Enemy {
 			targetPosition.set(leader.getPosition());
 			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5f))
 				targetPosition.set(ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment, 5f));
-			// if (checkForObstacleAvoidance())
-			// updateState(States.PATH_FIND_LEADER);
 			break;
-		// case PATH_FIND_PLAYER:
-		// findPlayer();
-		// break;
-		// case PATH_FOLLOW_PLAYER:
-		// followPathForSometime();
-		// break;
 		case SURROUND_PLAYER:
 			PVector positionToSeek = PVector.fromAngle(leader.getOrientation() + 2 * PConstants.PI * id / leader.getNumFollowers()).setMag(SURROUND_CIRCLE_RADIUS);
 			targetPosition = environment.getPlayer().getPosition().copy().add(positionToSeek);
@@ -101,33 +93,6 @@ public class Enemy_FlockerFollower extends Enemy {
 		updatePosition();
 	}
 
-	// private void findPlayer() {
-	// PVector pointToFleeTo = targetPosition.copy();
-	// pathFind(pointToFleeTo);
-	// updateState(States.PATH_FOLLOW_PLAYER);
-	// }
-	//
-	// private void followPathForSometime() {
-	// if (solutionPath != null && solutionPath.size() != 0 && (reached ||
-	// !startTakingCover) && followedNodes <= MAX_FOLLOW_NODE_COUNT) {
-	// int node = solutionPath.poll();
-	// int gridY = (int) (node / environment.getNumTiles().x);
-	// int gridX = (int) (node % environment.getNumTiles().x);
-	// targetPosition.x = gridX * environment.getTileSize().x +
-	// environment.getTileSize().x / 2;
-	// targetPosition.y = gridY * environment.getTileSize().y +
-	// environment.getTileSize().y / 2;
-	// startTakingCover = true;
-	// followedNodes++;
-	// }
-	// else if (solutionPath == null || solutionPath.size() == 0 || followedNodes
-	// > MAX_FOLLOW_NODE_COUNT) {
-	// updateState(States.SEEK);
-	// startTakingCover = false;
-	// followedNodes = 0;
-	// }
-	// }
-
 	private void updateState(States state) {
 		this.state = state;
 	}
@@ -147,26 +112,8 @@ public class Enemy_FlockerFollower extends Enemy {
 		}
 		if (life <= LIFE_THRESHOLD)
 			alive = false;
+		checkAndReducePlayerLife();
 	}
-
-	// private void pathFind(PVector pointToFleeTo) {
-	// int originX = (int)(position.x / environment.getTileSize().x);
-	// int originY = (int)(position.y / environment.getTileSize().y);
-	// int originNode = originY * (int)environment.getNumTiles().x + originX;
-	//
-	// int destinationX = (int)(pointToFleeTo.x / environment.getTileSize().x);
-	// int destinationY = (int)(pointToFleeTo.y / environment.getTileSize().y);
-	// int destinationNode = destinationY * (int)environment.getNumTiles().x +
-	// destinationX;
-	//
-	// if (graphSearch.search(originNode, destinationNode, searchType)) {
-	// solutionPath = graphSearch.getSolutionPath();
-	// Logger.log("Path cost is " + Double.toString(graphSearch.getPathCost()) +
-	// ".");
-	// Logger.log("Solution path is " + solutionPath.toString());
-	// }
-	// graphSearch.reset();
-	// }
 
 	private void updatePosition() {
 		position.add(velocity);

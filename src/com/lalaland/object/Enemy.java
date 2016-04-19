@@ -23,6 +23,9 @@ public abstract class Enemy extends GameObject {
 	protected float MAX_ACCELERATION;
   public static final int BORDER_PADDING = 20;
 	protected float SEPARATION_THRESHOLD;
+	protected float PLAYER_DAMAGE;
+	protected float DAMAGE_RADIUS;
+	protected float lifeReductionRate;
 
 	private static int totalHPDamage = 0;
 
@@ -59,7 +62,7 @@ public abstract class Enemy extends GameObject {
     updateShape();
   }
 
-	void enlarge(float delta){
+	protected void enlarge(float delta){
 		IND_RADIUS += delta;
 		updateShape();
 	}
@@ -69,11 +72,17 @@ public abstract class Enemy extends GameObject {
     updateShape();
   }
 
-	void diminish(float delta){
+	protected void diminish(float delta){
 		IND_RADIUS -= delta;
 		updateShape();
 	}
-  
+
+	protected void checkAndReducePlayerLife() {
+		if (position.dist(environment.getPlayer().getPosition()) < DAMAGE_RADIUS) {
+			environment.getPlayer().reduceLife(PLAYER_DAMAGE);
+		}
+	}
+
   protected void updateShape(){
   	group = parent.createShape(PApplet.GROUP);
     head = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);

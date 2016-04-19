@@ -167,6 +167,7 @@ public class Enemy_FlockerLeader extends Enemy {
 		if (life <= LIFE_THRESHOLD) {
 			updateState(States.LEADER_DEAD_KILL_PLAYER);
 		}
+		checkAndReducePlayerLife();
 	}
 
 	private void pathFind(PVector pointToFleeTo) {

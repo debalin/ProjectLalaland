@@ -207,6 +207,7 @@ public class Enemy_Blender extends Enemy {
       alive = false;
       spawnCount--;
     }
+    checkAndReducePlayerLife();
   }
 
 }

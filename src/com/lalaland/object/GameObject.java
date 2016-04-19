@@ -14,7 +14,6 @@ public abstract class GameObject extends Kinematic {
   protected Environment environment;
   protected float life;
   protected int MAX_LIFE = 100;
-  protected float lifeReductionRate;
   
   protected boolean POSITION_MATCHING;
   protected boolean DRAW_BREADCRUMBS;

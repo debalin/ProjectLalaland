@@ -168,6 +168,7 @@ public class Enemy_MartyrLeader extends Enemy {
     if (life <= LIFE_THRESHOLD) {
       updateState(States.LEADER_DEAD);
     }
+    checkAndReducePlayerLife();
   }
 
   private List<PVector> buildAvoidanceRays() {
