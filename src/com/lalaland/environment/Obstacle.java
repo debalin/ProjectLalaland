@@ -12,8 +12,6 @@ public class Obstacle {
   private List<PVector> tileLocations;
   private Environment environment;
   private PVector obstacleColor;
-  private PVector firstGrid;
-  private PVector lastGrid;
   private PVector centerPosition;
   
   public PVector getCorner() {
@@ -32,8 +30,6 @@ public class Obstacle {
     tileLocations = new ArrayList<>();
     this.environment = environment;
     this.obstacleColor = obstacleColor;
-    this.firstGrid = new PVector(firstGridX, firstGridY);
-    this.lastGrid = new PVector(lastGridX, lastGridY);
     PVector centerPosition1 = new PVector(firstGridX * environment.getTileSize().x + environment.getTileSize().x / 2, firstGridY * environment.getTileSize().y + environment.getTileSize().y / 2);
     PVector centerPosition2 = new PVector(lastGridX * environment.getTileSize().x + environment.getTileSize().x / 2, lastGridY * environment.getTileSize().y + environment.getTileSize().y / 2);
     centerPosition = new PVector((centerPosition1.x + centerPosition2.x) / 2, (centerPosition1.y + centerPosition2.y) / 2);

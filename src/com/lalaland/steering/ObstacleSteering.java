@@ -1,15 +1,16 @@
 package com.lalaland.steering;
 
-import com.lalaland.environment.Environment;
-import com.lalaland.environment.Obstacle;
-import com.lalaland.object.Kinematic;
-import processing.core.PApplet;
-import processing.core.PConstants;
-import processing.core.PVector;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import com.lalaland.environment.Environment;
+import com.lalaland.environment.Obstacle;
+import com.lalaland.object.Kinematic;
+
+import processing.core.PApplet;
+import processing.core.PConstants;
+import processing.core.PVector;
 
 public class ObstacleSteering {
 
@@ -104,7 +105,7 @@ public class ObstacleSteering {
     float targetOrientation;
     do {
       orient = random.nextInt(180) - random.nextInt(180);
-      targetOrientation = parent.radians(orient) + character.orientation;
+      targetOrientation = PApplet.radians(orient) + character.orientation;
     } while (checkForObstacleAvoidance(new Kinematic(character.position, PVector.fromAngle(targetOrientation), 0, 0), parent, environment, rayOffset));
     return targetOrientation;
   }

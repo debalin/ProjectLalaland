@@ -38,7 +38,7 @@ public class BoundarySteering {
     Random random = new Random();
     do {
       orient = random.nextInt(180) - random.nextInt(180);
-      targetOrientation = parent.radians(orient) +  character.orientation;
+      targetOrientation = PApplet.radians(orient) +  character.orientation;
     } while(checkForBoundaryAvoidance(new Kinematic(character.position, PVector.fromAngle(targetOrientation), 0, 0), parent, BORDER_PADDING));
     return targetOrientation;
   }

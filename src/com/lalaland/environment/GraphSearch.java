@@ -13,7 +13,8 @@ public class GraphSearch {
   private int visited[], numOfNodes;
   private double pathCost;
   private LinkedList<Integer> solutionPath;
-  private int expandedNodes;
+  @SuppressWarnings("unused")
+	private int expandedNodes;
   private Map<Integer, List<Utility.Neighbour>> adjacencyList;
   private Utility utility;
   

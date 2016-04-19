@@ -97,7 +97,8 @@ public class Enemy_Grunt extends Enemy {
     return false;
   }
 
-  private void drawAveragePosition() {
+  @SuppressWarnings("unused")
+	private void drawAveragePosition() {
     parent.pushMatrix();
     parent.fill(255, 255, 255);
     parent.ellipse(playerAveragePosition.x, playerAveragePosition.y, 5, 5);

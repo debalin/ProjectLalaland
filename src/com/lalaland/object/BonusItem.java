@@ -9,10 +9,11 @@ import processing.core.PVector;
 public class BonusItem {
 	private PVector position;
 	private PApplet parent;
+	@SuppressWarnings("unused")
 	private Environment environment;
 	private float IND_RADIUS;
 	private PVector IND_COLOR;
-	private PShape group, core, halo;
+	private PShape group, core;
 	private boolean isConsumed = false;
 		
 	

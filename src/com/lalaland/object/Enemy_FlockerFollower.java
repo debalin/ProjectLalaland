@@ -26,7 +26,7 @@ public class Enemy_FlockerFollower extends Enemy {
 	private static final float SURROUND_CIRCLE_RADIUS = 50f;
 
 	private enum States {
-		STAY_WITH_LEADER, SURROUND_PLAYER, CONVERGE_ON_PLAYER
+		STAY_WITH_LEADER, SURROUND_PLAYER, CONVERGE_ON_PLAYER, KILL_PLAYER
 	}
 
 	private States state;
@@ -52,6 +52,8 @@ public class Enemy_FlockerFollower extends Enemy {
 		lifeReductionRate = 20;
 		state = States.STAY_WITH_LEADER;
 		surrounded = allSurrounded = false;
+		PLAYER_DAMAGE = 0.5f;
+		DAMAGE_RADIUS = 10f;
 	}
 
 	@Override
@@ -85,6 +87,11 @@ public class Enemy_FlockerFollower extends Enemy {
 				surrounded = allSurrounded = false;
 				state = States.SURROUND_PLAYER;
 			}
+			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5f))
+				targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment, 5f);
+			break;	
+		case KILL_PLAYER:
+			targetPosition = environment.getPlayer().getPosition().copy();
 			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5f))
 				targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment, 5f);
 			break;	
@@ -167,7 +174,10 @@ public class Enemy_FlockerFollower extends Enemy {
 	
 	public void updateStateToKill() {
 		surrounded = allSurrounded = false;
-		updateState(States.SURROUND_PLAYER);
+		if(SURROUND_VERSION)
+			updateState(States.SURROUND_PLAYER);
+		else
+			updateState(States.KILL_PLAYER);
 	}
 	
 	public void updateStateToFollow() {

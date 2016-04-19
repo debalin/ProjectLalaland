@@ -1,13 +1,18 @@
 package com.lalaland.object;
 
-import com.lalaland.utility.Logger;
-import processing.core.*;
-import com.lalaland.environment.*;
-import com.lalaland.steering.*;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.lalaland.environment.Environment;
+import com.lalaland.steering.LookWhereYoureGoing;
+import com.lalaland.steering.ObstacleSteering;
+import com.lalaland.steering.Seek;
+import com.lalaland.steering.SteeringOutput;
+import com.lalaland.utility.Logger;
+
+import processing.core.PApplet;
+import processing.core.PVector;
 
 public class Enemy_FlockerLeader extends Enemy {
 
@@ -16,9 +21,8 @@ public class Enemy_FlockerLeader extends Enemy {
 	private static final int NUM_FOLLOWERS = 10;
 	private static final int MAX_FOLLOW_NODE_COUNT = 10;
 	private static final float SIGHT_RADIUS = 200f;
-	private static final float FUTURE_RAY_VEL_BASE = 15f;
 
-	private static final boolean SURROUND_VERSION = true;
+	private static final boolean SURROUND_VERSION = false;
 
 	private enum States {
 		SEEK_PLAYER, PATH_FIND_PLAYER, PATH_FOLLOW_PLAYER, KILL_PLAYER, LEADER_DEAD_KILL_PLAYER
@@ -44,6 +48,8 @@ public class Enemy_FlockerLeader extends Enemy {
 		lifeReductionRate = 3;
 		state = States.SEEK_PLAYER;
 		spawnCount++;
+		PLAYER_DAMAGE = 2f;
+		DAMAGE_RADIUS = 25f;
 
 		for (int i = 1; i <= NUM_FOLLOWERS; i++)
 			followers.add(new Enemy_FlockerFollower(i, positionX, positionY, parent, environment, this, SURROUND_VERSION));
