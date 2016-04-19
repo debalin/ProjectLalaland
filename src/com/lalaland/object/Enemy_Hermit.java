@@ -20,7 +20,7 @@ public class Enemy_Hermit extends Enemy {
 	private static final float MAX_LINEAR_ACC = 0.5f;
 	private static final float RADIUS_SATISFACTION = 0.1f;
 	private static final float SEEK_MAX_VELOCITY = 2.0f;
-	private static final boolean SPIRAL_RAGE = true;
+	private static final boolean SPIRAL_RAGE = false;
 	private static final float SPIRAL_WIDTH_CONSTANT = 2f;
 
 	private enum States {
@@ -120,6 +120,10 @@ public class Enemy_Hermit extends Enemy {
 		targetPosition.x = environment.getPlayer().getPosition().x;
     targetPosition.y = environment.getPlayer().getPosition().y;
 
+		position.add(velocity);
+		boolean onObstacle = ObstacleSteering.checkForObstacleAvoidance(this, parent, environment);
+		if (onObstacle)
+			targetPosition.set(ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment, 6f));
     Kinematic target = new Kinematic(targetPosition, null, 0, 0);
     SteeringOutput steering;
     steering = Seek.getSteering(this, target, MAX_LINEAR_ACC, RADIUS_SATISFACTION);
@@ -130,18 +134,14 @@ public class Enemy_Hermit extends Enemy {
       return;
     }
     reached = false;
-		if (SPIRAL_RAGE)
+		if (SPIRAL_RAGE && !onObstacle)
 			steering.linear.add(PVector.fromAngle(PVector.sub(environment.getPlayer().getPosition(), position).heading() + PConstants.PI / 2).setMag(steering.linear.mag() * SPIRAL_WIDTH_CONSTANT));
-		if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment))
-			targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment);
-		else
-    	velocity.add(steering.linear);
+		velocity.add(steering.linear);
     if (velocity.mag() >= SEEK_MAX_VELOCITY)
       velocity.setMag(SEEK_MAX_VELOCITY);
     steering.angular = LookWhereYoureGoing.getSteering(this, target, TIME_TARGET_ROT).angular;
 
     orientation += steering.angular;
-		position.add(velocity);
 	}
 
 	private void updatePositionWander() {

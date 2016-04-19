@@ -70,8 +70,7 @@ public class Enemy_FlockerLeader extends Enemy {
 			if (playerWithinSight())
 				updateState(States.KILL_PLAYER);
 			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment))
-				 updateState(States.PATH_FIND_PLAYER);
-//				targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment);
+				targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment.getPlayer(), environment, 5f);
 			break;
 		case PATH_FIND_PLAYER:
 			findPlayer();
@@ -240,18 +239,18 @@ public class Enemy_FlockerLeader extends Enemy {
 	}
 
 	public int getNumFollowers() {
-		return NUM_FOLLOWERS;
+		return followers.size();
 	}
 
 	private boolean allFollowersSurrounded() {
-		for (int i = 0; i < NUM_FOLLOWERS; i++)
+		for (int i = 0; i < followers.size(); i++)
 			if (!followers.get(i).isSurrounded())
 				return false;
 		return true;
 	}
 
 	private void commandFollowerToCloseIn() {
-		for (int i = 0; i < NUM_FOLLOWERS; i++)
+		for (int i = 0; i < followers.size(); i++)
 			followers.get(i).setAllSurrounded(true);
 	}
 }

@@ -34,7 +34,7 @@ public class ObstacleSteering {
     );
   }
 
-  public static PVector avoidObstacleOnSeek(Kinematic character, Kinematic target, Environment environment) {
+  public static PVector avoidObstacleOnSeek(Kinematic character, Kinematic target, Environment environment, float rayOffset) {
 		float angle, checkAngle;
 		int i;
 		PVector direction = character.velocity.copy();
@@ -43,20 +43,27 @@ public class ObstacleSteering {
 		if(checkAngle < 0)
 			checkAngle += 360f;
 		
-		for (i=0, angle = direction.heading(); i < 16; i++, angle += Math.PI / 8) {
-			if(angle > 360)
-				angle -= 360f;
-			
-			PVector ray1 = PVector.add(character.position.copy(), PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * 2f));
-			PVector ray2 = PVector.add(character.position.copy(), PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * 5f));
-			
-//			parent.ellipse(ray1.x, ray1.y, 2, 2);
-//			parent.ellipse(ray2.x, ray2.y, 2, 2);
-			
-			if (!environment.onObstacle(ray1) && !environment.onObstacle(ray2))
-				break;
+		for (i = 0, angle = direction.heading(); i < 16; i++, angle += PConstants.PI / 8) {
+			if (angle > 2 * PConstants.PI)
+				angle -= 2 * PConstants.PI;
+
+      List<PVector> futureRays = new ArrayList<>();
+			futureRays.add(PVector.add(character.position, PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * rayOffset)));
+			futureRays.add(PVector.add(character.position, PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * rayOffset / 2f)));
+      futureRays.add(PVector.add(character.position, PVector.fromAngle(angle - PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * rayOffset / 2f)));
+      futureRays.add(PVector.add(character.position, PVector.fromAngle(angle + PConstants.PI / 4f).setMag(FUTURE_RAY_VEL_BASE * rayOffset / 2f)));
+
+      boolean onObstacle = false;
+			for (PVector futureRay : futureRays) {
+        if (environment.onObstacle(futureRay)) {
+          onObstacle = true;
+          break;
+        }
+      }
+      if (!onObstacle)
+        break;
 		}
-		PVector targetPosition = PVector.add(character.position.copy(), PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * 5f));
+		PVector targetPosition = PVector.add(character.position.copy(), PVector.fromAngle(angle).setMag(FUTURE_RAY_VEL_BASE * rayOffset));
 		return targetPosition;
 	}
   
