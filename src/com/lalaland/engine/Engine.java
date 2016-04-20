@@ -34,7 +34,7 @@ public class Engine extends PApplet {
 
   private List<Enemy> enemies;
   private List<BonusItem> bonusItems;
-  private boolean inDEVMode = true;
+  private boolean inDEVMode = false;
 
   private static float time = 0f;
 
