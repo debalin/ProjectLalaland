@@ -109,8 +109,8 @@ public class Enemy_FlockerLeader extends Enemy {
 			break;
 		case LEADER_DEAD_KILL_PLAYER:
 			if (allFollowersDead()) {
-				killYourself(false);
-				//printMetrics();
+				killYourself(true);
+				printMetrics();
 				spawnCount--;
 			}
 			break;

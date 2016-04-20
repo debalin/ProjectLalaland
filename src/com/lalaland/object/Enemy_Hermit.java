@@ -20,7 +20,7 @@ public class Enemy_Hermit extends Enemy {
 	private static final float MAX_LINEAR_ACC = 0.5f;
 	private static final float RADIUS_SATISFACTION = 0.1f;
 	private static final float SEEK_MAX_VELOCITY = 2.0f;
-	private static final boolean SPIRAL_RAGE = true;
+	private static final boolean SPIRAL_RAGE = false;
 	private static final float SPIRAL_WIDTH_CONSTANT = 2f;
 
 	private enum States {

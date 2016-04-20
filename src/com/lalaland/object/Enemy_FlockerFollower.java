@@ -53,7 +53,7 @@ public class Enemy_FlockerFollower extends Enemy {
 		state = States.STAY_WITH_LEADER;
 		surrounded = allSurrounded = false;
 		PLAYER_DAMAGE = 0.5f;
-		DAMAGE_RADIUS = 10f;
+		DAMAGE_RADIUS = 15f;
 	}
 
 	@Override

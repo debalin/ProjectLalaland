@@ -187,11 +187,11 @@ public class Engine extends PApplet {
           enemies.add(new Enemy_Grunt(spawnSpot.x, spawnSpot.y, this, environment));
           break;
       case FLOCKER:
-          spawnSpot = new PVector(-100, -100);
+          spawnSpot = getRandomSpawnSpot();
           enemies.add(new Enemy_FlockerLeader(spawnSpot.x, spawnSpot.y, this, environment));
           break;
       case MARTYR:
-          spawnSpot = new PVector(-100, -100);
+          spawnSpot = getRandomSpawnSpot();
           enemies.add(new Enemy_MartyrLeader(spawnSpot.x, spawnSpot.y, this, environment));
           break;
       case BLENDER:

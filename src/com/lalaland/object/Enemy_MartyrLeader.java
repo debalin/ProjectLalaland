@@ -11,7 +11,7 @@ public class Enemy_MartyrLeader extends Enemy {
   private static final float LEADER_RADIUS = 12;
   private static final PVector LEADER_COLOR = new PVector(112, 71, 231);
   private static final int NUM_FOLLOWERS = 8;
-  private static final boolean DYNAMIC_FORMATION = false;
+  private static final boolean DYNAMIC_FORMATION = true;
   private static final int PURSUE_FORESIGHT = 5;
   private static final int[] RANK_PRIORITIES = {1, 0, 2, 7, 3, 4, 5, 6};
 
@@ -79,8 +79,8 @@ public class Enemy_MartyrLeader extends Enemy {
         break;
       case LEADER_DEAD:
         if (allFollowersDead()) {
-          killYourself(true);
-          printMetrics();
+          killYourself(false);
+//          printMetrics();
           spawnCount--;
         }
         else
