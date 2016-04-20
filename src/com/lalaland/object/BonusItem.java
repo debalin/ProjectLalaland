@@ -15,14 +15,19 @@ public class BonusItem {
 	private PVector IND_COLOR;
 	private PShape group, core;
 	private boolean isConsumed = false;
+	private boolean isRadialBullet = false;
 		
 	
-	public BonusItem(float positionX, float positionY, PApplet parent, Environment environment) {
+	public BonusItem(float positionX, float positionY, PApplet parent, Environment environment, boolean isRadialBullet) {
 		this.parent = parent;
 		this.environment = environment;
 		this.position = new PVector(positionX, positionY);
 		this.IND_RADIUS = 5;
-		this.IND_COLOR = new PVector(153, 204, 255);
+		this.isRadialBullet = isRadialBullet;
+		if(isRadialBullet)
+			this.IND_COLOR = new PVector(255, 104, 255);
+		else
+			this.IND_COLOR = new PVector(153, 204, 255);
 		group = parent.createShape();
 		group = parent.createShape(PApplet.GROUP);
     core = parent.createShape(PApplet.ELLIPSE, 0, 0, 2 * IND_RADIUS, 2 * IND_RADIUS);
@@ -30,6 +35,10 @@ public class BonusItem {
     core.setStroke(parent.color(255, 0));
     group.addChild(core);
 		
+	}
+
+	public boolean isRadialBullet(){
+		return isRadialBullet;
 	}
 	
 	public boolean isConsumed(){

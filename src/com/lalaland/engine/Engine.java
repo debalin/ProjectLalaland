@@ -237,7 +237,11 @@ public class Engine extends PApplet {
   private void spawnBonusItems(){
   	if(frameCount % BONUS_DROP_INTERVAL == 0){
   		PVector position = environment.getRandomValidPosition();
-  		bonusItems.add(new BonusItem(position.x, position.y, this, environment));
+      double rand = Math.random();
+      boolean radialBullets = false;
+      if(rand > 0.5)
+        radialBullets = true;
+  		bonusItems.add(new BonusItem(position.x, position.y, this, environment, radialBullets));
   	}
   }
 

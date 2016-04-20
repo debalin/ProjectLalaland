@@ -21,6 +21,7 @@ public class Player extends GameObject {
   private boolean LEFT, RIGHT, UP, DOWN;
   private List<Bullet> bullets;
   private boolean alive;
+  private boolean isradialBulletPowerup = false;
   
   public Player(float positionX, float positionY, PApplet parent, Environment environment) {
     super(positionX, positionY, parent, environment, PLAYER_RADIUS, PLAYER_COLOR);
@@ -65,9 +66,9 @@ public class Player extends GameObject {
 
   public void reduceLife(float damage) {
     if (life <= 0) {
-//      System.out.println("Player dead.");
-//      environment.getEnemies().forEach(enemy -> enemy.printCommonMetrics());
-//      alive = false;
+      System.out.println("Player dead.");
+      environment.getEnemies().forEach(enemy -> enemy.printCommonMetrics());
+      alive = false;
     }
     else
       life -= damage;
@@ -80,15 +81,25 @@ public class Player extends GameObject {
   private void controlBonusItemPicking(){
   	BonusItem item = environment.onBonusItem(position); 
   	if(item != null ){
-  		setGUN_FIRE_INTERVAL(4);
-  		gun_reset_framecount = parent.frameCount + BONUS_TIMEOUT_DURATION;  		
+      if(item.isRadialBullet()){
+        isradialBulletPowerup = true;
+      }
+      else {
+        setGUN_FIRE_INTERVAL(4);
+      }
+      gun_reset_framecount = parent.frameCount + BONUS_TIMEOUT_DURATION;
   	}
   	handleGunReset();
   }
   
   private void handleGunReset(){
-  	if(parent.frameCount == gun_reset_framecount)
-  		setGUN_FIRE_INTERVAL(10);
+  	if(parent.frameCount == gun_reset_framecount){
+      if(isradialBulletPowerup)
+        isradialBulletPowerup = false;
+//      else {
+        setGUN_FIRE_INTERVAL(10);
+//      }
+    }
   }
   
   private void controlBullets() {
@@ -129,7 +140,12 @@ public class Player extends GameObject {
   }
   
   public void shootBullet() {
-    getBullets().add(new Bullet(position.x, position.y, orientation, parent, 3, new PVector(255, 0, 0)));
+    if(isradialBulletPowerup){
+     shootRadialBullets();
+    }
+    else {
+      getBullets().add(new Bullet(position.x, position.y, orientation, parent, 3, new PVector(255, 0, 0)));
+    }
   }
 
   public void shootRadialBullets(){
