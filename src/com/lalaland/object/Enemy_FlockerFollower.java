@@ -46,8 +46,8 @@ public class Enemy_FlockerFollower extends Enemy {
 		DRAW_BREADCRUMBS = false;
 		TIME_TARGET_ROT = 20;
 		RADIUS_SATISFACTION = 10;
-		MAX_VELOCITY = 0.5f;
-		MAX_ACCELERATION = 0.3f;
+		MAX_VELOCITY = 0.7f;
+		MAX_ACCELERATION = 0.4f;
 		targetPosition = new PVector(position.x, position.y);
 		lifeReductionRate = 20;
 		state = States.STAY_WITH_LEADER;

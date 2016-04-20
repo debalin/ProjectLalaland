@@ -18,11 +18,11 @@ public class Enemy_FlockerLeader extends Enemy {
 
 	private static final float LEADER_RADIUS = 7;
 	private static final PVector LEADER_COLOR = new PVector(200, 45, 200);
-	private static final int NUM_FOLLOWERS = 10;
+	private static final int NUM_FOLLOWERS = 30;
 	private static final int MAX_FOLLOW_NODE_COUNT = 10;
 	private static final float SIGHT_RADIUS = 200f;
 
-	private static final boolean SURROUND_VERSION = false;
+	private static final boolean SURROUND_VERSION = true;
 
 	private enum States {
 		SEEK_PLAYER, PATH_FIND_PLAYER, PATH_FOLLOW_PLAYER, KILL_PLAYER, LEADER_DEAD_KILL_PLAYER
@@ -34,6 +34,9 @@ public class Enemy_FlockerLeader extends Enemy {
 
 	private static int spawnCount = 0;
 	public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
+
+	private float damageByFollowers;
+	private int timeWithinSight, timeWithinSightTemp;
 
 	public Enemy_FlockerLeader(float positionX, float positionY, PApplet parent, Environment environment) {
 		super(positionX, positionY, parent, environment, LEADER_RADIUS, LEADER_COLOR.copy());
@@ -50,6 +53,9 @@ public class Enemy_FlockerLeader extends Enemy {
 		spawnCount++;
 		PLAYER_DAMAGE = 2f;
 		DAMAGE_RADIUS = 25f;
+
+		damageByFollowers = 0;
+		timeWithinSight = timeWithinSightTemp = 0;
 
 		for (int i = 1; i <= NUM_FOLLOWERS; i++)
 			followers.add(new Enemy_FlockerFollower(i, positionX, positionY, parent, environment, this, SURROUND_VERSION));
@@ -73,8 +79,10 @@ public class Enemy_FlockerLeader extends Enemy {
 		case SEEK_PLAYER:
 			targetPosition.x = environment.getPlayer().getPosition().x;
 			targetPosition.y = environment.getPlayer().getPosition().y;
-			if (playerWithinSight())
+			if (playerWithinSight()) {
+				timeWithinSightTemp = parent.millis();
 				updateState(States.KILL_PLAYER);
+			}
 			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5f))
 				targetPosition = ObstacleSteering.avoidObstacleOnSeek(this, environment, 5f);
 			break;
@@ -91,15 +99,18 @@ public class Enemy_FlockerLeader extends Enemy {
 			targetPosition.y = environment.getPlayer().getPosition().y;
 			if (allFollowersSurrounded())
 				commandFollowerToCloseIn();
-			if (!playerWithinSight())
+			if (!playerWithinSight()) {
+				timeWithinSight += parent.millis() - timeWithinSightTemp;
+				timeWithinSightTemp = 0;
 				updateState(States.SEEK_PLAYER);
+			}
 			if (ObstacleSteering.checkForObstacleAvoidance(this, parent, environment, 5f))
 				updateState(States.PATH_FIND_PLAYER);
 			break;
 		case LEADER_DEAD_KILL_PLAYER:
 			if (allFollowersDead()) {
-				killYourself(false);
-				//printMetrics();
+				killYourself(true);
+				printMetrics();
 				spawnCount--;
 			}
 			break;
@@ -112,7 +123,9 @@ public class Enemy_FlockerLeader extends Enemy {
 	}
 
 	private void printMetrics() {
-
+		System.out.println("Time within sight: " + timeWithinSight);
+		System.out.println("Damage by followers: " + damageByFollowers);
+		System.out.println("Efficiency: " + damageByFollowers / (timeWithinSight / 1000));
 	}
 
 	private void updateFollowers() {
@@ -121,8 +134,10 @@ public class Enemy_FlockerLeader extends Enemy {
 			Enemy_FlockerFollower follower = i.next();
 			if (follower.isAlive())
 				follower.move();
-			else
+			else {
+				damageByFollowers += follower.damageCount;
 				i.remove();
+			}
 		}
 	}
 

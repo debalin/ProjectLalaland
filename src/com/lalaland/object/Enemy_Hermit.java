@@ -108,8 +108,8 @@ public class Enemy_Hermit extends Enemy {
 			}
 		}
 		if (life <= LIFE_THRESHOLD) {
-			killYourself(true);
-			printMetrics();
+			killYourself(false);
+			//printMetrics();
 			spawnCount--;
 		}
 		checkAndReducePlayerLife();
