@@ -96,7 +96,7 @@ public abstract class Enemy extends GameObject {
 	}
 
 	protected void printCommonMetrics() {
-		System.out.println("Survival time: " + survivalTime + " Damage count: " + damageCount);
+		System.out.println("Survival time: " + survivalTime/1000 + " Damage count: " + damageCount);
 	}
 
   protected void updateShape(){

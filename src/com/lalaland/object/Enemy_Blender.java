@@ -24,7 +24,8 @@ public class Enemy_Blender extends Enemy {
   public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
   private static int spawnCount = 0;
   private Enemy_Blender targetBlender = null;
-
+  private static float totalTimeLived = 0f;
+  private static float totalDamageDealt = 0f;
 
   private boolean isAltBehaviour = false;
 
@@ -127,7 +128,9 @@ public class Enemy_Blender extends Enemy {
     if(isABlenderVisible(true, 7)){
       if(decideDeath(this, targetBlender) == 1){
         //die
-        alive = false;
+        killYourself(true);
+        totalDamageDealt += damageCount;
+        totalTimeLived += survivalTime;
         spawnCount--;
       }
       else{
@@ -212,15 +215,18 @@ public class Enemy_Blender extends Enemy {
       }
     }
     if (life <= LIFE_THRESHOLD) {
-      killYourself(false);
-      //printMetrics();
+      killYourself(true);
+      totalDamageDealt += damageCount;
+      totalTimeLived += survivalTime;
       spawnCount--;
+      printMetrics();
     }
     checkAndReducePlayerLife();
   }
 
   private void printMetrics() {
-
+    if(spawnCount==0 || environment.getPlayer().life <= 0)
+     System.out.println("Total time lived: " + totalTimeLived/1000 + " Combined damage dealt: "+ totalDamageDealt);
   }
 
 }
