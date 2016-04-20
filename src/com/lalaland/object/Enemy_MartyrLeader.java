@@ -75,7 +75,8 @@ public class Enemy_MartyrLeader extends Enemy {
         break;
       case LEADER_DEAD:
         if (allFollowersDead()) {
-          alive = false;
+          killYourself(false);
+          //printMetrics();
           spawnCount--;
         }
         else
@@ -86,6 +87,10 @@ public class Enemy_MartyrLeader extends Enemy {
       updatePosition();
 
     updateFollowers();
+  }
+
+  private void printMetrics() {
+
   }
 
   public int getNumFollowers() {

@@ -30,6 +30,8 @@ public class Player extends GameObject {
     LEFT = RIGHT = UP = DOWN = false;
     bullets = Collections.synchronizedList(new LinkedList<>());
     alive = true;
+    MAX_LIFE = 100000;
+    life = MAX_LIFE;
   }
 
   public PVector getVelocity() {

@@ -170,8 +170,8 @@ public class Enemy_Grunt extends Enemy {
       }
     }
     if (life <= LIFE_THRESHOLD) {
-      killYourself(true);
-      printMetrics();
+      killYourself(false);
+      //printMetrics();
       spawnCount--;
     }
     checkAndReducePlayerLife();

@@ -151,8 +151,8 @@ public class Enemy_Soldier extends Enemy {
       }
     }
     if (life <= LIFE_THRESHOLD) {
-      killYourself(false);
-      //printMetrics();
+      killYourself(true);
+      printMetrics();
       spawnCount--;
     }
     if (life <= COVER_THRESHOLD && state == States.SEEK)
@@ -161,8 +161,22 @@ public class Enemy_Soldier extends Enemy {
   }
 
   private void printMetrics() {
-    System.out.println("Time to find covers: " + timeFindCoverTotal);
-    System.out.println("Time in covers: " + timeInCoverTotal);
+    System.out.print("Time to find covers: " + timeFindCoverTotal);
+    int temp = 0;
+    for (int each : timeFindCoverTotal)
+      temp += each;
+    if (temp != 0)
+      System.out.print(", Average: " + temp / timeFindCoverTotal.size() + "\n");
+    else
+      System.out.println();
+    System.out.print("Time in covers: " + timeInCoverTotal);
+    temp = 0;
+    for (int each : timeInCoverTotal)
+      temp += each;
+    if (temp != 0)
+      System.out.print(", Average: " + temp / timeInCoverTotal.size() + "\n");
+    else
+      System.out.println();
     System.out.println("Number of times cover changed: " + numChangeCovers);
   }
 

@@ -122,9 +122,15 @@ public class Enemy_MartyrFollower extends Enemy {
         }
       }
     }
-    if (life <= LIFE_THRESHOLD)
-      alive = false;
+    if (life <= LIFE_THRESHOLD) {
+      killYourself(false);
+      //printMetrics();
+    }
     checkAndReducePlayerLife();
+  }
+
+  private void printMetrics() {
+
   }
 
   private List<PVector> buildAvoidanceRays() {

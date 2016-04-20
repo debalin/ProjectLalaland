@@ -212,10 +212,15 @@ public class Enemy_Blender extends Enemy {
       }
     }
     if (life <= LIFE_THRESHOLD) {
-      alive = false;
+      killYourself(false);
+      //printMetrics();
       spawnCount--;
     }
     checkAndReducePlayerLife();
+  }
+
+  private void printMetrics() {
+
   }
 
 }
