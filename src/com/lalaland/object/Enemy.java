@@ -41,7 +41,8 @@ public abstract class Enemy extends GameObject {
 		acceleration = new PVector();
 		reached = false;
 		alive = true;
-		survivalTime = parent.millis();
+		if (parent != null)
+			survivalTime = parent.millis();
 		damageCount = 0f;
 		if (environment != null)
 			graphSearch = environment.getNewGraphSearch();

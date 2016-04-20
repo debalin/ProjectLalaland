@@ -109,8 +109,8 @@ public class Enemy_FlockerLeader extends Enemy {
 			break;
 		case LEADER_DEAD_KILL_PLAYER:
 			if (allFollowersDead()) {
-				killYourself(true);
-				printMetrics();
+				killYourself(false);
+				//printMetrics();
 				spawnCount--;
 			}
 			break;
@@ -125,6 +125,7 @@ public class Enemy_FlockerLeader extends Enemy {
 	private void printMetrics() {
 		System.out.println("Time within sight: " + timeWithinSight);
 		System.out.println("Damage by followers: " + damageByFollowers);
+		System.out.println("Total Damage: " + (damageByFollowers + damageCount));
 		System.out.println("Efficiency: " + damageByFollowers / (timeWithinSight / 1000));
 	}
 

@@ -119,13 +119,8 @@ public class Enemy_FlockerFollower extends Enemy {
 		}
 		if (life <= LIFE_THRESHOLD) {
 			killYourself(false);
-			//printMetrics();
 		}
 		checkAndReducePlayerLife();
-	}
-
-	private void printMetrics() {
-
 	}
 
 	private void updatePosition() {

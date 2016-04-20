@@ -11,7 +11,7 @@ public class Enemy_MartyrLeader extends Enemy {
   private static final float LEADER_RADIUS = 12;
   private static final PVector LEADER_COLOR = new PVector(112, 71, 231);
   private static final int NUM_FOLLOWERS = 8;
-  private static final boolean DYNAMIC_FORMATION = true;
+  private static final boolean DYNAMIC_FORMATION = false;
   private static final int PURSUE_FORESIGHT = 5;
   private static final int[] RANK_PRIORITIES = {1, 0, 2, 7, 3, 4, 5, 6};
 
@@ -25,6 +25,8 @@ public class Enemy_MartyrLeader extends Enemy {
   private static int spawnCount = 0;
   private Set<Integer> deadFollowers;
   public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
+
+  private float damageTakenByLeader, totalDamage;
 
   public Enemy_MartyrLeader(float positionX, float positionY, PApplet parent, Environment environment) {
     super(positionX, positionY, parent, environment, LEADER_RADIUS, LEADER_COLOR.copy());
@@ -41,6 +43,8 @@ public class Enemy_MartyrLeader extends Enemy {
     lifeReductionRate = 1;
     state = States.WAIT_FOR_FORMATION;
     spawnCount++;
+    damageTakenByLeader = 0;
+    totalDamage = 0;
 
     for (int i = 0; i < NUM_FOLLOWERS; i++)
       followers.add(new Enemy_MartyrFollower(positionX, positionY, parent, environment, this, i, DYNAMIC_FORMATION));
@@ -75,8 +79,8 @@ public class Enemy_MartyrLeader extends Enemy {
         break;
       case LEADER_DEAD:
         if (allFollowersDead()) {
-          killYourself(false);
-          //printMetrics();
+          killYourself(true);
+          printMetrics();
           spawnCount--;
         }
         else
@@ -90,7 +94,9 @@ public class Enemy_MartyrLeader extends Enemy {
   }
 
   private void printMetrics() {
-
+    System.out.println("Damage taken By Leader: " + damageTakenByLeader);
+    System.out.println("Total Damage: " + (totalDamage + damageCount));
+    System.out.println("Efficiency: " + damageTakenByLeader / (survivalTime / 1000));
   }
 
   public int getNumFollowers() {
@@ -146,6 +152,7 @@ public class Enemy_MartyrLeader extends Enemy {
         follower.move();
       else {
         deadFollowers.add(follower.getRank());
+        totalDamage += follower.damageCount;
         i.remove();
       }
     }
@@ -167,6 +174,8 @@ public class Enemy_MartyrLeader extends Enemy {
         Bullet bullet = i.next();
         if (environment.inSameGrid(bullet.getPosition(), position)) {
           life -= lifeReductionRate;
+          if (!allFollowersDead())
+            damageTakenByLeader += lifeReductionRate;
           super.incrementTotalHPDamage((int)lifeReductionRate);
           i.remove();
         }
