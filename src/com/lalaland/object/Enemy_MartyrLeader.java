@@ -80,7 +80,7 @@ public class Enemy_MartyrLeader extends Enemy {
       case LEADER_DEAD:
         if (allFollowersDead()) {
           killYourself(false);
-//          printMetrics();
+          //printMetrics();
           spawnCount--;
         }
         else
