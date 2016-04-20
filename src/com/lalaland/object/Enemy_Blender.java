@@ -20,14 +20,14 @@ public class Enemy_Blender extends Enemy {
   private static final float LRR_LOSS_RATE = 2.1f;
   private static final float BLENDER_VIEW_RADIUS = 250;
   private static final float MAX_LINEAR_ACC = 0.5f;
-  private static final float SEEK_MAX_VELOCITY = 1.3f;
+  private static float SEEK_MAX_VELOCITY = 1.3f;
   public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
   private static int spawnCount = 0;
   private Enemy_Blender targetBlender = null;
   private static float totalTimeLived = 0f;
   private static float totalDamageDealt = 0f;
 
-  private boolean isAltBehaviour = false;
+  private boolean isAltBehaviour = true;
 
 
   public Enemy_Blender(float positionX, float positionY, PApplet parent, Environment environment){
@@ -137,6 +137,7 @@ public class Enemy_Blender extends Enemy {
         //merge!
         if(IND_RADIUS < BLENDER_MAX_RADIUS){
           enlarge(1);
+          SEEK_MAX_VELOCITY += 0.05f;
         }
         DAMAGE_RADIUS += 1;
         PLAYER_DAMAGE += 0.2f;
@@ -225,8 +226,10 @@ public class Enemy_Blender extends Enemy {
   }
 
   private void printMetrics() {
-    if(spawnCount==0 || environment.getPlayer().life <= 0)
+    if(spawnCount==0 || environment.getPlayer().life <= 0) {
      System.out.println("Total time lived: " + totalTimeLived/1000 + " Combined damage dealt: "+ totalDamageDealt);
+     System.out.println("Efficiency: " + totalDamageDealt/10f * Math.sqrt(totalTimeLived/1000f));
+    }
   }
 
 }
