@@ -30,7 +30,7 @@ public class Player extends GameObject {
     LEFT = RIGHT = UP = DOWN = false;
     bullets = Collections.synchronizedList(new LinkedList<>());
     alive = true;
-    MAX_LIFE = 100000;
+    MAX_LIFE = 100;
     life = MAX_LIFE;
   }
 
@@ -64,18 +64,19 @@ public class Player extends GameObject {
   }
 
   public void reduceLife(float damage) {
-    life -= damage;
     if (life <= 0) {
-      System.out.println("Player dead.");
-      environment.getEnemies().forEach(enemy -> enemy.printCommonMetrics());
-      alive = false;
+//      System.out.println("Player dead.");
+//      environment.getEnemies().forEach(enemy -> enemy.printCommonMetrics());
+//      alive = false;
     }
+    else
+      life -= damage;
   }
 
   public boolean isAlive() {
     return alive;
   }
-  
+
   private void controlBonusItemPicking(){
   	BonusItem item = environment.onBonusItem(position); 
   	if(item != null ){

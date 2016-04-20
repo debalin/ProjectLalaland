@@ -20,7 +20,7 @@ public class Enemy_Hermit extends Enemy {
 	private static final float MAX_LINEAR_ACC = 0.5f;
 	private static final float RADIUS_SATISFACTION = 0.1f;
 	private static final float SEEK_MAX_VELOCITY = 2.0f;
-	private static final boolean SPIRAL_RAGE = false;
+	private static final boolean SPIRAL_RAGE = true;
 	private static final float SPIRAL_WIDTH_CONSTANT = 2f;
 
 	private enum States {
@@ -31,14 +31,22 @@ public class Enemy_Hermit extends Enemy {
 	private static int spawnCount = 0;
 	public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
 
+	private int timeRageMode, timeRageModeCurrent;
+	private float damageTakenRageMode;
+
 	public Enemy_Hermit(float positionX, float positionY, PApplet parent, Environment environment) {
 		super(positionX, positionY, parent, environment, HERMIT_RADIUS, HERMIT_COLOR);
 		DRAW_BREADCRUMBS = false;
 		TIME_TARGET_ROT = 7;
-		MAX_VELOCITY = 1.0f;		
+		MAX_VELOCITY = 1.0f;
+		DAMAGE_RADIUS = 30f;
+		PLAYER_DAMAGE = 2.5f;
 		lifeReductionRate = 4;
 		targetPosition = new PVector(position.x, position.y);
 		spawnCount++;
+		timeRageMode = 0;
+		timeRageModeCurrent = 0;
+		damageTakenRageMode = 0;
 		wander = new Wander(150);
 		state = States.WANDER;
 	}
@@ -66,6 +74,7 @@ public class Enemy_Hermit extends Enemy {
 				updatePositionWander();
 				if (isPlayerVisible()) {
 					rageModeOn();
+					timeRageModeCurrent = parent.millis();
 					updateState(States.RAGE_MODE);
 				}
 				break;
@@ -73,6 +82,8 @@ public class Enemy_Hermit extends Enemy {
 				updatePositionSeek();
 				if (!isPlayerVisible()) {
 					rageModeOff();
+					timeRageModeCurrent = parent.millis() - timeRageModeCurrent;
+					timeRageMode += timeRageModeCurrent;
 					updateState(States.WANDER);
 				}
 				break;
@@ -89,21 +100,27 @@ public class Enemy_Hermit extends Enemy {
 				Bullet bullet = i.next();
 				if (environment.inSameGrid(bullet.getPosition(), position)) {
 					life -= lifeReductionRate;
+					if (state == States.RAGE_MODE)
+						damageTakenRageMode += lifeReductionRate;
           super.incrementTotalHPDamage((int)lifeReductionRate);
 					i.remove();
 				}
 			}
 		}
 		if (life <= LIFE_THRESHOLD) {
-			killYourself(false);
-			//printMetrics();
+			killYourself(true);
+			printMetrics();
 			spawnCount--;
 		}
 		checkAndReducePlayerLife();
 	}
 
 	private void printMetrics() {
-
+		if (state == States.RAGE_MODE)
+			timeRageMode += parent.millis() - timeRageModeCurrent;
+		System.out.println("Time spent in rage mode: " + timeRageMode);
+		System.out.println("Damage taken in rage mode: " + damageTakenRageMode);
+		System.out.println("Efficiency: " + (timeRageMode / damageTakenRageMode));
 	}
 	
 	private void rageModeOn(){

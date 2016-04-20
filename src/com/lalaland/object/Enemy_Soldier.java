@@ -49,7 +49,7 @@ public class Enemy_Soldier extends Enemy {
     MAX_VELOCITY = 1;
     MAX_ACCELERATION = 0.3f;
     DAMAGE_RADIUS = 15f;
-    PLAYER_DAMAGE = 0.7f;
+    PLAYER_DAMAGE = 0.9f;
     targetPosition = new PVector(position.x, position.y);
     lifeReductionRate = 7;
     lifeRegainRate = 0.08f;
@@ -61,7 +61,7 @@ public class Enemy_Soldier extends Enemy {
 
     timeFindCoverTotal = new ArrayList<>();
     timeInCoverTotal = new ArrayList<>();
-    numChangeCovers = 0;
+    numChangeCovers = 1;
   }
 
   public static void initializeSpawnDetails(int frameRate) {
@@ -151,8 +151,8 @@ public class Enemy_Soldier extends Enemy {
       }
     }
     if (life <= LIFE_THRESHOLD) {
-      killYourself(true);
-      printMetrics();
+      killYourself(false);
+      //printMetrics();
       spawnCount--;
     }
     if (life <= COVER_THRESHOLD && state == States.SEEK)
@@ -161,23 +161,32 @@ public class Enemy_Soldier extends Enemy {
   }
 
   private void printMetrics() {
+    float timeFindCoverAverage = 0, timeInCoverAverage = 0;
     System.out.print("Time to find covers: " + timeFindCoverTotal);
     int temp = 0;
     for (int each : timeFindCoverTotal)
       temp += each;
-    if (temp != 0)
-      System.out.print(", Average: " + temp / timeFindCoverTotal.size() + "\n");
+    if (temp != 0) {
+      timeFindCoverAverage = temp / timeFindCoverTotal.size();
+      System.out.print(", Average: " + timeFindCoverAverage + "\n");
+    }
     else
       System.out.println();
     System.out.print("Time in covers: " + timeInCoverTotal);
     temp = 0;
     for (int each : timeInCoverTotal)
       temp += each;
-    if (temp != 0)
-      System.out.print(", Average: " + temp / timeInCoverTotal.size() + "\n");
+    if (temp != 0) {
+      timeInCoverAverage = temp / timeInCoverTotal.size();
+      System.out.print(", Average: " + timeInCoverAverage + "\n");
+    }
     else
       System.out.println();
     System.out.println("Number of times cover changed: " + numChangeCovers);
+    if (timeFindCoverAverage == 0 && numChangeCovers == 0)
+      System.out.println("Efficiency: 0.0");
+    else
+      System.out.println("Efficiency: " + timeInCoverAverage / (Math.sqrt(timeFindCoverAverage * (numChangeCovers + 1))));
   }
 
   private void regainHealth() {

@@ -44,7 +44,7 @@ public class Enemy_Grunt extends Enemy {
 		DRAW_BREADCRUMBS = false;
 		MAX_VELOCITY = 1.0f;
 		lifeReductionRate = 5;
-    DAMAGE_RADIUS = 30f;
+    DAMAGE_RADIUS = 25f;
     PLAYER_DAMAGE = 2.5f;
     spawnCount++;
     state = States.TRACKING_WANDER;
