@@ -33,6 +33,8 @@ public class Enemy_Grunt extends Enemy {
   private int playerTrackCount;
   private float randomAngle;
 
+  private int nearbyTime, nearbyTimeTemp;
+
   private enum States {
     TRACKING_WANDER, DIRECTED_WANDER, WANDER
   }
@@ -42,6 +44,8 @@ public class Enemy_Grunt extends Enemy {
 		DRAW_BREADCRUMBS = false;
 		MAX_VELOCITY = 1.0f;
 		lifeReductionRate = 5;
+    DAMAGE_RADIUS = 30f;
+    PLAYER_DAMAGE = 2.5f;
     spawnCount++;
     state = States.TRACKING_WANDER;
     wander = new Wander(RANDOMISER_INTERVAL);
@@ -50,6 +54,7 @@ public class Enemy_Grunt extends Enemy {
     playerAveragePosition = new PVector();
     playerTrackCount = 0;
     randomAngle = 0f;
+    nearbyTimeTemp = nearbyTime = 0;
 	}
 
 	@Override
@@ -89,7 +94,19 @@ public class Enemy_Grunt extends Enemy {
         updatePositionWander();
         break;
     }
+
+    evaluateMetrics();
 	}
+
+  private void evaluateMetrics() {
+    if (position.dist(environment.getPlayer().getPosition()) < 200 && nearbyTimeTemp == 0) {
+      nearbyTimeTemp = parent.millis();
+    }
+    else if (position.dist(environment.getPlayer().getPosition()) >= 200 && nearbyTimeTemp > 0) {
+      nearbyTime += parent.millis() - nearbyTimeTemp;
+      nearbyTimeTemp = 0;
+    }
+  }
 
   private boolean reachedPlayerNeighbourhood() {
     if (position.dist(playerAveragePosition) <= REACH_RADIUS)
@@ -153,10 +170,16 @@ public class Enemy_Grunt extends Enemy {
       }
     }
     if (life <= LIFE_THRESHOLD) {
-      alive = false;
+      killYourself(true);
+      printMetrics();
       spawnCount--;
     }
     checkAndReducePlayerLife();
+  }
+
+  private void printMetrics() {
+    System.out.println("Time spent near player: " + nearbyTime);
+    System.out.println("Efficiency: " + nearbyTime / survivalTime * 100);
   }
 
 }

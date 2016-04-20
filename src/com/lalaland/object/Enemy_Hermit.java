@@ -95,10 +95,15 @@ public class Enemy_Hermit extends Enemy {
 			}
 		}
 		if (life <= LIFE_THRESHOLD) {
-			alive = false;
+			killYourself(false);
+			//printMetrics();
 			spawnCount--;
 		}
 		checkAndReducePlayerLife();
+	}
+
+	private void printMetrics() {
+
 	}
 	
 	private void rageModeOn(){

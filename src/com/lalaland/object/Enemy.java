@@ -27,6 +27,8 @@ public abstract class Enemy extends GameObject {
 	protected float DAMAGE_RADIUS;
 	protected float lifeReductionRate;
 
+	protected float survivalTime, damageCount;
+
 	private static int totalHPDamage = 0;
 
 	public enum EnemyTypes {
@@ -39,6 +41,8 @@ public abstract class Enemy extends GameObject {
 		acceleration = new PVector();
 		reached = false;
 		alive = true;
+		survivalTime = parent.millis();
+		damageCount = 0f;
 		if (environment != null)
 			graphSearch = environment.getNewGraphSearch();
 	}
@@ -80,7 +84,19 @@ public abstract class Enemy extends GameObject {
 	protected void checkAndReducePlayerLife() {
 		if (position.dist(environment.getPlayer().getPosition()) < DAMAGE_RADIUS) {
 			environment.getPlayer().reduceLife(PLAYER_DAMAGE);
+			damageCount += PLAYER_DAMAGE;
 		}
+	}
+
+	protected void killYourself(boolean printMetricOrNot) {
+		alive = false;
+		survivalTime = parent.millis() - survivalTime;
+		if (printMetricOrNot)
+			printCommonMetrics();
+	}
+
+	protected void printCommonMetrics() {
+		System.out.println("Survival time: " + survivalTime + " Damage count: " + damageCount);
 	}
 
   protected void updateShape(){

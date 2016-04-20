@@ -31,6 +31,7 @@ public class Engine extends PApplet {
   
   private Environment environment;
   private Player player;
+
   private List<Enemy> enemies;
   private List<BonusItem> bonusItems;
   private boolean inDEVMode = true;
@@ -49,6 +50,10 @@ public class Engine extends PApplet {
     size((int)RESOLUTION.x, (int)RESOLUTION.y, P3D);
     smooth(SMOOTH_FACTOR);
     initializeEnemySpawnDetails();
+  }
+
+  public List<Enemy> getEnemies() {
+    return enemies;
   }
 
   private void initializeEnemySpawnDetails() {
@@ -201,15 +206,15 @@ public class Engine extends PApplet {
 
     float random = random(1, 100);
     if (random < 50)
-      randomSpawnSpot.x = random + Enemy.BORDER_PADDING;
+      randomSpawnSpot.x = random + 3 * Enemy.BORDER_PADDING;
     else
-      randomSpawnSpot.x = RESOLUTION.x - Enemy.BORDER_PADDING - (random - 50);
+      randomSpawnSpot.x = RESOLUTION.x - 3 * Enemy.BORDER_PADDING - (random - 50);
 
     random = random(1, 100);
     if (random < 50)
-      randomSpawnSpot.y = random + Enemy.BORDER_PADDING;
+      randomSpawnSpot.y = random + 3 * Enemy.BORDER_PADDING;
     else
-      randomSpawnSpot.y = RESOLUTION.y - Enemy.BORDER_PADDING - (random - 50);
+      randomSpawnSpot.y = RESOLUTION.y - 3 * Enemy.BORDER_PADDING - (random - 50);
 
     return randomSpawnSpot;
   }

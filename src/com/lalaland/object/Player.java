@@ -63,8 +63,11 @@ public class Player extends GameObject {
 
   public void reduceLife(float damage) {
     life -= damage;
-    if (life <= 0)
+    if (life <= 0) {
+      System.out.println("Player dead.");
+      environment.getEnemies().forEach(enemy -> enemy.printCommonMetrics());
       alive = false;
+    }
   }
 
   public boolean isAlive() {

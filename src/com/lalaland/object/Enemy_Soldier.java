@@ -7,6 +7,7 @@ import com.lalaland.steering.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Enemy_Soldier extends Enemy {
@@ -34,6 +35,9 @@ public class Enemy_Soldier extends Enemy {
   private float lifeRegainRate;
   private Obstacle lastCoverObstacle;
 
+  private ArrayList<Integer> timeFindCoverTotal, timeInCoverTotal;
+  private int numChangeCovers, timeFindCover, timeInCover;
+
   public static int SPAWN_OFFSET, SPAWN_INTERVAL, SPAWN_MAX;
   
   public Enemy_Soldier(float positionX, float positionY, PApplet parent, Environment environment) {
@@ -45,7 +49,7 @@ public class Enemy_Soldier extends Enemy {
     MAX_VELOCITY = 1;
     MAX_ACCELERATION = 0.3f;
     DAMAGE_RADIUS = 15f;
-    PLAYER_DAMAGE = 0.9f;
+    PLAYER_DAMAGE = 0.7f;
     targetPosition = new PVector(position.x, position.y);
     lifeReductionRate = 7;
     lifeRegainRate = 0.08f;
@@ -54,6 +58,10 @@ public class Enemy_Soldier extends Enemy {
     state = States.SEEK;
     lastCoverObstacle = null;
     spawnCount++;
+
+    timeFindCoverTotal = new ArrayList<>();
+    timeInCoverTotal = new ArrayList<>();
+    numChangeCovers = 0;
   }
 
   public static void initializeSpawnDetails(int frameRate) {
@@ -74,6 +82,7 @@ public class Enemy_Soldier extends Enemy {
           updateState(States.PATH_FIND_PLAYER);
         break;
       case PATH_FIND_COVER:
+        timeFindCover = parent.millis();
         findCover();
         break;
       case PATH_FOLLOW_COVER:
@@ -133,14 +142,17 @@ public class Enemy_Soldier extends Enemy {
         if (environment.inSameGrid(bullet.getPosition(), position)) {
           life -= lifeReductionRate;
           super.incrementTotalHPDamage((int)lifeReductionRate);
-          if (state == States.REGAIN_HEALTH)
+          if (state == States.REGAIN_HEALTH) {
             updateState(States.PATH_FIND_COVER);
+            numChangeCovers++;
+          }
           i.remove();
         }
       }
     }
     if (life <= LIFE_THRESHOLD) {
-      alive = false;
+      killYourself(false);
+      //printMetrics();
       spawnCount--;
     }
     if (life <= COVER_THRESHOLD && state == States.SEEK)
@@ -148,10 +160,18 @@ public class Enemy_Soldier extends Enemy {
     checkAndReducePlayerLife();
   }
 
+  private void printMetrics() {
+    System.out.println("Time to find covers: " + timeFindCoverTotal);
+    System.out.println("Time in covers: " + timeInCoverTotal);
+    System.out.println("Number of times cover changed: " + numChangeCovers);
+  }
+
   private void regainHealth() {
     life += lifeRegainRate;
-    if (life >= REGAIN_THRESHOLD)
+    if (life >= REGAIN_THRESHOLD) {
       updateState(States.SEEK);
+      timeInCoverTotal.add(parent.millis() - timeInCover);
+    }
   }
 
   private void findCover() {
@@ -216,6 +236,8 @@ public class Enemy_Soldier extends Enemy {
     }
     else if (solutionPath == null || solutionPath.size() == 0) {
       updateState(States.REGAIN_HEALTH);
+      timeFindCoverTotal.add(parent.millis() - timeFindCover);
+      timeInCover = parent.millis();
       startTakingCover = false;
     }
   }
