@@ -19,7 +19,7 @@ public class Enemy_Soldier extends Enemy {
   private static final float FLEE_VELOCITY = 2;
   private static final int OBSTACLE_OFFSET = 20;
   private static final int MAX_FOLLOW_NODE_COUNT = 10;
-  private static final  PathFindTypes PATH_FIND_TYPE = PathFindTypes.FARTHEST_FROM_PLAYER;
+  private static final  PathFindTypes PATH_FIND_TYPE = PathFindTypes.NEAREST_TO_SOLDIER;
 
   private static int spawnCount = 0;
 
