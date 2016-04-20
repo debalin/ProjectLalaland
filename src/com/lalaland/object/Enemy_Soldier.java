@@ -183,10 +183,10 @@ public class Enemy_Soldier extends Enemy {
     else
       System.out.println();
     System.out.println("Number of times cover changed: " + numChangeCovers);
-    if (timeFindCoverAverage == 0 && numChangeCovers == 0)
+    if (timeFindCoverAverage * numChangeCovers == 0)
       System.out.println("Efficiency: 0.0");
     else
-      System.out.println("Efficiency: " + timeInCoverAverage / (Math.sqrt(timeFindCoverAverage * (numChangeCovers + 1))));
+      System.out.println("Efficiency: " + timeInCoverAverage / (Math.sqrt(timeFindCoverAverage * numChangeCovers)));
   }
 
   private void regainHealth() {
