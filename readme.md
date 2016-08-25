@@ -12,7 +12,6 @@
 + [Demo Video](https://youtu.be/PioWmf5c-ow)
 + [Presentation Slides](https://drive.google.com/open?id=0B13zgKKtKt2EZzh0MEcyTWNJQXM)
 + [Paper Submission](https://drive.google.com/open?id=0B13zgKKtKt2ESFNDaFdjVmlTa28)
-+ [Github Repository](https://github.ncsu.edu/ddas4/CSC584_Project)
 
 ### Description
 Crimsonland is a 2D (top-down view) survival game where the player is trying to stay alive while various enemies converge on him from all sides of the map. The player is placed in the middle of the map at the beginning of the game and the enemies enter from around the boundary of the map. The player has to shoot the enemies to kill them and stop them from reaching him. Killing enemies also earns the player points, and the objective is to try and maximize the points earned until death.
