@@ -3,7 +3,7 @@
 #### North Carolina State University
 
 
-###Authors
+### Authors
 + Debalin Das
 + Kunal Kapoor
 + Utkarsh Verma
